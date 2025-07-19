@@ -108,4 +108,45 @@ public class Student {
     public void setGender(String gender) {
         this.gender = gender;
     }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public void setAcademicYear(String academicYear) {
+        this.academicYear = academicYear;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setGuardianName(String guardianName) {
+        this.guardianName = guardianName;
+    }
+
+    public void setGuardianPhone(String guardianPhone) {
+        this.guardianPhone = guardianPhone;
+    }
+
+    public void setPreferredRoomType(String preferredRoomType) {
+        this.preferredRoomType = preferredRoomType;
+    }
+
+    public void setAssignedRoom(String assignedRoom) {
+        this.assignedRoom = assignedRoom;
+    }
+
+    public void setSleepType(String sleepType) {
+        this.sleepType = sleepType;
+    }
+
 }
