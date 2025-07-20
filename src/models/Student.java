@@ -97,9 +97,12 @@ public class Student {
     }
 
     public String getSleepType() {
+
         return sleepType;
     }
+    public String getDateOfAdmission(){
 
+        return dateOfAdmission.toString();}
     // Setters
     public void setName(String name) {
         this.name = name;
