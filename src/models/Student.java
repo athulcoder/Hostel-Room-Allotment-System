@@ -1,4 +1,4 @@
-package com.hostel.allotment.models;
+package models;
 
 import java.time.LocalDate;
 
