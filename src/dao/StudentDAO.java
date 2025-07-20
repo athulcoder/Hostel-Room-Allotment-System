@@ -40,7 +40,42 @@ public class StudentDAO {
     }
 
     //method to update student data
-    public void updateStudent(Student student){
+    public boolean updateStudent(Student student){
 
+        String sql = """
+                UPDATE students SET
+                age = ?,
+                department = ?,
+                academicYear = ?,
+                contactNumber = ?,
+                email = ?,
+                guardianName = ?,
+                guardianPhone = ?,
+                preferredRoomType = ?,
+                assignedRoom = ?,
+                sleepType = ?
+                WHERE studentId = ?;
+                """;
+
+        try(Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setInt(1,student.getAge());
+            stmt.setString(2, student.getDepartment());
+            stmt.setString(3,student.getAcademicYear());
+            stmt.setString(4,student.getContactNumber());
+            stmt.setString(5,student.getEmail());
+            stmt.setString(6,student.getGuardianName());
+            stmt.setString(7,student.getGuardianPhone());
+            stmt.setString(8,student.getPreferredRoomType());
+            stmt.setString(9,student.getPreferredRoomType());
+            stmt.setString(10,student.getSleepType());
+            stmt.setString(11,student.getStudentId());
+
+            int rowsAffected = stmt.executeUpdate();
+
+            return  rowsAffected >0;
+        }catch(SQLException e){
+            System.out.println("Error DB : "+ e.getMessage());
+            return false;
+        }
     }
 }
