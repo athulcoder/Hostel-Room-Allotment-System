@@ -1,4 +1,4 @@
-package src.main.java.com.hostel.allotment.models;
+package com.hostel.allotment.models;
 
 import java.time.LocalDate;
 
@@ -43,6 +43,7 @@ public class Student {
         this.preferredRoomType = preferredRoomType;
         this.assignedRoom = assignedRoom;
         this.sleepType = sleepType;
+        this.dateOfAdmission = LocalDate.now();
 
     }
 

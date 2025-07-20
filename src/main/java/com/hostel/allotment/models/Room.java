@@ -57,4 +57,7 @@ public class Room {
     }
 
     //Setters
+    public void setOccupants(List<Student> students) {
+        this.occupants = students;
+    }
 }
