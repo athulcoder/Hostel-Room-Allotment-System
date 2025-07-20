@@ -1,4 +1,4 @@
-package src.main.java.com.hostel.allotment.models;
+package com.hostel.allotment.models;
 
 import java.util.ArrayList;
 import java.util.List;
