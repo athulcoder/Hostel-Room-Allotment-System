@@ -1,5 +1,4 @@
 
-import com.hostel.allotment.models.Student;
 
 public class Main {
 
