@@ -41,6 +41,6 @@ public class StudentDAO {
 
     //method to update student data
     public void updateStudent(Student student){
-        
+
     }
 }
