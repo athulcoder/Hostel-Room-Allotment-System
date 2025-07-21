@@ -44,5 +44,6 @@ public class DatabaseInitializer {
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(DB_URL);
+        
     }
 }
