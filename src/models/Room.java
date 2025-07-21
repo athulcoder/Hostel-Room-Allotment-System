@@ -63,9 +63,14 @@ public class Room {
     }
     public void setCapacity(int capacity){
         this.capacity = capacity;
+
     }
     public void setOccupancy(int occupancy){
         this.occupancy = occupancy;
+        if(occupancy==this.capacity)
+        {
+            setRoomFull(true);
+        }
     }
     public void setRoomFull(boolean isFull){
         this.isFull = isFull;
