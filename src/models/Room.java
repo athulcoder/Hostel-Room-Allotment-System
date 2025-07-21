@@ -51,4 +51,26 @@ public class Room {
     }
 
     //Setters
+    public void setRoomNumber(String roomNumber){
+        this.roomNumber = roomNumber;
+    }
+    public void setRoomType (String roomType){
+        this.roomType = roomType;
+    }
+    public void setFloorNumber(int floorNumber){
+        this.floorNumber = floorNumber;
+
+    }
+    public void setCapacity(int capacity){
+        this.capacity = capacity;
+    }
+    public void setOccupancy(int occupancy){
+        this.occupancy = occupancy;
+    }
+    public void setRoomFull(boolean isFull){
+        this.isFull = isFull;
+    }
+
+
+
 }

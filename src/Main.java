@@ -16,8 +16,9 @@ public class Main {
         DatabaseInitializer.initializeDatabase();
 
         RoomDAO roomDAO = new RoomDAO();
-        Room room = new Room("C340", "4 bed", 3, 4);
-        roomDAO.createRoom(room);
+       Room r = roomDAO.getRoomByNumber("C340");
+
+        System.out.println(r.getRoomType()+" "+ r.getRoomNumber());
 
     }
 

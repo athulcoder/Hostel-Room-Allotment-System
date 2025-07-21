@@ -3,10 +3,7 @@ package dao;
 import models.Room;
 import utils.DatabaseInitializer;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class RoomDAO {
 
@@ -28,6 +25,31 @@ public class RoomDAO {
         } catch (SQLException e){
             System.out.println("Error while creating ROOM : "+e.getMessage());
         }
+    }
+
+    //get room by number
+
+
+    public Room getRoomByNumber(String roomNumber){
+        String sql = "SELECT * from rooms WHERE roomNumber = ? ";
+        Room room = new Room();
+
+        try(Connection conn = DatabaseInitializer.getConnection(); PreparedStatement statement = conn.prepareStatement(sql)){
+            statement.setString(1,roomNumber);
+            ResultSet res = statement.executeQuery();
+            room.setRoomNumber(res.getString("roomNumber"));
+            room.setRoomType(res.getString("roomType"));
+            room.setFloorNumber(res.getInt("floorNumber"));
+            room.setCapacity(res.getInt("capacity"));
+            room.setOccupancy(res.getInt("occupancy"));
+            room.setRoomFull(res.getBoolean("isFull"));
+
+
+        }catch (SQLException e){
+            System.out.println("ERROR while getting room by number : "+ e.getMessage());
+        }
+
+    return room;
     }
 
 }
