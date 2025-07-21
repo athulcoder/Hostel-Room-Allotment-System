@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Room {
 
-    private int roomNumber;
+    private String roomNumber;
     private String roomType;
     private int floorNumber;
     private int capacity;
@@ -17,7 +17,7 @@ public class Room {
         this.occupants = new ArrayList<>();
     }
 
-    public Room(int roomNumber, String roomType, int floorNumber, int capacity) {
+    public Room(String roomNumber, String roomType, int floorNumber, int capacity) {
         this.roomNumber = roomNumber;
         this.roomType = roomType;
         this.floorNumber = floorNumber;
@@ -28,7 +28,7 @@ public class Room {
     }
 
     // Getters
-    public int getRoomNumber() {
+    public String getRoomNumber() {
         return roomNumber;
     }
 

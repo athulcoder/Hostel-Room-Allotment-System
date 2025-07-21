@@ -5,7 +5,10 @@ import utils.DatabaseInitializer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentDAO {
 
@@ -78,4 +81,38 @@ public class StudentDAO {
             return false;
         }
     }
+
+
+
+    // method to getStudents by room number
+
+    public List<Student> getStudentsByRoom(String roomNumber){
+        List<Student> students = new ArrayList<>();
+        String sql = """
+                SELECT * FROM students
+                WHERE assignedRoom = ?
+                """;
+        try(Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)){
+
+
+            stmt.setString(11,roomNumber);
+            ResultSet res = stmt.executeQuery();
+            while(res.next()){
+             Student student = new Student(res.getString("studentId"),res.getString("name"),res.getString("gender"), res.getInt("age"), res.getString("department"), res.getString("academicYear"), res.getString("contactNumber"), res.getString("email"),res.getString("guardianName"), res.getString("guardianPhone"), res.getString("preferredRoomType"), res.getString("assignedRoom"),res.getString("sleepType"));
+             students.add(student);
+            }
+
+
+
+        }catch(SQLException e){
+            System.out.println("Error DB : "+ e.getMessage());
+
+
+        }
+
+        return students;
+    }
+
+
+
 }
