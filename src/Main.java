@@ -14,11 +14,15 @@ public class Main {
 
         //Database initialising
         DatabaseInitializer.initializeDatabase();
-
+        StudentDAO studentDAO = new StudentDAO();
         RoomDAO roomDAO = new RoomDAO();
-       Room rooms = roomDAO.getRoomByNumber("C340");
 
 
+        List<Student> s = studentDAO.getStudentsWithPreference("Early Bird","Double");
+
+        for(Student ss: s){
+            System.out.println(ss.getSleepType());
+        }
     }
 
 }

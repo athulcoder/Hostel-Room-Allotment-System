@@ -1,6 +1,7 @@
 package dao;
 
 import models.Room;
+import models.Student;
 import utils.DatabaseInitializer;
 
 import java.sql.*;
@@ -34,8 +35,14 @@ public class RoomDAO {
         }
     }
 
-    // get All Rooms
+    //allocating room for a new student
 
+
+    public List<Room> getAvailableRoomsByTypeAndFloor(String roomType,int floorNumber){
+        String sql = "SELECT * from rooms WHERE roomType=? AND floorNumber=? AND isFull= 0 ";
+        return getRoomsByFilter(sql, ps -> {ps.setString(1, roomType);ps.setInt(2,floorNumber);});
+    }
+    // get All Rooms
     public List<Room> getAllRooms(){
         String sql = "SELECT * from rooms";
         return getRoomsByFilter(sql,preparedStatement -> {});
@@ -78,7 +85,7 @@ public class RoomDAO {
 
 
     // filters room by  Type , floorNumber
-    private List<Room> getRoomsByFilter(String sql, SQLConsumer<PreparedStatement> binder) {
+    public List<Room> getRoomsByFilter(String sql, SQLConsumer<PreparedStatement> binder) {
         List<Room> rooms = new ArrayList<>();
 
         try (Connection conn = DatabaseInitializer.getConnection();
@@ -101,7 +108,7 @@ public class RoomDAO {
 
     // map room
 
-    private Room mapRoom(ResultSet res) throws SQLException {
+    public Room mapRoom(ResultSet res) throws SQLException {
         Room room = new Room();
         room.setRoomNumber(res.getString("roomNumber"));
         room.setRoomType(res.getString("roomType"));
@@ -111,6 +118,28 @@ public class RoomDAO {
         room.setRoomFull(res.getBoolean("isFull"));
 
         return room;
+    }
+    public  int academicYearMapFloor(String academicYear){
+
+        int floor = 1;
+        switch (academicYear){
+            case "1st Year" -> {
+                floor= 5;
+            }
+            case "2nd Year" -> {
+                floor= 4;
+            }
+            case "3rd Year"->{
+                floor= 3;
+            }
+            case "Final Year"->{
+                floor= 2;
+            }
+
+
+
+        }
+        return floor;
     }
 
 

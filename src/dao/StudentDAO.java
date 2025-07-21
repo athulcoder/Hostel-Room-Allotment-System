@@ -1,5 +1,6 @@
 package dao;
 
+import models.Room;
 import models.Student;
 import utils.DatabaseInitializer;
 
@@ -11,7 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudentDAO {
-
+    @FunctionalInterface
+    public interface SQLConsumer<T> {
+        void accept(T t) throws SQLException;
+    }
 
     //method to save a new student to db
     public void saveStudent(Student student) {
@@ -113,6 +117,36 @@ public class StudentDAO {
         return students;
     }
 
+    //FILTER for all
+   public List<Student> getStudentsWithFilter(String sql, SQLConsumer<PreparedStatement> binder){
+
+       List<Student> students = new ArrayList<>();
+
+       try (Connection conn = DatabaseInitializer.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+
+           binder.accept(ps);
+           ResultSet res = ps.executeQuery();
+
+           while (res.next()) {
+               Student student = new Student(res.getString("studentId"),res.getString("name"),res.getString("gender"), res.getInt("age"), res.getString("department"), res.getString("academicYear"), res.getString("contactNumber"), res.getString("email"),res.getString("guardianName"), res.getString("guardianPhone"), res.getString("preferredRoomType"), res.getString("assignedRoom"),res.getString("sleepType"));
+               students.add(student);
+           }
+
+       } catch (SQLException e) {
+           System.out.println("ERROR fetching students: " + e.getMessage());
+       }
+
+       return students;
+   }
 
 
-}
+   // For SleepType --Preference
+   public List<Student> getStudentsWithPreference(String sleepType,String roomType) {
+       String sql = "SELECT * FROM students WHERE sleepType = ? AND preferredRoomType = ? ";
+       return getStudentsWithFilter(sql, ps -> {ps.setString(1, sleepType);ps.setString(2,roomType);});
+   }
+   }
+
+
+
