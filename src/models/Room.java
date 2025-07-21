@@ -1,8 +1,5 @@
 package models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Room {
 
     private String roomNumber;
@@ -10,11 +7,11 @@ public class Room {
     private int floorNumber;
     private int capacity;
     private int occupancy;
-    private List<Student> occupants;
+
     private boolean isFull;
 
     public Room() {
-        this.occupants = new ArrayList<>();
+
     }
 
     public Room(String roomNumber, String roomType, int floorNumber, int capacity) {
@@ -22,7 +19,7 @@ public class Room {
         this.roomType = roomType;
         this.floorNumber = floorNumber;
         this.capacity = capacity;
-        this.occupants = new ArrayList<>();
+
         this.occupancy = 0;
         this.isFull = false;
     }
@@ -48,16 +45,10 @@ public class Room {
         return occupancy;
     }
 
-    public List<Student> getOccupants() {
-        return occupants;
-    }
-
-    public boolean getRoomStatus() {
+    public boolean getRoomFull() {
+        this.isFull = (occupancy == capacity);
         return isFull;
     }
 
     //Setters
-    public void setOccupants(List<Student> students) {
-        this.occupants = students;
-    }
 }

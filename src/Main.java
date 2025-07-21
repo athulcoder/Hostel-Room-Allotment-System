@@ -1,5 +1,7 @@
 
+import dao.RoomDAO;
 import dao.StudentDAO;
+import models.Room;
 import models.Student;
 import utils.DatabaseInitializer;
 
@@ -13,16 +15,10 @@ public class Main {
         //Database initialising
         DatabaseInitializer.initializeDatabase();
 
-        StudentDAO dao = new StudentDAO();
-
-        List<Student> students= new ArrayList<Student>();
-        students = dao.getStudentsByRoom("B202");
-
-        for(int i = 0; i< students.toArray().length; i++) {
-
-            System.out.println(students.get(i).getName());
-        }
-        }
+        RoomDAO roomDAO = new RoomDAO();
+        Room room = new Room("C340", "4 bed", 3, 4);
+        roomDAO.createRoom(room);
 
     }
 
+}
