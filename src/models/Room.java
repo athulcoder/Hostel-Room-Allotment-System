@@ -46,7 +46,7 @@ public class Room {
     }
 
     public boolean getRoomFull() {
-        this.isFull = (occupancy == capacity);
+        isFull = (occupancy >= capacity);
         return isFull;
     }
 

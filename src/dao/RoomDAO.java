@@ -37,7 +37,23 @@ public class RoomDAO {
 
     //allocating room for a new student
 
+    public void allocateRoomToStudent(Room r){
+        String roomNo = r.getRoomNumber();
+        int occupancy = r.getOccupancy();
+        String sql = "UPDATE rooms SET occupancy=? ,isFull=? WHERE roomNumber =?";
 
+        try(Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setInt(1,occupancy);
+            stmt.setBoolean(2,r.getRoomFull());
+            stmt.setString(3,roomNo);
+            stmt.executeUpdate();
+            System.out.println("Room "+roomNo +" updated");
+        } catch (SQLException e){
+            System.out.println("Error while creating ROOM : "+e.getMessage());
+        }
+    }
+
+    //Getting available rooms
     public List<Room> getAvailableRoomsByTypeAndFloor(String roomType,int floorNumber){
         String sql = "SELECT * from rooms WHERE roomType=? AND floorNumber=? AND isFull= 0 ";
         return getRoomsByFilter(sql, ps -> {ps.setString(1, roomType);ps.setInt(2,floorNumber);});

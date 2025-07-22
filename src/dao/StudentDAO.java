@@ -102,7 +102,9 @@ public class StudentDAO {
             stmt.setString(1,roomNumber);
             ResultSet res = stmt.executeQuery();
             while(res.next()){
+
              Student student = new Student(res.getString("studentId"),res.getString("name"),res.getString("gender"), res.getInt("age"), res.getString("department"), res.getString("academicYear"), res.getString("contactNumber"), res.getString("email"),res.getString("guardianName"), res.getString("guardianPhone"), res.getString("preferredRoomType"), res.getString("assignedRoom"),res.getString("sleepType"));
+
              students.add(student);
             }
 
