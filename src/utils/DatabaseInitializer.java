@@ -72,9 +72,11 @@ public class DatabaseInitializer {
             stmt.execute(sql);
             System.out.println(" Database initialized and table created for rooms.");
 
+            
         } catch (SQLException e) {
-            System.err.println("DB Room table error :" + e.getMessage());
+            System.err.println("DB Room table error :" + e.getMessage()); 
         }
+
     }
 
 }
