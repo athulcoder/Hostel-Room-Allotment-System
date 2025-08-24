@@ -74,8 +74,8 @@ public class DatabaseInitializer {
 
             
         } catch (SQLException e) {
-            System.err.println("DB Room table error :" + e.getMessage()); 
-        }
+            System.err.println("DB Room table Error :" + e.getMessage()); 
+        } add
 
     }
 
