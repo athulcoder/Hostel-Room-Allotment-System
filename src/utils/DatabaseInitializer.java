@@ -67,15 +67,15 @@ public class DatabaseInitializer {
                 )
                 """;
 
-                
         try (Connection conn = DriverManager.getConnection(DB_URL); Statement stmt = conn.createStatement();) {
             stmt.execute(sql);
             System.out.println(" Database initialized and table created for rooms.");
 
-            
         } catch (SQLException e) {
-            System.err.println("DB Room table Error :" + e.getMessage()); 
-        } add
+            System.err.println("DB Room table Error : " + e.getMessage());
+        }
+
+
 
     }
 
