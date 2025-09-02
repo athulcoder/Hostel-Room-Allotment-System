@@ -1,19 +1,19 @@
 package dao;
 
-import models.Room;
-import models.Student;
-import utils.DatabaseInitializer;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import models.Student;
+import utils.DatabaseInitializer;
 
 public class StudentDAO {
+
     @FunctionalInterface
     public interface SQLConsumer<T> {
+
         void accept(T t) throws SQLException;
     }
 
@@ -21,8 +21,7 @@ public class StudentDAO {
     public void saveStudent(Student student) {
 
         String sql = "INSERT INTO students (studentId, name, gender, age,department,academicYear, contactNumber, email, guardianName, guardianPhone, preferredRoomType, assignedRoom, sleepType, dateOfAdmission) VALUES (?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?)";
-        try (Connection conn = DatabaseInitializer.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, student.getStudentId());
             stmt.setString(2, student.getName());
@@ -47,7 +46,7 @@ public class StudentDAO {
     }
 
     //method to update student data
-    public boolean updateStudent(Student student){
+    public boolean updateStudent(Student student) {
 
         String sql = """
                 UPDATE students SET
@@ -64,55 +63,48 @@ public class StudentDAO {
                 WHERE studentId = ?;
                 """;
 
-        try(Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)){
-            stmt.setInt(1,student.getAge());
+        try (Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, student.getAge());
             stmt.setString(2, student.getDepartment());
-            stmt.setString(3,student.getAcademicYear());
-            stmt.setString(4,student.getContactNumber());
-            stmt.setString(5,student.getEmail());
-            stmt.setString(6,student.getGuardianName());
-            stmt.setString(7,student.getGuardianPhone());
-            stmt.setString(8,student.getPreferredRoomType());
-            stmt.setString(9,student.getPreferredRoomType());
-            stmt.setString(10,student.getSleepType());
-            stmt.setString(11,student.getStudentId());
+            stmt.setString(3, student.getAcademicYear());
+            stmt.setString(4, student.getContactNumber());
+            stmt.setString(5, student.getEmail());
+            stmt.setString(6, student.getGuardianName());
+            stmt.setString(7, student.getGuardianPhone());
+            stmt.setString(8, student.getPreferredRoomType());
+            stmt.setString(9, student.getPreferredRoomType());
+            stmt.setString(10, student.getSleepType());
+            stmt.setString(11, student.getStudentId());
 
             int rowsAffected = stmt.executeUpdate();
 
-            return  rowsAffected >0;
-        }catch(SQLException e){
-            System.out.println("Error DB : "+ e.getMessage());
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.out.println("Error DB : " + e.getMessage());
             return false;
         }
     }
 
-
-
     // method to getStudents by room number
-
-    public List<Student> getStudentsByRoom(String roomNumber){
+    public List<Student> getStudentsByRoom(String roomNumber) {
         List<Student> students = new ArrayList<>();
         String sql = """
                 SELECT * FROM students
                 WHERE assignedRoom = ?
                 """;
-        try(Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)){
+        try (Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-
-            stmt.setString(1,roomNumber);
+            stmt.setString(1, roomNumber);
             ResultSet res = stmt.executeQuery();
-            while(res.next()){
+            while (res.next()) {
 
-             Student student = new Student(res.getString("studentId"),res.getString("name"),res.getString("gender"), res.getInt("age"), res.getString("department"), res.getString("academicYear"), res.getString("contactNumber"), res.getString("email"),res.getString("guardianName"), res.getString("guardianPhone"), res.getString("preferredRoomType"), res.getString("assignedRoom"),res.getString("sleepType"));
+                Student student = new Student(res.getString("studentId"), res.getString("name"), res.getString("gender"), res.getInt("age"), res.getString("department"), res.getString("academicYear"), res.getString("contactNumber"), res.getString("email"), res.getString("guardianName"), res.getString("guardianPhone"), res.getString("preferredRoomType"), res.getString("assignedRoom"), res.getString("sleepType"));
 
-             students.add(student);
+                students.add(student);
             }
 
-
-
-        }catch(SQLException e){
-            System.out.println("Error DB : "+ e.getMessage());
-
+        } catch (SQLException e) {
+            System.out.println("Error DB : " + e.getMessage());
 
         }
 
@@ -120,35 +112,33 @@ public class StudentDAO {
     }
 
     //FILTER for all
-   public List<Student> getStudentsWithFilter(String sql, SQLConsumer<PreparedStatement> binder){
+    public List<Student> getStudentsWithFilter(String sql, SQLConsumer<PreparedStatement> binder) {
 
-       List<Student> students = new ArrayList<>();
+        List<Student> students = new ArrayList<>();
 
-       try (Connection conn = DatabaseInitializer.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseInitializer.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-           binder.accept(ps);
-           ResultSet res = ps.executeQuery();
+            binder.accept(ps);
+            ResultSet res = ps.executeQuery();
 
-           while (res.next()) {
-               Student student = new Student(res.getString("studentId"),res.getString("name"),res.getString("gender"), res.getInt("age"), res.getString("department"), res.getString("academicYear"), res.getString("contactNumber"), res.getString("email"),res.getString("guardianName"), res.getString("guardianPhone"), res.getString("preferredRoomType"), res.getString("assignedRoom"),res.getString("sleepType"));
-               students.add(student);
-           }
+            while (res.next()) {
+                Student student = new Student(res.getString("studentId"), res.getString("name"), res.getString("gender"), res.getInt("age"), res.getString("department"), res.getString("academicYear"), res.getString("contactNumber"), res.getString("email"), res.getString("guardianName"), res.getString("guardianPhone"), res.getString("preferredRoomType"), res.getString("assignedRoom"), res.getString("sleepType"));
+                students.add(student);
+            }
 
-       } catch (SQLException e) {
-           System.out.println("ERROR fetching students: " + e.getMessage());
-       }
+        } catch (SQLException e) {
+            System.out.println("ERROR fetching students: " + e.getMessage());
+        }
 
-       return students;
-   }
+        return students;
+    }
 
-
-   // For SleepType --Preference
-   public List<Student> getStudentsWithPreference(String sleepType,String roomType) {
-       String sql = "SELECT * FROM students WHERE sleepType = ? AND preferredRoomType = ? ";
-       return getStudentsWithFilter(sql, ps -> {ps.setString(1, sleepType);ps.setString(2,roomType);});
-   }
-   }
-
-
-
+    // For SleepType --Preference
+    public List<Student> getStudentsWithPreference(String sleepType, String roomType) {
+        String sql = "SELECT * FROM students WHERE sleepType = ? AND preferredRoomType = ? ";
+        return getStudentsWithFilter(sql, ps -> {
+            ps.setString(1, sleepType);
+            ps.setString(2, roomType);
+        });
+    }
+}
