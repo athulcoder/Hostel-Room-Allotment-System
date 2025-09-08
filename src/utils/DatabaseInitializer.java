@@ -24,6 +24,8 @@ public class DatabaseInitializer {
 
     }
 
+
+
     private static void createStudentTable() {
         String sql = """
             CREATE TABLE IF NOT EXISTS students (
