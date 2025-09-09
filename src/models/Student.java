@@ -1,6 +1,7 @@
 package models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Student {
 
@@ -20,8 +21,8 @@ public class Student {
     private String preferredRoomType;
     private String assignedRoom;
     private String sleepType;
-    private LocalDate dateOfAdmission;
-
+    private LocalDateTime dateOfAdmission;
+    private String hostelId;
     // default constructor
     public Student() {
 
@@ -43,8 +44,7 @@ public class Student {
         this.preferredRoomType = preferredRoomType;
         this.assignedRoom = assignedRoom;
         this.sleepType = sleepType;
-        this.dateOfAdmission = LocalDate.now();
-
+        this.dateOfAdmission = LocalDateTime.now();
     }
 
     // Getters
@@ -103,6 +103,10 @@ public class Student {
     public String getDateOfAdmission(){
 
         return dateOfAdmission.toString();}
+
+    public String getHostelId(){
+        return hostelId;
+    }
     // Setters
     public void setName(String name) {
         this.name = name;
@@ -153,4 +157,7 @@ public class Student {
         this.sleepType = sleepType;
     }
 
+    public void setHostelId(String hostelId){
+        this.hostelId = hostelId;
+    }
 }

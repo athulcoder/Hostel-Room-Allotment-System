@@ -7,21 +7,21 @@ public class Room {
     private int floorNumber;
     private int capacity;
     private int occupancy;
-
     private boolean isFull;
 
+    private String hostelId; // reference to Hosel Schema
     public Room() {
 
     }
 
-    public Room(String roomNumber, String roomType, int floorNumber, int capacity) {
+    public Room(String roomNumber, String roomType, int floorNumber, int capacity, String hostelId) {
         this.roomNumber = roomNumber;
         this.roomType = roomType;
         this.floorNumber = floorNumber;
         this.capacity = capacity;
-
         this.occupancy = 0;
         this.isFull = false;
+        this.hostelId = hostelId;
     }
 
     // Getters
@@ -50,6 +50,9 @@ public class Room {
         return isFull;
     }
 
+    public String getHostelId(){
+        return this.hostelId;
+    }
     //Setters
     public void setRoomNumber(String roomNumber){
         this.roomNumber = roomNumber;
@@ -76,6 +79,8 @@ public class Room {
         this.isFull = isFull;
     }
 
-
+    public void setHostelId(String hostelId){
+        this.hostelId = hostelId;
+    }
 
 }
