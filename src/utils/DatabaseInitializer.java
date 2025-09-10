@@ -75,7 +75,9 @@ public class DatabaseInitializer {
                 floorNumber INTEGER,
                 capacity INTEGER,
                 occupancy INTEGER,
-                isFull BOOLEAN
+                isFull BOOLEAN,
+                hostelId TEXT,
+                FOREIGN KEY (hostelId) REFERENCES hostels(hostelId)
                 )
                 """;
 
