@@ -1,6 +1,6 @@
 package models;
 
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 
 public class Student {
@@ -23,6 +23,7 @@ public class Student {
     private String sleepType;
     private LocalDateTime dateOfAdmission;
     private String hostelId;
+
     // default constructor
     public Student() {
 

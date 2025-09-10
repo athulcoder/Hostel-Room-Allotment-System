@@ -14,11 +14,10 @@ public class Admin {
     private String hostelId;
     //constructor
 
-    Admin(){
 
-    }
 
-    Admin(String username, String password, String name , String role, String phoneNumber,String hostelId){
+
+    public Admin(String username, String password, String name , String role, String phoneNumber,String hostelId){
         this.username = username;
         this.password = password;
         this.name = name;
@@ -27,6 +26,10 @@ public class Admin {
         this.lastLoginTime = LocalDateTime.now();
         this.isActive = false;
         this.hostelId = hostelId;
+    }
+
+    public Admin() {
+
     }
 
 
@@ -65,7 +68,18 @@ public class Admin {
     }
 
 
+
+
+
     //Setters
+
+
+
+
+
+
+
+
 
     public void setUsername(String username){
         this.username = username;
@@ -79,8 +93,7 @@ public class Admin {
     public void setRole(String role){
         this.role = role;
     }
-    public void setPhoneNumber(String phoneNumber){
-        this.phoneNumber = phoneNumber;
+    public void setPhoneNumber(String phoneNumber){this.phoneNumber = phoneNumber;
     }
     public void setIsActive(Boolean active){
         this.isActive = active;

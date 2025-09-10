@@ -1,9 +1,6 @@
 package utils;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class DatabaseInitializer {
 
@@ -17,11 +14,22 @@ public class DatabaseInitializer {
         createStudentTable();
         createRoomTable();
 
+
     }
 
-    public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(DB_URL);
 
+    //This function returns a connection from the database
+    // .Since Sqlite is our database to make references from
+    // one table we have to execute a sql statement to enable the foreign keys
+    public static Connection getConnection() throws SQLException {
+        Connection conn = DriverManager.getConnection(DB_URL);
+        try(Statement stmt = conn.createStatement()){
+            stmt.execute("PRAGMA foreign_keys = ON;");
+        }catch (SQLException e){
+            System.out.println("DB Connection error : "+e);
+        }
+
+        return conn;
     }
 
 
@@ -42,7 +50,9 @@ public class DatabaseInitializer {
                 preferredRoomType TEXT,
                 assignedRoom TEXT,
                 sleepType TEXT,
-                dateOfAdmission TEXT
+                dateOfAdmission TEXT,
+                hostelId TEXT,
+                FOREIGN KEY (hostelId) REFERENCES hostels(hostelId)
             );
         """;
 
@@ -76,6 +86,7 @@ public class DatabaseInitializer {
         } catch (SQLException e) {
             System.err.println("DB Room table Error : " + e.getMessage());
         }
+
 
 
 
