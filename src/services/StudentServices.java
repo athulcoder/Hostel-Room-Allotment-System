@@ -1,13 +1,10 @@
 package services;
 
-import dao.RoomDAO;
-import dao.StudentDAO;
 import models.Room;
 import models.Student;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static utils.RoomList.containsRoom;
 
