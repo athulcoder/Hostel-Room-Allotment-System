@@ -11,9 +11,10 @@ public class DatabaseInitializer {
 
         System.out.print(DB_URL);
 
+        createHostelTable();
+        createAdminTable();
         createStudentTable();
         createRoomTable();
-
 
     }
 
@@ -23,6 +24,7 @@ public class DatabaseInitializer {
     // one table we have to execute a sql statement to enable the foreign keys
     public static Connection getConnection() throws SQLException {
         Connection conn = DriverManager.getConnection(DB_URL);
+
         try(Statement stmt = conn.createStatement()){
             stmt.execute("PRAGMA foreign_keys = ON;");
         }catch (SQLException e){
@@ -31,7 +33,6 @@ public class DatabaseInitializer {
 
         return conn;
     }
-
 
 
     private static void createStudentTable() {
@@ -89,9 +90,57 @@ public class DatabaseInitializer {
             System.err.println("DB Room table Error : " + e.getMessage());
         }
 
-
-
-
     }
 
-}
+
+    private static  void createAdminTable(){
+            String sql = """
+                    CREATE TABLE IF NOT EXISTS admins(
+                    username TEXT,
+                    password TEXT,
+                    name TEXT,
+                    role TEXT,
+                    phoneNumber TEXT,
+                    lastLoginTime TEXT,
+                    isActive Boolean,
+                    hostelId TEXT,
+                    FOREIGN KEY (hostelId) REFERENCES hostels(hostelId)
+                    )
+                    """;
+
+            try(Connection conn = DriverManager.getConnection(DB_URL);Statement stmt = conn.createStatement()){
+                stmt.execute(sql);
+                System.out.println("Table initialized for Admin");
+            }catch (SQLException e) {
+               System.out.println("ADMIN TABLE ERROR :"+e);
+            }
+            }
+
+
+
+
+            private static void createHostelTable(){
+
+            String sql = """
+                    CREATE TABLE IF NOT EXISTS hostels(
+                    hostelName TEXT,
+                    hostelId TEXT,
+                    type TEXT,
+                    totalRoomCount INTEGER,
+                    totalFloorCount INTEGER,
+                    maxCapacity INTEGER
+                    )
+                    """;
+
+            try(Connection conn = DriverManager.getConnection(DB_URL); Statement statement = conn.createStatement();){
+
+                statement.execute(sql);
+                System.out.println("Table initialized for Hostel");
+            }catch (SQLException e ){
+                System.out.println("HOSTEL TABLE ERROR : "+ e);
+            }
+            }
+        }
+
+
+

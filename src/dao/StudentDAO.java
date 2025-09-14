@@ -1,144 +1,33 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import models.Student;
-import utils.DatabaseInitializer;
 
+//This class contains the methods that are need to be performed by the Student
 public class StudentDAO {
 
-    @FunctionalInterface
-    public interface SQLConsumer<T> {
 
-        void accept(T t) throws SQLException;
+    //addStudent
+    public void addStudent(Student student){
+
+        //first we have to check whether the student already exists
+
+        //sql query for adding the student to tha database
+
+
+
+
     }
 
-    //method to save a new student to db
-    public void saveStudent(Student student) {
+    //update student logic (takes the
+    public void updateStudent(Student s){
 
-        String sql = "INSERT INTO students (studentId, name, gender, age,department,academicYear, contactNumber, email, guardianName, guardianPhone, preferredRoomType, assignedRoom, sleepType, dateOfAdmission) VALUES (?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?)";
-        try (Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, student.getStudentId());
-            stmt.setString(2, student.getName());
-            stmt.setString(3, student.getGender());
-            stmt.setInt(4, student.getAge());
-            stmt.setString(5, student.getDepartment());
-            stmt.setString(6, student.getAcademicYear());
-            stmt.setString(7, student.getContactNumber());
-            stmt.setString(8, student.getEmail());
-            stmt.setString(9, student.getGuardianName());
-            stmt.setString(10, student.getGuardianPhone());
-            stmt.setString(11, student.getPreferredRoomType());
-            stmt.setString(12, student.getAssignedRoom());
-            stmt.setString(13, student.getSleepType());
-            stmt.setString(14, student.getDateOfAdmission());
-            stmt.executeUpdate();
-            System.out.println("Student saved to database.");
-
-        } catch (SQLException e) {
-            System.err.println(" DB Error: " + e.getMessage());
-        }
     }
 
-    //method to update student data
-    public boolean updateStudent(Student student) {
 
-        String sql = """
-                UPDATE students SET
-                age = ?,
-                department = ?,
-                academicYear = ?,
-                contactNumber = ?,
-                email = ?,
-                guardianName = ?,
-                guardianPhone = ?,
-                preferredRoomType = ?,
-                assignedRoom = ?,
-                sleepType = ?
-                WHERE studentId = ?;
-                """;
+    //logic to delete Student from db
+    public void deleteStudent(String studentId){}
 
-        try (Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, student.getAge());
-            stmt.setString(2, student.getDepartment());
-            stmt.setString(3, student.getAcademicYear());
-            stmt.setString(4, student.getContactNumber());
-            stmt.setString(5, student.getEmail());
-            stmt.setString(6, student.getGuardianName());
-            stmt.setString(7, student.getGuardianPhone());
-            stmt.setString(8, student.getPreferredRoomType());
-            stmt.setString(9, student.getPreferredRoomType());
-            stmt.setString(10, student.getSleepType());
-            stmt.setString(11, student.getStudentId());
 
-            int rowsAffected = stmt.executeUpdate();
 
-            return rowsAffected > 0;
-        } catch (SQLException e) {
-            System.out.println("Error DB : " + e.getMessage());
-            return false;
-        }
-    }
 
-    // method to getStudents by room number
-    public List<Student> getStudentsByRoom(String roomNumber) {
-        List<Student> students = new ArrayList<>();
-        String sql = """
-                SELECT * FROM students
-                WHERE assignedRoom = ?
-                """;
-        try (Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, roomNumber);
-            ResultSet res = stmt.executeQuery();
-            while (res.next()) {
-
-                Student student = new Student(res.getString("studentId"), res.getString("name"), res.getString("gender"), res.getInt("age"), res.getString("department"), res.getString("academicYear"), res.getString("contactNumber"), res.getString("email"), res.getString("guardianName"), res.getString("guardianPhone"), res.getString("preferredRoomType"), res.getString("assignedRoom"), res.getString("sleepType"));
-
-                students.add(student);
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Error DB : " + e.getMessage());
-
-        }
-
-        return students;
-    }
-
-    //FILTER for all
-    public List<Student> getStudentsWithFilter(String sql, SQLConsumer<PreparedStatement> binder) {
-
-        List<Student> students = new ArrayList<>();
-
-        try (Connection conn = DatabaseInitializer.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            binder.accept(ps);
-            ResultSet res = ps.executeQuery();
-
-            while (res.next()) {
-                Student student = new Student(res.getString("studentId"), res.getString("name"), res.getString("gender"), res.getInt("age"), res.getString("department"), res.getString("academicYear"), res.getString("contactNumber"), res.getString("email"), res.getString("guardianName"), res.getString("guardianPhone"), res.getString("preferredRoomType"), res.getString("assignedRoom"), res.getString("sleepType"));
-                students.add(student);
-            }
-
-        } catch (SQLException e) {
-            System.out.println("ERROR fetching students: " + e.getMessage());
-        }
-
-        return students;
-    }
-
-    // For SleepType --Preference
-    public List<Student> getStudentsWithPreference(String sleepType, String roomType) {
-        String sql = "SELECT * FROM students WHERE sleepType = ? AND preferredRoomType = ? ";
-        return getStudentsWithFilter(sql, ps -> {
-            ps.setString(1, sleepType);
-            ps.setString(2, roomType);
-        });
-    }
 }
