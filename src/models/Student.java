@@ -110,6 +110,10 @@ public class Student {
         return hostelId;
     }
     // Setters
+
+    public void setStudentId(String studentId){
+        this.studentId = studentId;
+    }
     public void setName(String name) {
         this.name = name;
 
@@ -161,5 +165,9 @@ public class Student {
 
     public void setHostelId(String hostelId){
         this.hostelId = hostelId;
+    }
+
+    public void setDateOfAdmission(LocalDateTime dateOfAdmission) {
+        this.dateOfAdmission = dateOfAdmission;
     }
 }

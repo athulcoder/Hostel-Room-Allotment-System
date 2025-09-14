@@ -4,6 +4,8 @@ import dao.StudentDAO;
 import models.Student;
 import utils.DatabaseInitializer;
 
+import java.util.ArrayList;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -32,10 +34,11 @@ public class Main {
         s.setHostelId("H001");
         //and then we are passing that to the doa function
         StudentDAO studentDAO = new StudentDAO();
-        if(studentDAO.deleteStudent("S134"))
-            System.out.println("Student deleted");
-        else
-            System.out.println("Not data found to update");
+        studentDAO.addStudent(s);
+        ArrayList<Student> students = studentDAO.getStudentByName("Athul Sabu");
+        for(Student student: students)
+            System.out.println(s.getName() +" "+s.getEmail());
+
 
     }
 

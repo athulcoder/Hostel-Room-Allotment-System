@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 //This class contains the methods that are need to be performed by the Student
 public class StudentDAO {
@@ -126,7 +128,41 @@ public class StudentDAO {
         return false;
     }
 
+    public ArrayList<Student> getStudentByName(String name){
+        String sql = "SELECT * FROM students WHERE name=?";
+        ArrayList<Student> students = new ArrayList<Student>();
+        try(Connection conn = DatabaseInitializer.getConnection(); PreparedStatement statement = conn.prepareStatement(sql);){
+            statement.setString(1,name);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()){
+                Student student = new Student();
+                student.setStudentId(rs.getString("studentId"));
+                student.setName(rs.getString("name"));
+                student.setGender(rs.getString("gender"));
+                student.setAge(rs.getInt("age"));
+                student.setDepartment(rs.getString("department"));
+                student.setAcademicYear(rs.getString("academicYear"));
+                student.setContactNumber(rs.getString("contactNumber"));
+                student.setEmail(rs.getString("email"));
+                student.setGuardianName(rs.getString("guardianName"));
+                student.setGuardianPhone(rs.getString("guardianPhone"));
+                student.setPreferredRoomType(rs.getString("preferredRoomType"));
+                student.setAssignedRoom(rs.getString("assignedRoom"));
+                student.setSleepType(rs.getString("sleepType"));
+                student.setDateOfAdmission(LocalDateTime.parse(rs.getString("dateOfAdmission")));
+                student.setHostelId(rs.getString("hostelId"));
+
+                students.add(student);
+
+            }
+            return students;
 
 
+        }catch (SQLException e){
+            System.out.println("Error while  fetching students by name: "+e);
+        }
+        return students;
+    }
 
 }
