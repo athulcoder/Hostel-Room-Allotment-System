@@ -64,7 +64,7 @@ public class StudentDAO {
     //update student logic (takes the
     public boolean updateStudent(Student student) {
         //check student already exists or not
-        String checkSql = "SELECT COUNT(*) FROM students WHERE studentId = ?";
+
         String updateSql = """
                 UPDATE students
                 SET name = ?,
@@ -81,15 +81,8 @@ public class StudentDAO {
                 WHERE studentId = ?;
                 """;
 
-        try (Connection conn = DatabaseInitializer.getConnection(); PreparedStatement checkStmt = conn.prepareStatement(checkSql); PreparedStatement updateStmt = conn.prepareStatement(updateSql);) {
-//            checkStmt.setString(1, student.getStudentId());
-//            ResultSet checkRes = checkStmt.executeQuery();
-//            checkRes.next();
-//            int count = checkRes.getInt(1);
-//            if (count == 0) {
-//                return false;
-//            }
-
+        try (Connection conn = DatabaseInitializer.getConnection();  PreparedStatement updateStmt = conn.prepareStatement(updateSql);) {
+//
             updateStmt.setString(1, student.getName());
             updateStmt.setInt(2, student.getAge());
             updateStmt.setString(3, student.getDepartment());
@@ -118,7 +111,20 @@ public class StudentDAO {
 
 
     //logic to delete Student from db
-    public void deleteStudent(String studentId){}
+    public boolean deleteStudent(String studentId){
+
+        String deleteSql = "DELETE FROM students WHERE studentId =?";
+
+        try(Connection conn = DatabaseInitializer.getConnection(); PreparedStatement statement = conn.prepareStatement(deleteSql);){
+            statement.setString(1,studentId);
+            int rowsAffected = statement.executeUpdate();
+            if(rowsAffected>0)
+                    return true;
+        }catch (SQLException e){
+            System.out.println("Error while deleting Student : "+e);
+        }
+        return false;
+    }
 
 
 

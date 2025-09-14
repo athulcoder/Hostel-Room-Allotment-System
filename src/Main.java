@@ -32,10 +32,9 @@ public class Main {
         s.setHostelId("H001");
         //and then we are passing that to the doa function
         StudentDAO studentDAO = new StudentDAO();
-        if(studentDAO.updateStudent(s))
-            System.out.println("Student was updated");
+        if(studentDAO.deleteStudent("S134"))
+            System.out.println("Student deleted");
         else
-
             System.out.println("Not data found to update");
 
     }
