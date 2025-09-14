@@ -13,17 +13,17 @@ public class Main {
 
         Student s = new Student(
                 "S134",                 // studentId
-                "Rahul Kiran",          // name
+                "Athul Sabu",          // name
                 "Male",                 // gender
-                20,                     // age
-                "Mechanical Engineering", // department
+                19,                     // age
+                "CSE", // department
                 "2nd Year",             // academicYear
                 "9876543210",           // contactNumber
-                "bony@example.com",     // email
-                "Kiran Mohan",             // guardianName
-                "9123456789",           // guardianPhone
+                "athul@example.com",     // email
+                "Sabu Varghese",             // guardianName
+                "9947811091",           // guardianPhone
                 "Four Sharing",       // preferredRoomType
-                "B340",             // assignedRoom
+                "D527",             // assignedRoom
                 "Early Sleeper"         // sleepType
         );
 
@@ -32,10 +32,12 @@ public class Main {
         s.setHostelId("H001");
         //and then we are passing that to the doa function
         StudentDAO studentDAO = new StudentDAO();
-        if(studentDAO.addStudent(s))
-            System.out.println("Student successfully added");
+        if(studentDAO.updateStudent(s))
+            System.out.println("Student was updated");
         else
-            System.out.println("Student already exists");
+
+            System.out.println("Not data found to update");
+
     }
 
 }

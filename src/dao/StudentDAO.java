@@ -23,9 +23,13 @@ public class StudentDAO {
             ResultSet checkRes = checkStmt.executeQuery();
             checkRes.next();
             int count = checkRes.getInt(1);
+
+            //if the student Already Exists then return false
             if(count>0){
                 return false;
             }
+
+            //create the statement since student is not available with the given data
             insertStmt.setString(1,student.getStudentId());
             insertStmt.setString(2,student.getName());
             insertStmt.setString(3,student.getGender());
@@ -51,10 +55,6 @@ public class StudentDAO {
         }catch (SQLException e){
             System.out.println("ERROR WHILE ADDING STUDENT : "+e);
         }
-        //first we have to check whether the student already exists
-
-
-        //sql query for adding the student to tha database
 
 
 
@@ -62,7 +62,57 @@ public class StudentDAO {
     }
 
     //update student logic (takes the
-    public void updateStudent(Student s){
+    public boolean updateStudent(Student student) {
+        //check student already exists or not
+        String checkSql = "SELECT COUNT(*) FROM students WHERE studentId = ?";
+        String updateSql = """
+                UPDATE students
+                SET name = ?,
+                    age = ?,
+                    department = ?,
+                    academicYear =?,
+                    contactNumber =?,
+                    email =?,
+                    guardianName =?,
+                    guardianPhone =?,
+                    preferredRoomType =?,
+                    assignedRoom = ?,
+                    sleepType = ?
+                WHERE studentId = ?;
+                """;
+
+        try (Connection conn = DatabaseInitializer.getConnection(); PreparedStatement checkStmt = conn.prepareStatement(checkSql); PreparedStatement updateStmt = conn.prepareStatement(updateSql);) {
+//            checkStmt.setString(1, student.getStudentId());
+//            ResultSet checkRes = checkStmt.executeQuery();
+//            checkRes.next();
+//            int count = checkRes.getInt(1);
+//            if (count == 0) {
+//                return false;
+//            }
+
+            updateStmt.setString(1, student.getName());
+            updateStmt.setInt(2, student.getAge());
+            updateStmt.setString(3, student.getDepartment());
+            updateStmt.setString(4, student.getAcademicYear());
+            updateStmt.setString(5, student.getContactNumber());
+            updateStmt.setString(6, student.getEmail());
+            updateStmt.setString(7, student.getGuardianName());
+            updateStmt.setString(8, student.getGuardianPhone());
+            updateStmt.setString(9, student.getPreferredRoomType());
+            updateStmt.setString(10, student.getAssignedRoom());
+            updateStmt.setString(11, student.getSleepType());
+            updateStmt.setString(12, student.getStudentId());
+
+            int rowsInserted = updateStmt.executeUpdate();
+
+            if( rowsInserted > 0)
+                return true ;
+
+        } catch (SQLException e) {
+            System.out.println("ERROR while updating student : " + e);
+        }
+
+        return false;
 
     }
 
