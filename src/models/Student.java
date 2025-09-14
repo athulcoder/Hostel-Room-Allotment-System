@@ -101,10 +101,11 @@ public class Student {
 
         return sleepType;
     }
-    public String getDateOfAdmission(){
+    public String getDateOfAdmission() {
 
-        return dateOfAdmission.toString();}
-
+//        return dateOfAdmission.getDayOfMonth() +" " + dateOfAdmission.getMonth() + " "+dateOfAdmission.getYear() +"  "+dateOfAdmission.getHour() +":"+dateOfAdmission.getMinute() +":"+dateOfAdmission.getSecond();
+        return dateOfAdmission.toString();
+    }
     public String getHostelId(){
         return hostelId;
     }

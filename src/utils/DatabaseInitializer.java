@@ -123,8 +123,8 @@ public class DatabaseInitializer {
 
             String sql = """
                     CREATE TABLE IF NOT EXISTS hostels(
+                    hostelId TEXT  PRIMARY KEY,
                     hostelName TEXT,
-                    hostelId TEXT,
                     type TEXT,
                     totalRoomCount INTEGER,
                     totalFloorCount INTEGER,
