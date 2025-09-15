@@ -15,16 +15,11 @@ public class Main {
 
         StudentDAO studentDAO = new StudentDAO();
 
-        System.out.println(studentDAO.getStudentByStudentId("S134").getName());
-        System.out.println(studentDAO.getStudentByStudentId("S134").getStudentId());
-        System.out.println(studentDAO.getStudentByStudentId("S134").getDepartment());
-        System.out.println(studentDAO.getStudentByStudentId("S134").getName());
-        System.out.println(studentDAO.getStudentByStudentId("S134").getName());
-        System.out.println(studentDAO.getStudentByStudentId("S134").getName());
-        System.out.println(studentDAO.getStudentByStudentId("S134").getName());
-        System.out.println(studentDAO.getStudentByStudentId("S134").getName());
-        System.out.println(studentDAO.getStudentByStudentId("S134").getName());
-        System.out.println(studentDAO.getStudentByStudentId("S134").getName());
+        ArrayList<Student> students = studentDAO.getStudentByRoomNumber("D527");
+
+        for(Student s : students)
+            System.out.println(s.getName()+" "+ s.getEmail());
+
     }
 
 }

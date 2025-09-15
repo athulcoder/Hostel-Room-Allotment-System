@@ -245,7 +245,7 @@ public class StudentDAO {
     //function to getStudentByRoomNumber
 
     public ArrayList<Student> getStudentByRoomNumber(String roomNumber){
-        String sql = "SELECT * FROM students WHERE roomNumber= ?";
+        String sql = "SELECT * FROM students WHERE assignedRoom= ?";
         ArrayList<Student> students = new ArrayList<Student>();
 
         try(Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)){
@@ -282,5 +282,6 @@ public class StudentDAO {
 
         return  null;
     }
+
 
 }
