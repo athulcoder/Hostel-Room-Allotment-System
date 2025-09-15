@@ -166,6 +166,8 @@ public class StudentDAO {
         return students;
     }
 
+
+    //Function to fetch all students of a particular hostel
     public ArrayList<Student> getAllStudents(String hostelId){
         String sql = "SELECT * FROM students WHERE hostelId = ?";
         ArrayList<Student> students = new ArrayList<Student>();
@@ -202,6 +204,42 @@ public class StudentDAO {
     }
 
 
+    //Fetch a student based on Admission No
+
+    public Student getStudentByStudentId(String studentId) {
+        String sql = "SELECT * FROM students WHERE studentId = ?";
+        Student student = new Student();
+        try (Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, studentId);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                student.setStudentId(rs.getString("studentId"));
+                student.setName(rs.getString("name"));
+                student.setGender(rs.getString("gender"));
+                student.setAge(rs.getInt("age"));
+                student.setDepartment(rs.getString("department"));
+                student.setAcademicYear(rs.getString("academicYear"));
+                student.setContactNumber(rs.getString("contactNumber"));
+                student.setEmail(rs.getString("email"));
+                student.setGuardianName(rs.getString("guardianName"));
+                student.setGuardianPhone(rs.getString("guardianPhone"));
+                student.setPreferredRoomType(rs.getString("preferredRoomType"));
+                student.setAssignedRoom(rs.getString("assignedRoom"));
+                student.setSleepType(rs.getString("sleepType"));
+                student.setDateOfAdmission(LocalDateTime.parse(rs.getString("dateOfAdmission")));
+                student.setHostelId(rs.getString("hostelId"));
+
+                return student;
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error while fetching student by studentId : " + e);
+        }
+
+
+        return null;
+    }
 
 
 }
