@@ -3,6 +3,7 @@ package dao;
 import models.Student;
 import utils.DatabaseInitializer;
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -164,5 +165,43 @@ public class StudentDAO {
         }
         return students;
     }
+
+    public ArrayList<Student> getAllStudents(String hostelId){
+        String sql = "SELECT * FROM students WHERE hostelId = ?";
+        ArrayList<Student> students = new ArrayList<Student>();
+        try(Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setString(1,hostelId);
+
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+
+                Student student = new Student();
+                student.setStudentId(rs.getString("studentId"));
+                student.setName(rs.getString("name"));
+                student.setGender(rs.getString("gender"));
+                student.setAge(rs.getInt("age"));
+                student.setDepartment(rs.getString("department"));
+                student.setAcademicYear(rs.getString("academicYear"));
+                student.setContactNumber(rs.getString("contactNumber"));
+                student.setEmail(rs.getString("email"));
+                student.setGuardianName(rs.getString("guardianName"));
+                student.setGuardianPhone(rs.getString("guardianPhone"));
+                student.setPreferredRoomType(rs.getString("preferredRoomType"));
+                student.setAssignedRoom(rs.getString("assignedRoom"));
+                student.setSleepType(rs.getString("sleepType"));
+                student.setDateOfAdmission(LocalDateTime.parse(rs.getString("dateOfAdmission")));
+                student.setHostelId(rs.getString("hostelId"));
+
+                students.add(student);
+            }
+        }catch (SQLException e ){
+            System.out.println("Error while fetching all students details : "+e);
+        }
+
+        return students;
+    }
+
+
+
 
 }
