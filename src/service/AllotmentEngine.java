@@ -12,7 +12,7 @@ public class AllotmentEngine {
 
     private void getStudentsByAcademicYear(String academicYear){
         ArrayList<Student> students = new ArrayList<Student>();
-
+            //first you have to fetch students fom db then do operations
 
     }
 }
