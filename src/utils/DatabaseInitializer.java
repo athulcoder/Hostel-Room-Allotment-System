@@ -140,6 +140,8 @@ public class DatabaseInitializer {
                 System.out.println("HOSTEL TABLE ERROR : "+ e);
             }
             }
+
+
         }
 
 

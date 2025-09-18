@@ -8,7 +8,6 @@ public class Room {
     private int capacity;
     private int occupancy;
     private boolean isFull;
-
     private String hostelId; // reference to Hosel Schema
     public Room() {
 

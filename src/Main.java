@@ -1,6 +1,8 @@
 
 
+import dao.RoomDAO;
 import dao.StudentDAO;
+import models.Room;
 import models.Student;
 import utils.DatabaseInitializer;
 
@@ -13,12 +15,9 @@ public class Main {
 
         DatabaseInitializer.initializeDatabase();
 
-        StudentDAO studentDAO = new StudentDAO();
-
-        ArrayList<Student> students = studentDAO.getStudentByRoomNumber("D527");
-
-        for(Student s : students)
-            System.out.println(s.getName()+" "+ s.getEmail());
+        RoomDAO roomDAO = new RoomDAO();
+        Room room = new Room("527","2-bed",5,2,"H001");
+        roomDAO.createRoom(room);
 
     }
 
