@@ -16,16 +16,17 @@ public class RoomDAO {
 
     //Add a new Room
     public boolean createRoom(Room room) {
-        String insertSql = "INSERT INTO rooms (roomId, roomNumber, capacity, occupied, roomType, hostelId) VALUES (?, ?, ?, ?, ?, ?)";
+        String insertSql = "INSERT INTO rooms ( roomNumber, capacity, occupancy,floorNumber, roomType, hostelId ,isFull) VALUES (?, ?, ?, ?, ?, ?,?)";
         try (Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(insertSql)) {
 
-            stmt.setString(1, room.getRoomId());
-            stmt.setInt(2, room.getRoomNumber());
-            stmt.setInt(3, room.getCapacity());
-            stmt.setInt(4, room.getOccupied());
-            stmt.setString(5, room.getRoomType());
-            stmt.setString(6, room.getHostelId());
 
+            stmt.setString(1, room.getRoomNumber());
+            stmt.setInt(2, room.getCapacity());
+            stmt.setInt(3, room.getOccupancy());
+            stmt.setInt(4, room.getFloorNumber());
+            stmt.setString(5,room.getRoomType());
+            stmt.setString(6, room.getHostelId());
+            stmt.setBoolean(7,room.getRoomFull());
             int rowsInserted = stmt.executeUpdate();
             if (rowsInserted > 0)
                 return true;
@@ -37,21 +38,22 @@ public class RoomDAO {
     }
 
     //Fetch details of a particular room by roomNumber
-    public Room getRoomDetails(int roomNumber) {
+    public Room getRoomDetails(String roomNumber) {
         String sql = "SELECT * FROM rooms WHERE roomNumber = ?";
         Room room = new Room();
 
         try (Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, roomNumber);
+            stmt.setString(1, roomNumber);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                room.setRoomId(rs.getString("roomId"));
+
                 room.setRoomNumber(rs.getString("roomNumber"));
                 room.setCapacity(rs.getInt("capacity"));
                 room.setOccupancy(rs.getInt("occupancy"));
                 room.setRoomType(rs.getString("roomType"));
                 room.setHostelId(rs.getString("hostelId"));
+                room.setFloorNumber(rs.getInt("floorNumber"));
                 room.setRoomFull(rs.getBoolean("isFull"));
                 return room;
             }
@@ -67,18 +69,20 @@ public class RoomDAO {
         String updateSql = """
                 UPDATE rooms
                 SET capacity = ?,
-                    occupied = ?,
+                    occupancy = ?,
                     roomType = ?,
-                    hostelId = ?
+                    floorNumber = ?,
+                    isFull =?
                 WHERE roomNumber = ?
                 """;
 
         try (Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(updateSql)) {
             stmt.setInt(1, room.getCapacity());
-            stmt.setInt(2, room.getOccupied());
+            stmt.setInt(2, room.getOccupancy());
             stmt.setString(3, room.getRoomType());
-            stmt.setString(4, room.getHostelId());
-            stmt.setInt(5, room.getRoomNumber());
+            stmt.setInt(4, room.getFloorNumber());
+            stmt.setBoolean(5, room.getRoomFull());
+            stmt.setString(6, room.getRoomNumber());
 
             int rowsUpdated = stmt.executeUpdate();
             if (rowsUpdated > 0)
@@ -115,7 +119,7 @@ public class RoomDAO {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Room room = new Room();
-                room.setRoomId(rs.getString("roomId"));
+
                 room.setRoomNumber(rs.getString("roomNumber"));
                 room.setCapacity(rs.getInt("capacity"));
                 room.setOccupancy(rs.getInt("occupancy"));
@@ -132,14 +136,14 @@ public class RoomDAO {
 
     //Fetch all available rooms (rooms where occupied < capacity)
     public List<Room> getAvailableRooms() {
-        String sql = "SELECT * FROM rooms WHERE occupied < capacity";
+        String sql = "SELECT * FROM rooms WHERE isFull = 0"; // isFull = false
         List<Room> rooms = new ArrayList<>();
 
         try (Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Room room = new Room();
-                room.setRoomId(rs.getString("roomId"));
+
                 room.setRoomNumber(rs.getString("roomNumber"));
                 room.setCapacity(rs.getInt("capacity"));
                 room.setOccupancy(rs.getInt("occupancy"));

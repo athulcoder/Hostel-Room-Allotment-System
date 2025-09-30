@@ -24,7 +24,7 @@ public class Room {
     }
 
     // Getters
-    public int getRoomNumber() {
+    public String getRoomNumber() {
         return roomNumber;
     }
 
@@ -82,14 +82,7 @@ public class Room {
         this.hostelId = hostelId;
     }
 
-    public String getRoomId() {
-        return "";
-    }
 
-    public int getOccupied() {
-        return 0;
-    }
 
-    public void setRoomId(String roomId) {
-    }
+
 }
