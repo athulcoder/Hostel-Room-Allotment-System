@@ -2,7 +2,7 @@ package dao;
 
 import models.Hostel;
 import models.Room;
-import util.DatabaseInitializer;
+import utils.DatabaseInitializer;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,10 +11,10 @@ import java.util.List;
 public class HostelDAO
 {
     // 🔹 Insert a new hostel into the database
-    public void addHostel(Hostel hostel) 
+    public void addHostel(Hostel hostel)
     {
         String query = "INSERT INTO hostels (hostelId, hostelName, type, totalRoomCount, totalFloorCount, maxCapacity) " +
-                       "VALUES (?, ?, ?, ?, ?, ?)";
+                "VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseInitializer.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query))
@@ -32,7 +32,7 @@ public class HostelDAO
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            System.out.println("Error  while adding Hostel : "+e.getMessage());
         }
     }
 
@@ -44,12 +44,12 @@ public class HostelDAO
 
         try (Connection conn = DatabaseInitializer.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query))
-         {
+        {
 
             stmt.setString(1, hostelId);
             ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) 
+            if (rs.next())
             {
                 hostel = new Hostel(
                         rs.getString("hostelName"),
@@ -64,7 +64,7 @@ public class HostelDAO
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            System.out.println("Error  while fetching  Hostel by Id : "+e.getMessage());
         }
         return hostel;
     }
@@ -81,7 +81,7 @@ public class HostelDAO
         {
 
             while (rs.next())
-                {
+            {
                 Hostel hostel = new Hostel(
                         rs.getString("hostelName"),
                         rs.getString("type"),
@@ -91,12 +91,12 @@ public class HostelDAO
                         rs.getString("hostelId")
                 );
                 hostels.add(hostel);
-                }
+            }
 
         }
-        catch (SQLException e) 
+        catch (SQLException e)
         {
-            e.printStackTrace();
+            System.out.println("Error my getting all hostels "+e.getMessage());
         }
         return hostels;
     }
@@ -105,10 +105,10 @@ public class HostelDAO
     public void updateHostel(Hostel hostel)
     {
         String query = "UPDATE hostels SET hostelName = ?, type = ?, totalRoomCount = ?, totalFloorCount = ?, maxCapacity = ? " +
-                       "WHERE hostelId = ?";
+                "WHERE hostelId = ?";
 
         try (Connection conn = DatabaseInitializer.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) 
+             PreparedStatement stmt = conn.prepareStatement(query))
         {
 
             stmt.setString(1, hostel.getHostelName());
@@ -123,18 +123,18 @@ public class HostelDAO
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            System.out.println("Error  while updating Hostel : "+e.getMessage());
         }
     }
 
     // 🔹 Delete hostel by ID
-    public void deleteHostel(String hostelId) 
+    public void deleteHostel(String hostelId)
     {
         String query = "DELETE FROM hostels WHERE hostelId = ?";
 
         try (Connection conn = DatabaseInitializer.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query))
-       {
+        {
 
             stmt.setString(1, hostelId);
             stmt.executeUpdate();
@@ -142,18 +142,18 @@ public class HostelDAO
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            System.out.println("Error  while deleting Hostel : "+e.getMessage());
         }
     }
 
     // 🔹 Get all rooms inside a hostel
-    public List<Room> getRoomsInHostel(String hostelId) 
-        {
+    public List<Room> getRoomsInHostel(String hostelId)
+    {
         List<Room> rooms = new ArrayList<>();
         String query = "SELECT * FROM rooms WHERE hostelId = ?";
 
         try (Connection conn = DatabaseInitializer.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) 
+             PreparedStatement stmt = conn.prepareStatement(query))
         {
 
             stmt.setString(1, hostelId);
@@ -175,7 +175,7 @@ public class HostelDAO
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            System.out.println("Error  while getting rooms of  Hostel : "+e.getMessage());
         }
         return rooms;
     }

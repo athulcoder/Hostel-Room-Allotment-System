@@ -10,10 +10,10 @@ public class Hostel {
 
     //Constructor
 
-    Hostel(){
+   public Hostel(){
 
     }
-    Hostel(String hostelName, String type, int totalRoomCount, int totalFloorCount, int maxCapacity, String hostelId){
+   public Hostel(String hostelName, String type, int totalRoomCount, int totalFloorCount, int maxCapacity, String hostelId){
         this.hostelName = hostelName;
         this.type = type;
         this.totalFloorCount = totalFloorCount;
