@@ -47,11 +47,12 @@ public class RoomDAO {
 
             if (rs.next()) {
                 room.setRoomId(rs.getString("roomId"));
-                room.setRoomNumber(rs.getInt("roomNumber"));
+                room.setRoomNumber(rs.getString("roomNumber"));
                 room.setCapacity(rs.getInt("capacity"));
-                room.setOccupied(rs.getInt("occupied"));
+                room.setOccupancy(rs.getInt("occupancy"));
                 room.setRoomType(rs.getString("roomType"));
                 room.setHostelId(rs.getString("hostelId"));
+                room.setRoomFull(rs.getBoolean("isFull"));
                 return room;
             }
 
@@ -115,11 +116,12 @@ public class RoomDAO {
             while (rs.next()) {
                 Room room = new Room();
                 room.setRoomId(rs.getString("roomId"));
-                room.setRoomNumber(rs.getInt("roomNumber"));
+                room.setRoomNumber(rs.getString("roomNumber"));
                 room.setCapacity(rs.getInt("capacity"));
-                room.setOccupied(rs.getInt("occupied"));
+                room.setOccupancy(rs.getInt("occupancy"));
                 room.setRoomType(rs.getString("roomType"));
                 room.setHostelId(rs.getString("hostelId"));
+                room.setRoomFull(rs.getBoolean("isFull"));
                 rooms.add(room);
             }
         } catch (SQLException e) {
@@ -138,11 +140,12 @@ public class RoomDAO {
             while (rs.next()) {
                 Room room = new Room();
                 room.setRoomId(rs.getString("roomId"));
-                room.setRoomNumber(rs.getInt("roomNumber"));
+                room.setRoomNumber(rs.getString("roomNumber"));
                 room.setCapacity(rs.getInt("capacity"));
-                room.setOccupied(rs.getInt("occupied"));
+                room.setOccupancy(rs.getInt("occupancy"));
                 room.setRoomType(rs.getString("roomType"));
                 room.setHostelId(rs.getString("hostelId"));
+                room.setRoomFull(rs.getBoolean("isFull"));
                 rooms.add(room);
             }
         } catch (SQLException e) {
