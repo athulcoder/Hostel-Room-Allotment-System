@@ -12,7 +12,7 @@ public class LoginScreen extends JPanel {
         setPreferredSize(new Dimension(400, 300));
 
         // custom background (gradient)
-        setLayout(  new GridBagLayout()) ;
+        setLayout(      new GridBagLayout()) ;
         setOpaque(false);
 
         GridBagConstraints gbc = new GridBagConstraints();
