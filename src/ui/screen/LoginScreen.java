@@ -77,7 +77,7 @@ public class LoginScreen extends JFrame {
         System.out.println(username.getText());
         System.out.println(password.getPassword());
         this.dispose();
-        new
+        new Dashboard(username.getText());
     }
 
 
