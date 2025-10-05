@@ -9,7 +9,7 @@ public class LoginScreen extends JFrame {
     JPasswordField password;
     public LoginScreen() {
         this.setTitle("Hostel Room Allotment System");
-        this.setSize(500, 300);
+        this.setExtendedState(Frame.MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null); // center window on screen
 
@@ -68,7 +68,7 @@ public class LoginScreen extends JFrame {
         panel.add(loginButton);
         loginButton.addActionListener(e->login());
         this.add(panel);
-        this.setResizable(false);
+//        this.setResizable(false);
         this.setVisible(true);
     }
 

@@ -7,7 +7,7 @@ public class Dashboard extends JFrame {
 
     Dashboard(String username){
 
-        this.setSize(600,600);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         this.setLayout(new FlowLayout());
         this.add(new JLabel("Welcome "+username));
