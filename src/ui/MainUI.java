@@ -8,7 +8,7 @@ public class MainUI extends JFrame{
 
     CardLayout cardLayout ;
     JPanel mainPanel ;
-    MainUI(){
+    public MainUI(){
 
         setTitle("Hostel Room Allotment System");
         setSize(1000,750);

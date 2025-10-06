@@ -25,7 +25,7 @@ public class Main {
 //                System.out.println(re.getRoomNumber());
 //        }
 
-        new LoginScreen();
+        new MainUI();
 
     }
 
