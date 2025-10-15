@@ -7,8 +7,8 @@ import java.awt.event.*;
 
 // Custom Rounded TextField
 class RoundedTextField extends JTextField {
-    private int arcWidth = 20;
-    private int arcHeight = 20;
+    private final int arcWidth = 20;
+    private final int arcHeight = 20;
 
     public RoundedTextField(int columns) {
         super(columns);
@@ -37,8 +37,8 @@ class RoundedTextField extends JTextField {
 
 // Custom Rounded PasswordField
 class RoundedPasswordField extends JPasswordField {
-    private int arcWidth = 20;
-    private int arcHeight = 20;
+    private final int arcWidth = 20;
+    private final int arcHeight = 20;
 
     public RoundedPasswordField(int columns) {
         super(columns);
@@ -144,15 +144,35 @@ public class LoginScreen extends JPanel implements ActionListener {
 
         loginPanel.add(title);
         loginPanel.add(Box.createVerticalStrut(30));
-        loginPanel.add(new JLabel("Username:"));
-        loginPanel.add(usernameField);
-        loginPanel.add(Box.createVerticalStrut(20));
-        loginPanel.add(new JLabel("Password:"));
-        loginPanel.add(passwordField);
+
+        //username and password label
+        // Create username row
+        JPanel usernamePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        usernamePanel.setOpaque(false); // transparent background (keeps gradient visible)
+        JLabel usernameLabel = new JLabel("Username:");
+        usernameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        usernamePanel.add(usernameLabel);
+        usernamePanel.add(usernameField);
+
+// Create password row
+        JPanel passwordPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        passwordPanel.setOpaque(false);
+        JLabel passwordLabel = new JLabel("Password:");
+        passwordLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        passwordPanel.add(passwordLabel);
+        passwordPanel.add(passwordField);
+
+// Add all to main loginPanel (vertical)
+        loginPanel.add(title);
+        loginPanel.add(Box.createVerticalStrut(30));
+        loginPanel.add(usernamePanel);
+        loginPanel.add(Box.createVerticalStrut(15));
+        loginPanel.add(passwordPanel);
         loginPanel.add(Box.createVerticalStrut(30));
         loginPanel.add(loginButton);
         loginPanel.add(Box.createVerticalStrut(20));
         loginPanel.add(messageLabel);
+
 
         backgroundPanel.add(loginPanel);
     }
