@@ -51,6 +51,7 @@ public class HostelDAO
 
             if (rs.next())
             {
+
                 hostel = new Hostel(
                         rs.getString("hostelName"),
                         rs.getString("type"),
