@@ -9,6 +9,7 @@ public class MainUI extends JFrame {
 
     private CardLayout cardLayout;
     private JPanel mainPanel;
+    private Dashboard dashboard;
 
     public MainUI() {
         setTitle("Hostel Room Allotment System");
@@ -23,9 +24,9 @@ public class MainUI extends JFrame {
 
         // Create and add screens
         LoginScreen loginScreen = new LoginScreen(this); // Pass MainUI reference for screen switching later
-        Dashboard dashboard = new Dashboard();
+
         mainPanel.add(loginScreen, "login-screen");
-        mainPanel.add(dashboard,"dashboard");
+
         // Add the main panel to frame
         add(mainPanel);
 
@@ -40,5 +41,16 @@ public class MainUI extends JFrame {
         cardLayout.show(mainPanel, screenName);
     }
 
+    public void showDashboard(){
+
+        if(dashboard==null){
+            dashboard = new Dashboard();
+
+            mainPanel.add("dashboard",dashboard);
+            showScreen("dashboard");
+
+
+        }
+    }
 
 }

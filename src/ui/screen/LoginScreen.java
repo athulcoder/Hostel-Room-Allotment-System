@@ -194,7 +194,7 @@ public class LoginScreen extends JPanel implements ActionListener {
                 if (admin !=null) {
 
                     SessionManager.login(admin);
-                    mainUI.showScreen("dashboard");
+                    mainUI.showDashboard();
                 } else {
                     messageLabel.setForeground(Color.RED);
                     messageLabel.setText("Invalid Username or Password!");
