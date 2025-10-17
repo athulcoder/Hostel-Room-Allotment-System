@@ -16,13 +16,13 @@ public class Main {
     public static void main(String[] args) {
 
 
-//        new MainUI();
+        new MainUI();
 
-        AdminDAO a = new AdminDAO();
-        Admin ad = a.login("admin234", "123456");
-        System.out.println(ad.getUsername() +
-                ad.getLastLoginTime() +
-                ad.getName());
+//        AdminDAO a = new AdminDAO();
+//        Admin ad = a.login("admin234", "123456");
+//        System.out.println(ad.getUsername() +
+//                ad.getLastLoginTime() +
+//                ad.getName());
 
 //    System.out.println(a.logout("admin234"));
     }

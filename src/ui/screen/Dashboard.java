@@ -1,5 +1,8 @@
 package ui.screen;
 
+import models.Admin;
+import utils.SessionManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -52,7 +55,17 @@ public class Dashboard extends JPanel {
         contentPanel.setBackground(Color.WHITE);
 
         // Add all pages to the card layout
-        contentPanel.add(createPage("Dashboard Overview", "Welcome to the admin dashboard!"), "dashboard");
+        //sample text
+        String welcome ="";
+        try{
+           Admin admin = SessionManager.getCurrentAdmin();
+           welcome =admin.getName();
+           System.out.println(welcome);
+        }catch (Exception e){
+            System.out.println("ERROR " + e.getMessage());
+        }
+
+        contentPanel.add(createPage("Dashboard Overview", welcome), "dashboard");
         contentPanel.add(createPage("Student Management", "Add, edit or remove students."), "students");
         contentPanel.add(createPage("Rooms Overview", "Manage available rooms."), "rooms");
         contentPanel.add(createPage("Room Allotment", "Allocate rooms efficiently."), "allotment");

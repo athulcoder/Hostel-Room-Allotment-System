@@ -2,6 +2,7 @@ package dao;
 
 import models.Admin;
 import utils.DatabaseInitializer;
+import utils.SessionManager;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -43,7 +44,7 @@ public class AdminDAO
                 updateStmt.setString(3,admin.getUsername());
                 int c = updateStmt.executeUpdate();
                 admin.setIsActive(true);
-                System.out.println(admin.getLastLoginTime().getHour());
+                SessionManager.login(admin);
             }
 
 

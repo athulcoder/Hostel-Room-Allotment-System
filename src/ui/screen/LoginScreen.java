@@ -3,6 +3,8 @@ package ui.screen;
 import dao.AdminDAO;
 import models.Admin;
 import ui.MainUI;
+import utils.SessionManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -181,18 +183,24 @@ public class LoginScreen extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String username = usernameField.getText();
-        String password = new String(passwordField.getPassword());
+        if(e.getSource()==loginButton){
+            String username = usernameField.getText();
+            String password = new String(passwordField.getPassword());
 
-        AdminDAO adminDAO = new AdminDAO();
-        Admin admin = adminDAO.login(username,password);
+            if(!username.isEmpty() && !password.isEmpty()){
+                AdminDAO adminDAO = new AdminDAO();
+                Admin admin = adminDAO.login(username,password);
 
-        if (admin !=null) {
+                if (admin !=null) {
 
-            mainUI.showScreen("dashboard");
-        } else {
-            messageLabel.setForeground(Color.RED);
-            messageLabel.setText("Invalid Username or Password!");
+                    SessionManager.login(admin);
+                    mainUI.showScreen("dashboard");
+                } else {
+                    messageLabel.setForeground(Color.RED);
+                    messageLabel.setText("Invalid Username or Password!");
+                }
+            }
+
         }
     }
 }
