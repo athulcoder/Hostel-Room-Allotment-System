@@ -24,7 +24,7 @@ public class Main {
                 ad.getLastLoginTime() +
                 ad.getName());
 
-    System.out.println(a.logout("admin234"));
+//    System.out.println(a.logout("admin234"));
     }
 
 
