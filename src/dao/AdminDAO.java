@@ -42,7 +42,8 @@ public class AdminDAO
                 updateStmt.setBoolean(2,true);
                 updateStmt.setString(3,admin.getUsername());
                 int c = updateStmt.executeUpdate();
-                System.out.println(admin.getLastLoginTime().toString());
+                admin.setIsActive(true);
+                System.out.println(admin.getLastLoginTime().getHour());
             }
 
 
@@ -52,8 +53,6 @@ public class AdminDAO
         {
             System.out.println("Error while logging in Admin : " + e.getMessage());
         }
-        if (admin!=null)
-            admin.setIsActive(true);
 
         return admin;
     }

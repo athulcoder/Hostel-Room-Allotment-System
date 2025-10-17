@@ -1,5 +1,7 @@
 package ui.screen;
 
+import dao.AdminDAO;
+import models.Admin;
 import ui.MainUI;
 import javax.swing.*;
 import java.awt.*;
@@ -182,12 +184,12 @@ public class LoginScreen extends JPanel implements ActionListener {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
 
-        if (username.equals("admin") && password.equals("1234")) {
-            messageLabel.setForeground(new Color(0, 150, 0));
-            messageLabel.setText("Login Successful!");
+        AdminDAO adminDAO = new AdminDAO();
+        Admin admin = adminDAO.login(username,password);
+
+        if (admin !=null) {
+
             mainUI.showScreen("dashboard");
-            // Example: switch to another screen in MainUI later
-            // mainUI.showScreen("dashboard");
         } else {
             messageLabel.setForeground(Color.RED);
             messageLabel.setText("Invalid Username or Password!");
