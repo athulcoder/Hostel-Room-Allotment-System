@@ -1,3 +1,5 @@
+package utils;
+
 import models.Admin;
 
 public class SessionManager {
