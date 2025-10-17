@@ -4,6 +4,7 @@ import models.Admin;
 import utils.DatabaseInitializer;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 
 public class AdminDAO
 {
@@ -11,14 +12,19 @@ public class AdminDAO
     public Admin login(String username, String password)
     {
         String query = "SELECT * FROM admins WHERE username = ? AND password = ?";
+        String sql = "UPDATE admins SET lastLoginTime = ?, isActive = ? WHERE username =?  ";
+
         Admin admin = null;
 
         try (Connection conn = DatabaseInitializer.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query))
+             PreparedStatement stmt = conn.prepareStatement(query); PreparedStatement updateStmt = conn.prepareStatement(sql))
         {
             stmt.setString(1, username);
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
+
+
+
 
             if (rs.next())
             {
@@ -30,12 +36,24 @@ public class AdminDAO
                         rs.getString("phoneNumber"),
                         rs.getString("hostelId")
                 );
+
+                admin.setLastLoginTime(LocalDateTime.now());
+                updateStmt.setString(1,admin.getLastLoginTime().toString());
+                updateStmt.setBoolean(2,true);
+                updateStmt.setString(3,admin.getUsername());
+                int c = updateStmt.executeUpdate();
+                System.out.println(admin.getLastLoginTime().toString());
             }
+
+
+
         }
         catch (SQLException e)
         {
             System.out.println("Error while logging in Admin : " + e.getMessage());
         }
+        if (admin!=null)
+            admin.setIsActive(true);
 
         return admin;
     }
@@ -66,15 +84,15 @@ public class AdminDAO
     }
 
     // 🔹 Admin Logout
-    public boolean logout(int adminId)
+    public boolean logout(String username)
     {
         // Example implementation: mark admin as logged out (if tracking session)
-        String query = "UPDATE admins SET isLoggedIn = FALSE WHERE adminId = ?";
+        String query = "UPDATE admins SET isActive = 0 WHERE username = ?";
 
         try (Connection conn = DatabaseInitializer.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query))
         {
-            stmt.setInt(1, adminId);
+            stmt.setString(1, username);
             int rowsUpdated = stmt.executeUpdate();
             return rowsUpdated > 0;
         }

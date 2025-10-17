@@ -23,7 +23,7 @@ public class Dashboard extends JPanel {
         sidebar.setPreferredSize(new Dimension(220, getHeight()));
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
 
-        JLabel title = new JLabel("🏠 Dashboard");
+        JLabel title = new JLabel("Dashboard");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         title.setForeground(Color.WHITE);
         title.setFont(new Font("Segoe UI", Font.BOLD, 22));
