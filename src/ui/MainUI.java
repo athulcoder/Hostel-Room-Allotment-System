@@ -1,5 +1,7 @@
 package ui;
 
+import controllers.AdminController;
+import dao.AdminDAO;
 import ui.screen.Dashboard;
 import ui.screen.LoginScreen;
 import javax.swing.*;
@@ -24,6 +26,7 @@ public class MainUI extends JFrame {
 
         // Create and add screens
         LoginScreen loginScreen = new LoginScreen(this); // Pass MainUI reference for screen switching later
+        new AdminController(loginScreen, this);
 
         mainPanel.add(loginScreen, "login-screen");
 
