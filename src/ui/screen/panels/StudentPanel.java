@@ -128,8 +128,38 @@ public class StudentPanel extends JPanel {
         header.add(count, BorderLayout.EAST);
         panel.add(header, BorderLayout.NORTH);
 
-        String[] columnNames = {"Name", "Gender", "Age", "Department", "Acad. Year"};
-        Object[][] data = {{"Aisha Khan", "Female", 20, "Computer Science", "Year 2"}, {"Liam Chen", "Male", 22, "Economics", "Year 3"}, {"Maya Patel", "Female", 21, "Mechanical Eng.", "Year 2"}, {"Noah Garcia", "Male", 24, "Business Admin", "Year 1"}, {"Sofia Rossi", "Female", 19, "Biology", "Year 1"}};
+        String[] columnNames = {
+                "studentId",
+                "name",
+                "gender",
+                "age",
+                "department",
+                "academicYear",
+                "email",
+                "guardianName",
+                "guardianPhone",
+                "preferredRoomType",
+                "assignedRoom",
+                "sleepType",
+                "dateOfAdmission",
+                "hostelId"
+        };
+        Object[][] data = {
+                {"24CS512", "Aisha Khan", "Female", 20, "Computer Science", "Year 2",
+                        "aisha.khan@example.com", "Mr. Khan", "9876543210", "2-sharing", "R101", "early", "20-03-2023", "H001"},
+
+                {"24CS513", "Liam Chen", "Male", 22, "Economics", "Year 3",
+                        "liam.chen@example.com", "Mr. Chen", "9876543211", "4-sharing", "R102", "late", "20-03-2023", "H001"},
+
+                {"24CS514", "Maya Patel", "Female", 21, "Mechanical Engineering", "Year 2",
+                        "maya.patel@example.com", "Mr. Patel", "9876543212", "6-sharing", "R103", "normal", "20-03-2023", "H001"},
+
+                {"24CS515", "Noah Garcia", "Male", 24, "Business Administration", "Year 1",
+                        "noah.garcia@example.com", "Mr. Garcia", "9876543213", "2-sharing", "R104", "early", "20-03-2023", "H001"},
+
+                {"24CS516", "Sofia Rossi", "Female", 19, "Biology", "Year 1",
+                        "sofia.rossi@example.com", "Mr. Rossi", "9876543214", "4-sharing", "R105", "late", "20-03-2023", "H001"}
+        };
         model = new DefaultTableModel(data, columnNames) {
             public boolean isCellEditable(int row, int column) {
                 return false;
