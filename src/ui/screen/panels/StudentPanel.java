@@ -524,30 +524,28 @@ public class StudentPanel extends JPanel {
         this.students = students;
 
         // Convert list to Object[][]
-        data = new Object[students.size()][15];
+        model.setRowCount(0);
 
-
-        for (int i = 0; i < students.size(); i++) {
-            Student s = students.get(i);
-            data[i][0] = s.getStudentId();
-            data[i][1] = s.getName();
-            data[i][2] = s.getGender();
-            data[i][3] = s.getAge();
-            data[i][4] = s.getDepartment();
-            data[i][5] = s.getAcademicYear();
-            data[i][6] = s.getContactNumber();
-            data[i][7] = s.getEmail();
-            data[i][8] = s.getGuardianName();
-            data[i][9] = s.getGuardianPhone();
-            data[i][10] = s.getPreferredRoomType();
-            data[i][11] = s.getAssignedRoom();
-            data[i][12] = s.getSleepType();
-            data[i][13] = s.getDateOfAdmission();
-            data[i][14] = s.getHostelId();
+        for (Student s : students) {
+            Object[] row = {
+                    s.getStudentId(),
+                    s.getName(),
+                    s.getGender(),
+                    s.getAge(),
+                    s.getDepartment(),
+                    s.getAcademicYear(),
+                    s.getContactNumber(),
+                    s.getEmail(),
+                    s.getGuardianName(),
+                    s.getGuardianPhone(),
+                    s.getPreferredRoomType(),
+                    s.getAssignedRoom(),
+                    s.getSleepType(),
+                    s.getDateOfAdmission(),
+                    s.getHostelId()
+            };
+            model.addRow(row); // dynamically add row
         }
-        for(Student s: students){
-            System.out.println(s.getName());
-        }
-    }
+}
 }
 
