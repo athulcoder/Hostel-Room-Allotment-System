@@ -107,6 +107,10 @@ public class StudentPanel extends JPanel {
         roomBtn.setForeground(COLOR_TEXT_DARK);
         actionBar.add(roomBtn);
 
+        RoundedButton refreshBtn = new RoundedButton("Refresh", IconFactory.createIcon(IconFactory.IconType.SEARCH), COLOR_PRIMARY_ACCENT, COLOR_SIDEBAR);
+        refreshBtn.setForeground(COLOR_TEXT_DARK);
+        actionBar.add(refreshBtn);
+        actionBar.add(Box.createHorizontalStrut(10));
         actionBar.add(Box.createHorizontalGlue());
 
         topPanel.add(actionBar);
