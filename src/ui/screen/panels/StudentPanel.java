@@ -1,4 +1,5 @@
 package ui.screen.panels;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
@@ -15,7 +16,7 @@ import java.awt.geom.RoundRectangle2D;
 
 /**
  * A fully self-contained JPanel that provides the UI for managing students.
- * It includes a student list, a details form, search, and filter options.
+ * The student details form is now shown in a JDialog when adding or editing.
  * All custom components and theme constants are defined within this file.
  *
  * @author Gemini
@@ -39,13 +40,16 @@ public class StudentPanel extends JPanel {
     public static final Font FONT_BOLD = new Font("Segoe UI", Font.BOLD, 14);
     public static final Font FONT_HEADER = new Font("Segoe UI", Font.BOLD, 28);
 
+    private JTable table;
+    private DefaultTableModel model;
+
     public StudentPanel() {
         super(new BorderLayout(0, 20));
         setBackground(COLOR_BACKGROUND);
         setBorder(BorderFactory.createEmptyBorder(20, 40, 40, 40));
 
         add(createTopPanel(), BorderLayout.NORTH);
-        add(createMainContentPanel(), BorderLayout.CENTER);
+        add(createStudentListPanel(), BorderLayout.CENTER);
     }
 
     private JPanel createTopPanel() {
@@ -53,7 +57,6 @@ public class StudentPanel extends JPanel {
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
         topPanel.setOpaque(false);
 
-        // --- Header Title & Add Button ---
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setOpaque(false);
 
@@ -75,12 +78,12 @@ public class StudentPanel extends JPanel {
 
         RoundedButton addStudentBtn = new RoundedButton("Add Student", IconFactory.createIcon(IconFactory.IconType.ADD), COLOR_PRIMARY_ACCENT, COLOR_PRIMARY_ACCENT.brighter());
         addStudentBtn.setForeground(COLOR_WHITE);
+        addStudentBtn.addActionListener(e -> showStudentDialog(null)); // Show dialog for adding
         headerPanel.add(addStudentBtn, BorderLayout.EAST);
 
         topPanel.add(headerPanel);
         topPanel.add(Box.createVerticalStrut(20));
 
-        // --- Action Bar (Search & Filters) ---
         JPanel actionBar = new JPanel();
         actionBar.setOpaque(false);
         actionBar.setLayout(new BoxLayout(actionBar, BoxLayout.X_AXIS));
@@ -109,39 +112,6 @@ public class StudentPanel extends JPanel {
         return topPanel;
     }
 
-    private JSplitPane createMainContentPanel() {
-        JPanel listPanel = createStudentListPanel();
-        JScrollPane detailsScrollPane = new JScrollPane(createStudentDetailsPanel());
-        detailsScrollPane.setBorder(null);
-        detailsScrollPane.getViewport().setBackground(COLOR_BACKGROUND);
-
-
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, listPanel, detailsScrollPane);
-        splitPane.setDividerLocation(650);
-        splitPane.setDividerSize(15);
-        splitPane.setBorder(null);
-        splitPane.setOpaque(false);
-
-        splitPane.setUI(new BasicSplitPaneUI() {
-            public BasicSplitPaneDivider createDefaultDivider() {
-                return new BasicSplitPaneDivider(this) {
-                    public void setBorder(Border b) {
-                    }
-
-                    @Override
-                    public void paint(Graphics g) {
-                        g.setColor(COLOR_BACKGROUND);
-                        g.fillRect(0, 0, getWidth(), getHeight());
-                    }
-                };
-            }
-        });
-        splitPane.getLeftComponent().setMinimumSize(new Dimension(450, 400));
-        splitPane.getRightComponent().setMinimumSize(new Dimension(380, 400));
-
-        return splitPane;
-    }
-
     private JPanel createStudentListPanel() {
         RoundedPanel panel = new RoundedPanel();
         panel.setLayout(new BorderLayout(0, 15));
@@ -160,13 +130,13 @@ public class StudentPanel extends JPanel {
 
         String[] columnNames = {"Name", "Gender", "Age", "Department", "Acad. Year"};
         Object[][] data = {{"Aisha Khan", "Female", 20, "Computer Science", "Year 2"}, {"Liam Chen", "Male", 22, "Economics", "Year 3"}, {"Maya Patel", "Female", 21, "Mechanical Eng.", "Year 2"}, {"Noah Garcia", "Male", 24, "Business Admin", "Year 1"}, {"Sofia Rossi", "Female", 19, "Biology", "Year 1"}};
-        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+        model = new DefaultTableModel(data, columnNames) {
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
 
-        JTable table = new JTable(model);
+        table = new JTable(model);
         table.setRowHeight(40);
         table.setFont(FONT_MAIN);
         table.setForeground(COLOR_TEXT_DARK);
@@ -175,6 +145,17 @@ public class StudentPanel extends JPanel {
         table.setBorder(null);
         table.setGridColor(COLOR_BORDER);
         table.setShowVerticalLines(false);
+
+        table.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
+                int selectedRow = table.getSelectedRow();
+                Object[] rowData = new Object[model.getColumnCount()];
+                for (int i = 0; i < model.getColumnCount(); i++) {
+                    rowData[i] = model.getValueAt(selectedRow, i);
+                }
+                showStudentDialog(rowData); // Show dialog for editing
+            }
+        });
 
         JTableHeader tableHeader = table.getTableHeader();
         tableHeader.setFont(FONT_BOLD);
@@ -192,11 +173,24 @@ public class StudentPanel extends JPanel {
         return panel;
     }
 
-    private JPanel createStudentDetailsPanel() {
+    private void showStudentDialog(Object[] data) {
+        Window parentWindow = SwingUtilities.getWindowAncestor(this);
+        JDialog dialog = new JDialog((Frame) parentWindow, true); // Modal
+
+        JPanel detailsPanel = createStudentDetailsPanel(dialog, data);
+
+        dialog.setTitle(data == null ? "Add New Student" : "Edit Student Details");
+        dialog.getContentPane().add(detailsPanel);
+        dialog.pack();
+        dialog.setLocationRelativeTo(parentWindow);
+        dialog.setVisible(true);
+    }
+
+    private JPanel createStudentDetailsPanel(JDialog parentDialog, Object[] data) {
         RoundedPanel panel = new RoundedPanel();
         panel.setLayout(new BorderLayout());
 
-        JLabel title = new JLabel("Student Details");
+        JLabel title = new JLabel(data == null ? "New Student Profile" : "Student Details");
         title.setFont(FONT_BOLD);
         title.setForeground(COLOR_TEXT_DARK);
         panel.add(title, BorderLayout.NORTH);
@@ -207,28 +201,47 @@ public class StudentPanel extends JPanel {
         gbc.insets = new Insets(8, 5, 8, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        addField(formPanel, gbc, "Name", new JTextField("Aisha Khan"), 0, 0, 2);
-        addField(formPanel, gbc, "Gender", new JComboBox<>(new String[]{"Female", "Male"}), 0, 2, 2);
-        addField(formPanel, gbc, "Age", new JTextField("20"), 1, 0, 1);
-        addField(formPanel, gbc, "Academic Year", new JComboBox<>(new String[]{"Year 1", "Year 2"}), 1, 2, 1);
-        addField(formPanel, gbc, "Department", new JComboBox<>(new String[]{"Computer Science"}), 2, 0, 2);
-        addField(formPanel, gbc, "Preferred Room Type", new JComboBox<>(new String[]{"Single", "Double"}), 2, 2, 2);
-        addField(formPanel, gbc, "Sleep Type", new JComboBox<>(new String[]{"Early", "Night"}), 3, 0, 1);
-        addField(formPanel, gbc, "Room", new JTextField("A-101"), 3, 2, 1);
-        addField(formPanel, gbc, "Contact Info", new JTextField("aisha.k@example.com"), 4, 0, 4);
-        addField(formPanel, gbc, "Guardian Info", new JTextField("Mrs. Khan, Relation, Contact"), 5, 0, 4);
+        // Create and populate fields
+        JTextField nameField = new JTextField(data != null ? data[0].toString() : "");
+        JComboBox<String> genderCombo = new JComboBox<>(new String[]{"Female", "Male"});
+        if (data != null) genderCombo.setSelectedItem(data[1]);
+        JTextField ageField = new JTextField(data != null ? data[2].toString() : "");
+        JComboBox<String> yearCombo = new JComboBox<>(new String[]{"Year 1", "Year 2", "Year 3", "Year 4"});
+        if (data != null) yearCombo.setSelectedItem(data[4]);
+        JComboBox<String> deptCombo = new JComboBox<>(new String[]{"Computer Science", "Economics", "Mechanical Eng.", "Business Admin", "Biology"});
+        if (data != null) deptCombo.setSelectedItem(data[3]);
+        JComboBox<String> roomTypeCombo = new JComboBox<>(new String[]{"Single", "Double", "Triple"});
+        JComboBox<String> sleepTypeCombo = new JComboBox<>(new String[]{"Early", "Night"});
+        JTextField roomField = new JTextField(data != null ? "A-101" : ""); // Dummy data
+        JTextField contactField = new JTextField(data != null ? "email@example.com" : ""); // Dummy data
+        JTextField guardianField = new JTextField(data != null ? "Guardian Info" : ""); // Dummy data
+
+        addField(formPanel, gbc, "Name", nameField, 0, 0, 2);
+        addField(formPanel, gbc, "Gender", genderCombo, 0, 2, 2);
+        addField(formPanel, gbc, "Age", ageField, 1, 0, 1);
+        addField(formPanel, gbc, "Academic Year", yearCombo, 1, 2, 1);
+        addField(formPanel, gbc, "Department", deptCombo, 2, 0, 2);
+        addField(formPanel, gbc, "Preferred Room Type", roomTypeCombo, 2, 2, 2);
+        addField(formPanel, gbc, "Sleep Type", sleepTypeCombo, 3, 0, 1);
+        addField(formPanel, gbc, "Room", roomField, 3, 2, 1);
+        addField(formPanel, gbc, "Contact Info", contactField, 4, 0, 4);
+        addField(formPanel, gbc, "Guardian Info", guardianField, 5, 0, 4);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         buttonPanel.setOpaque(false);
 
         RoundedButton saveBtn = new RoundedButton("Save", null, COLOR_PRIMARY_ACCENT, COLOR_PRIMARY_ACCENT.brighter());
         saveBtn.setForeground(COLOR_WHITE);
+        saveBtn.addActionListener(e -> parentDialog.dispose()); // Add save logic here
 
         RoundedButton deleteBtn = new RoundedButton("Delete", null, COLOR_DANGER_LIGHT, COLOR_DANGER_HOVER);
         deleteBtn.setForeground(COLOR_DANGER);
+        deleteBtn.addActionListener(e -> parentDialog.dispose()); // Add delete logic here
+        deleteBtn.setVisible(data != null); // Only show delete for existing students
 
         RoundedButton cancelBtn = new RoundedButton("Cancel", null, COLOR_WHITE, COLOR_SIDEBAR);
         cancelBtn.setForeground(COLOR_TEXT_DARK);
+        cancelBtn.addActionListener(e -> parentDialog.dispose());
 
         buttonPanel.add(cancelBtn);
         buttonPanel.add(deleteBtn);
@@ -243,6 +256,7 @@ public class StudentPanel extends JPanel {
         formPanel.add(buttonPanel, gbc);
 
         panel.add(formPanel, BorderLayout.CENTER);
+        panel.setPreferredSize(new Dimension(450, (int)panel.getPreferredSize().getHeight()));
         return panel;
     }
 
@@ -465,6 +479,7 @@ public class StudentPanel extends JPanel {
         }
     }
 
+    // Main method for standalone testing
 
 }
 
