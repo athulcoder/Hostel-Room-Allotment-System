@@ -16,6 +16,8 @@ public class StudentController {
 
        studentDAO = new StudentDAO();
        handleGetAllStudents();
+
+       view.getRefreshBtn().addActionListener(e->handleGetAllStudents());
    }
 
 
@@ -28,4 +30,6 @@ public class StudentController {
    public void handleGetAllStudents(){
        view.setStudents( studentDAO.getAllStudents(SessionManager.getCurrentAdmin().getHostelId()));
    }
+
+
 }

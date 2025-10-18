@@ -1,6 +1,7 @@
 package ui.screen.panels;
 
 import models.Student;
+import ui.screen.components.RoundedButton;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -39,9 +40,10 @@ public class StudentPanel extends JPanel {
     private JTable table;
     private DefaultTableModel model;
     private Object[][] data;
+    private  JLabel countLabel;
     private Student newStudent;
     //list of student
-
+    private RoundedButton refreshBtn;
     private ArrayList<Student> students = new ArrayList<>();
 
     public StudentPanel() {
@@ -107,7 +109,7 @@ public class StudentPanel extends JPanel {
         roomBtn.setForeground(COLOR_TEXT_DARK);
         actionBar.add(roomBtn);
 
-        RoundedButton refreshBtn = new RoundedButton("Refresh", IconFactory.createIcon(IconFactory.IconType.SEARCH), COLOR_PRIMARY_ACCENT, COLOR_SIDEBAR);
+        refreshBtn = new RoundedButton("Refresh", IconFactory.createIcon(IconFactory.IconType.SEARCH), COLOR_PRIMARY_ACCENT, COLOR_SIDEBAR);
         refreshBtn.setForeground(COLOR_TEXT_DARK);
         actionBar.add(refreshBtn);
         actionBar.add(Box.createHorizontalStrut(10));
@@ -126,11 +128,11 @@ public class StudentPanel extends JPanel {
         JLabel title = new JLabel("All Students");
         title.setFont(FONT_BOLD);
         title.setForeground(COLOR_TEXT_DARK);
-        JLabel count = new JLabel("Showing 5 results");
-        count.setFont(FONT_MAIN);
-        count.setForeground(COLOR_TEXT_LIGHT);
+        countLabel = new JLabel();
+        countLabel.setFont(FONT_MAIN);
+        countLabel.setForeground(COLOR_TEXT_LIGHT);
         header.add(title, BorderLayout.WEST);
-        header.add(count, BorderLayout.EAST);
+        header.add(countLabel, BorderLayout.EAST);
         panel.add(header, BorderLayout.NORTH);
 
         String[] columnNames = {
@@ -150,22 +152,7 @@ public class StudentPanel extends JPanel {
                 "dateOfAdmission",
                 "hostelId"
         };
-         data = new Object[][]{
-                {"24CS512", "Aisha Khan", "Female", 20, "Computer Science", "Year 2", "57759495033",
-                        "aisha.khan@example.com", "Mr. Khan", "9876543210", "2-sharing", "R101", "early", "20-03-2023", "H001"},
 
-                {"24CS513", "Liam Chen", "Male", 22, "Economics", "Year 3","57759495033",
-                        "liam.chen@example.com", "Mr. Chen", "9876543211", "4-sharing", "R102", "late", "20-03-2023", "H001"},
-
-                {"24CS514", "Maya Patel", "Female", 21, "Mechanical Engineering", "Year 2","57759495033",
-                        "maya.patel@example.com", "Mr. Patel", "9876543212", "6-sharing", "R103", "normal", "20-03-2023", "H001"},
-
-                {"24CS515", "Noah Garcia", "Male", 24, "Business Administration", "Year 1","57759495033",
-                        "noah.garcia@example.com", "Mr. Garcia", "9876543213", "2-sharing", "R104", "early", "20-03-2023", "H001"},
-
-                {"24CS516", "Sofia Rossi", "Female", 19, "Biology", "Year 1","57759495033",
-                        "sofia.rossi@example.com", "Mr. Rossi", "9876543214", "4-sharing", "R105", "late", "20-03-2023", "H001"}
-        };
         model = new DefaultTableModel(data, columnNames) {
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -351,50 +338,6 @@ public class StudentPanel extends JPanel {
         }
     }
 
-    private static class RoundedButton extends JButton {
-        private final Color originalBgColor;
-        private final Color hoverBgColor;
-        private Color currentBgColor;
-        private final int cornerRadius = 20;
-
-        public RoundedButton(String text, Icon icon, Color background, Color hover) {
-            super(text);
-            this.originalBgColor = background;
-            this.hoverBgColor = hover;
-            this.currentBgColor = background;
-
-            setIcon(icon);
-            setFont(FONT_BOLD);
-            setCursor(new Cursor(Cursor.HAND_CURSOR));
-            setContentAreaFilled(false);
-            setFocusPainted(false);
-            setBorder(BorderFactory.createEmptyBorder(9, 16, 9, 16));
-
-            addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    currentBgColor = hoverBgColor;
-                    repaint();
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    currentBgColor = originalBgColor;
-                    repaint();
-                }
-            });
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(currentBgColor);
-            g2.fillRoundRect(0, 0, getWidth(), getHeight(), cornerRadius, cornerRadius);
-            g2.dispose();
-            super.paintComponent(g);
-        }
-    }
 
     private static class SearchField extends JPanel {
         public SearchField(String placeholder, Icon icon) {
@@ -551,8 +494,15 @@ public class StudentPanel extends JPanel {
                     s.getDateOfAdmission(),
                     s.getHostelId()
             };
-            model.addRow(row); // dynamically add row
+            model.addRow(row);
+
+
+            countLabel.setText("Showing "+students.size()+" results");
         }
-}
+    }
+
+    public RoundedButton getRefreshBtn() {
+        return refreshBtn;
+    }
 }
 
