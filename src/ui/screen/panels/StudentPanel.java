@@ -135,6 +135,7 @@ public class StudentPanel extends JPanel {
                 "age",
                 "department",
                 "academicYear",
+                "contactNumber",
                 "email",
                 "guardianName",
                 "guardianPhone",
@@ -145,19 +146,19 @@ public class StudentPanel extends JPanel {
                 "hostelId"
         };
         Object[][] data = {
-                {"24CS512", "Aisha Khan", "Female", 20, "Computer Science", "Year 2",
+                {"24CS512", "Aisha Khan", "Female", 20, "Computer Science", "Year 2", "57759495033",
                         "aisha.khan@example.com", "Mr. Khan", "9876543210", "2-sharing", "R101", "early", "20-03-2023", "H001"},
 
-                {"24CS513", "Liam Chen", "Male", 22, "Economics", "Year 3",
+                {"24CS513", "Liam Chen", "Male", 22, "Economics", "Year 3","57759495033",
                         "liam.chen@example.com", "Mr. Chen", "9876543211", "4-sharing", "R102", "late", "20-03-2023", "H001"},
 
-                {"24CS514", "Maya Patel", "Female", 21, "Mechanical Engineering", "Year 2",
+                {"24CS514", "Maya Patel", "Female", 21, "Mechanical Engineering", "Year 2","57759495033",
                         "maya.patel@example.com", "Mr. Patel", "9876543212", "6-sharing", "R103", "normal", "20-03-2023", "H001"},
 
-                {"24CS515", "Noah Garcia", "Male", 24, "Business Administration", "Year 1",
+                {"24CS515", "Noah Garcia", "Male", 24, "Business Administration", "Year 1","57759495033",
                         "noah.garcia@example.com", "Mr. Garcia", "9876543213", "2-sharing", "R104", "early", "20-03-2023", "H001"},
 
-                {"24CS516", "Sofia Rossi", "Female", 19, "Biology", "Year 1",
+                {"24CS516", "Sofia Rossi", "Female", 19, "Biology", "Year 1","57759495033",
                         "sofia.rossi@example.com", "Mr. Rossi", "9876543214", "4-sharing", "R105", "late", "20-03-2023", "H001"}
         };
         model = new DefaultTableModel(data, columnNames) {
@@ -232,19 +233,24 @@ public class StudentPanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Create and populate fields
-        JTextField nameField = new JTextField(data != null ? data[0].toString() : "");
+        JTextField nameField = new JTextField(data != null ? data[1].toString() : "");
         JComboBox<String> genderCombo = new JComboBox<>(new String[]{"Female", "Male"});
-        if (data != null) genderCombo.setSelectedItem(data[1]);
-        JTextField ageField = new JTextField(data != null ? data[2].toString() : "");
+        if (data != null) genderCombo.setSelectedItem(data[2]);
+        JTextField ageField = new JTextField(data != null ? data[3].toString() : "");
         JComboBox<String> yearCombo = new JComboBox<>(new String[]{"Year 1", "Year 2", "Year 3", "Year 4"});
-        if (data != null) yearCombo.setSelectedItem(data[4]);
+        if (data != null) yearCombo.setSelectedItem(data[5]);
         JComboBox<String> deptCombo = new JComboBox<>(new String[]{"Computer Science", "Economics", "Mechanical Eng.", "Business Admin", "Biology"});
-        if (data != null) deptCombo.setSelectedItem(data[3]);
-        JComboBox<String> roomTypeCombo = new JComboBox<>(new String[]{"Single", "Double", "Triple"});
+        if (data != null) deptCombo.setSelectedItem(data[4]);
+        JComboBox<String> roomTypeCombo = new JComboBox<>(new String[]{"2-sharing", "4-sharing", "6-sharing"});
+        if (data != null) roomTypeCombo.setSelectedItem(data[10]);
         JComboBox<String> sleepTypeCombo = new JComboBox<>(new String[]{"Early", "Night"});
-        JTextField roomField = new JTextField(data != null ? "A-101" : ""); // Dummy data
-        JTextField contactField = new JTextField(data != null ? "email@example.com" : ""); // Dummy data
-        JTextField guardianField = new JTextField(data != null ? "Guardian Info" : ""); // Dummy data
+        if(data!=null) sleepTypeCombo.setSelectedItem(data[12]);
+        JTextField roomField = new JTextField(data != null ? data[11].toString() : ""); // Dummy data
+        JTextField contactNumberField = new JTextField(data != null ? data[6].toString() : "");// Dummy data
+        JTextField emailField = new JTextField(data != null ? data[7].toString() : "");// Dummy data
+
+        JTextField guardianNameField = new JTextField(data != null ?data[8].toString() : ""); // Dummy data
+        JTextField guardianPhoneField = new JTextField(data != null ? data[9].toString() : ""); // Dummy data
 
         addField(formPanel, gbc, "Name", nameField, 0, 0, 2);
         addField(formPanel, gbc, "Gender", genderCombo, 0, 2, 2);
@@ -254,8 +260,11 @@ public class StudentPanel extends JPanel {
         addField(formPanel, gbc, "Preferred Room Type", roomTypeCombo, 2, 2, 2);
         addField(formPanel, gbc, "Sleep Type", sleepTypeCombo, 3, 0, 1);
         addField(formPanel, gbc, "Room", roomField, 3, 2, 1);
-        addField(formPanel, gbc, "Contact Info", contactField, 4, 0, 4);
-        addField(formPanel, gbc, "Guardian Info", guardianField, 5, 0, 4);
+        addField(formPanel, gbc, "Contact Number", contactNumberField, 4, 0, 2);
+        addField(formPanel, gbc, "Contact Number", emailField, 4, 2, 2);
+
+        addField(formPanel, gbc, "Guardian Name", guardianNameField, 5, 0, 2);
+        addField(formPanel, gbc, "Guardian Phone", guardianPhoneField, 5, 2, 2);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         buttonPanel.setOpaque(false);
