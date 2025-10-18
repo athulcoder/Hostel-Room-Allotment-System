@@ -1,5 +1,6 @@
 package ui.screen;
 
+import controllers.StudentController;
 import ui.screen.panels.StudentPanel;
 
 import javax.swing.*;
@@ -53,7 +54,8 @@ public class Dashboard extends JPanel {
 
         // --- Create and Add Different Content Panels ---
         JPanel dashboardView = new DashboardPanel();
-        JPanel studentsView = new StudentPanel();
+        StudentPanel studentsView = new StudentPanel();
+            new StudentController(studentsView,this);
         JPanel roomsView = new PlaceholderPanel("Rooms Management");
         JPanel allotmentsView = new PlaceholderPanel("Allotments Management");
         JPanel settingsView = new PlaceholderPanel("Application Settings");

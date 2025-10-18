@@ -1,5 +1,7 @@
 package ui.screen.panels;
 
+import models.Student;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
@@ -13,14 +15,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
+import java.util.ArrayList;
 
-/**
- * A fully self-contained JPanel that provides the UI for managing students.
- * The student details form is now shown in a JDialog when adding or editing.
- * All custom components and theme constants are defined within this file.
- *
- * @author Gemini
- */
 public class StudentPanel extends JPanel {
 
     // --- Embedded Theme Constants ---
@@ -42,6 +38,9 @@ public class StudentPanel extends JPanel {
 
     private JTable table;
     private DefaultTableModel model;
+    private Object[][] data;
+    //list of student
+    private ArrayList<Student> students = new ArrayList<>();
 
     public StudentPanel() {
         super(new BorderLayout(0, 20));
@@ -145,7 +144,7 @@ public class StudentPanel extends JPanel {
                 "dateOfAdmission",
                 "hostelId"
         };
-        Object[][] data = {
+         data = new Object[][]{
                 {"24CS512", "Aisha Khan", "Female", 20, "Computer Science", "Year 2", "57759495033",
                         "aisha.khan@example.com", "Mr. Khan", "9876543210", "2-sharing", "R101", "early", "20-03-2023", "H001"},
 
@@ -518,7 +517,37 @@ public class StudentPanel extends JPanel {
         }
     }
 
-    // Main method for standalone testing
+    //setters for setting data
 
+
+    public void setStudents(ArrayList<Student> students) {
+        this.students = students;
+
+        // Convert list to Object[][]
+        data = new Object[students.size()][15];
+
+
+        for (int i = 0; i < students.size(); i++) {
+            Student s = students.get(i);
+            data[i][0] = s.getStudentId();
+            data[i][1] = s.getName();
+            data[i][2] = s.getGender();
+            data[i][3] = s.getAge();
+            data[i][4] = s.getDepartment();
+            data[i][5] = s.getAcademicYear();
+            data[i][6] = s.getContactNumber();
+            data[i][7] = s.getEmail();
+            data[i][8] = s.getGuardianName();
+            data[i][9] = s.getGuardianPhone();
+            data[i][10] = s.getPreferredRoomType();
+            data[i][11] = s.getAssignedRoom();
+            data[i][12] = s.getSleepType();
+            data[i][13] = s.getDateOfAdmission();
+            data[i][14] = s.getHostelId();
+        }
+        for(Student s: students){
+            System.out.println(s.getName());
+        }
+    }
 }
 
