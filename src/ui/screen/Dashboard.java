@@ -1,5 +1,7 @@
 package ui.screen;
 
+import ui.screen.panels.StudentPanel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -51,7 +53,7 @@ public class Dashboard extends JPanel {
 
         // --- Create and Add Different Content Panels ---
         JPanel dashboardView = new DashboardPanel();
-        JPanel studentsView = new PlaceholderPanel("Students Management");
+        JPanel studentsView = new StudentPanel();
         JPanel roomsView = new PlaceholderPanel("Rooms Management");
         JPanel allotmentsView = new PlaceholderPanel("Allotments Management");
         JPanel settingsView = new PlaceholderPanel("Application Settings");
@@ -79,7 +81,7 @@ public class Dashboard extends JPanel {
         sidebar.setPreferredSize(new Dimension(240, 0)); // Width is respected, height is managed by BorderLayout
         sidebar.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, COLOR_BORDER));
 
-        JLabel appTitle = new JLabel("Campus Manager");
+        JLabel appTitle = new JLabel("HOSTEL ROOM ALLOTMENT");
         appTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
         appTitle.setForeground(COLOR_TEXT_DARK);
         appTitle.setIcon(IconFactory.createIcon(IconFactory.IconType.APP_LOGO));
@@ -375,8 +377,8 @@ public class Dashboard extends JPanel {
     /**
      * A factory class to create simple, scalable icons programmatically.
      */
-    private static class IconFactory {
-        enum IconType {
+    public static class IconFactory {
+        public enum IconType {
             DASHBOARD, STUDENTS, ROOMS, ALLOTMENTS, SETTINGS, REFRESH,
             ALERTS, ADMIN, ROOMS_AVAILABLE, APP_LOGO
         }

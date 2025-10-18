@@ -1,0 +1,470 @@
+package ui.screen.panels;
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.RoundRectangle2D;
+
+/**
+ * A fully self-contained JPanel that provides the UI for managing students.
+ * It includes a student list, a details form, search, and filter options.
+ * All custom components and theme constants are defined within this file.
+ *
+ * @author Gemini
+ */
+public class StudentPanel extends JPanel {
+
+    // --- Embedded Theme Constants ---
+    public static final Color COLOR_BACKGROUND = new Color(245, 250, 248);
+    public static final Color COLOR_SIDEBAR = new Color(236, 244, 241);
+    public static final Color COLOR_PRIMARY_ACCENT = new Color(13, 156, 116);
+    public static final Color COLOR_PRIMARY_ACCENT_LIGHT = new Color(224, 243, 239);
+    public static final Color COLOR_WHITE = Color.WHITE;
+    public static final Color COLOR_TEXT_DARK = new Color(40, 40, 40);
+    public static final Color COLOR_TEXT_LIGHT = new Color(150, 150, 150);
+    public static final Color COLOR_BORDER = new Color(220, 220, 220);
+    public static final Color COLOR_DANGER = new Color(220, 38, 38);
+    public static final Color COLOR_DANGER_LIGHT = new Color(255, 235, 238);
+    public static final Color COLOR_DANGER_HOVER = new Color(254, 215, 215);
+
+    public static final Font FONT_MAIN = new Font("Segoe UI", Font.PLAIN, 14);
+    public static final Font FONT_BOLD = new Font("Segoe UI", Font.BOLD, 14);
+    public static final Font FONT_HEADER = new Font("Segoe UI", Font.BOLD, 28);
+
+    public StudentPanel() {
+        super(new BorderLayout(0, 20));
+        setBackground(COLOR_BACKGROUND);
+        setBorder(BorderFactory.createEmptyBorder(20, 40, 40, 40));
+
+        add(createTopPanel(), BorderLayout.NORTH);
+        add(createMainContentPanel(), BorderLayout.CENTER);
+    }
+
+    private JPanel createTopPanel() {
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+        topPanel.setOpaque(false);
+
+        // --- Header Title & Add Button ---
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setOpaque(false);
+
+        JPanel titlePanel = new JPanel();
+        titlePanel.setOpaque(false);
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+        titlePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel title = new JLabel("Students");
+        title.setFont(FONT_HEADER);
+        title.setForeground(COLOR_TEXT_DARK);
+        titlePanel.add(title);
+
+        JLabel subtitle = new JLabel("Add, edit, or remove student profiles");
+        subtitle.setFont(FONT_MAIN);
+        subtitle.setForeground(COLOR_TEXT_LIGHT);
+        titlePanel.add(subtitle);
+        headerPanel.add(titlePanel, BorderLayout.WEST);
+
+        RoundedButton addStudentBtn = new RoundedButton("Add Student", IconFactory.createIcon(IconFactory.IconType.ADD), COLOR_PRIMARY_ACCENT, COLOR_PRIMARY_ACCENT.brighter());
+        addStudentBtn.setForeground(COLOR_WHITE);
+        headerPanel.add(addStudentBtn, BorderLayout.EAST);
+
+        topPanel.add(headerPanel);
+        topPanel.add(Box.createVerticalStrut(20));
+
+        // --- Action Bar (Search & Filters) ---
+        JPanel actionBar = new JPanel();
+        actionBar.setOpaque(false);
+        actionBar.setLayout(new BoxLayout(actionBar, BoxLayout.X_AXIS));
+        actionBar.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        actionBar.add(new SearchField("Search students...", IconFactory.createIcon(IconFactory.IconType.SEARCH)));
+        actionBar.add(Box.createHorizontalStrut(15));
+
+        RoundedButton deptBtn = new RoundedButton("Department", IconFactory.createIcon(IconFactory.IconType.DEPARTMENT), COLOR_WHITE, COLOR_SIDEBAR);
+        deptBtn.setForeground(COLOR_TEXT_DARK);
+        actionBar.add(deptBtn);
+        actionBar.add(Box.createHorizontalStrut(10));
+
+        RoundedButton yearBtn = new RoundedButton("Year", IconFactory.createIcon(IconFactory.IconType.CALENDAR), COLOR_WHITE, COLOR_SIDEBAR);
+        yearBtn.setForeground(COLOR_TEXT_DARK);
+        actionBar.add(yearBtn);
+        actionBar.add(Box.createHorizontalStrut(10));
+
+        RoundedButton roomBtn = new RoundedButton("Room Type", IconFactory.createIcon(IconFactory.IconType.ROOM_TYPE), COLOR_WHITE, COLOR_SIDEBAR);
+        roomBtn.setForeground(COLOR_TEXT_DARK);
+        actionBar.add(roomBtn);
+
+        actionBar.add(Box.createHorizontalGlue());
+
+        topPanel.add(actionBar);
+        return topPanel;
+    }
+
+    private JSplitPane createMainContentPanel() {
+        JPanel listPanel = createStudentListPanel();
+        JScrollPane detailsScrollPane = new JScrollPane(createStudentDetailsPanel());
+        detailsScrollPane.setBorder(null);
+        detailsScrollPane.getViewport().setBackground(COLOR_BACKGROUND);
+
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, listPanel, detailsScrollPane);
+        splitPane.setDividerLocation(650);
+        splitPane.setDividerSize(15);
+        splitPane.setBorder(null);
+        splitPane.setOpaque(false);
+
+        splitPane.setUI(new BasicSplitPaneUI() {
+            public BasicSplitPaneDivider createDefaultDivider() {
+                return new BasicSplitPaneDivider(this) {
+                    public void setBorder(Border b) {
+                    }
+
+                    @Override
+                    public void paint(Graphics g) {
+                        g.setColor(COLOR_BACKGROUND);
+                        g.fillRect(0, 0, getWidth(), getHeight());
+                    }
+                };
+            }
+        });
+        splitPane.getLeftComponent().setMinimumSize(new Dimension(450, 400));
+        splitPane.getRightComponent().setMinimumSize(new Dimension(380, 400));
+
+        return splitPane;
+    }
+
+    private JPanel createStudentListPanel() {
+        RoundedPanel panel = new RoundedPanel();
+        panel.setLayout(new BorderLayout(0, 15));
+
+        JPanel header = new JPanel(new BorderLayout());
+        header.setOpaque(false);
+        JLabel title = new JLabel("All Students");
+        title.setFont(FONT_BOLD);
+        title.setForeground(COLOR_TEXT_DARK);
+        JLabel count = new JLabel("Showing 5 results");
+        count.setFont(FONT_MAIN);
+        count.setForeground(COLOR_TEXT_LIGHT);
+        header.add(title, BorderLayout.WEST);
+        header.add(count, BorderLayout.EAST);
+        panel.add(header, BorderLayout.NORTH);
+
+        String[] columnNames = {"Name", "Gender", "Age", "Department", "Acad. Year"};
+        Object[][] data = {{"Aisha Khan", "Female", 20, "Computer Science", "Year 2"}, {"Liam Chen", "Male", 22, "Economics", "Year 3"}, {"Maya Patel", "Female", 21, "Mechanical Eng.", "Year 2"}, {"Noah Garcia", "Male", 24, "Business Admin", "Year 1"}, {"Sofia Rossi", "Female", 19, "Biology", "Year 1"}};
+        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        JTable table = new JTable(model);
+        table.setRowHeight(40);
+        table.setFont(FONT_MAIN);
+        table.setForeground(COLOR_TEXT_DARK);
+        table.setSelectionBackground(COLOR_PRIMARY_ACCENT_LIGHT);
+        table.setSelectionForeground(COLOR_PRIMARY_ACCENT);
+        table.setBorder(null);
+        table.setGridColor(COLOR_BORDER);
+        table.setShowVerticalLines(false);
+
+        JTableHeader tableHeader = table.getTableHeader();
+        tableHeader.setFont(FONT_BOLD);
+        tableHeader.setForeground(COLOR_TEXT_LIGHT);
+        tableHeader.setBackground(COLOR_WHITE);
+        tableHeader.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, COLOR_BORDER));
+
+        table.getColumnModel().getColumn(0).setCellRenderer(new AvatarRenderer());
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.getViewport().setBackground(COLOR_WHITE);
+        scrollPane.setBorder(BorderFactory.createLineBorder(COLOR_BORDER));
+
+        panel.add(scrollPane, BorderLayout.CENTER);
+        return panel;
+    }
+
+    private JPanel createStudentDetailsPanel() {
+        RoundedPanel panel = new RoundedPanel();
+        panel.setLayout(new BorderLayout());
+
+        JLabel title = new JLabel("Student Details");
+        title.setFont(FONT_BOLD);
+        title.setForeground(COLOR_TEXT_DARK);
+        panel.add(title, BorderLayout.NORTH);
+
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setOpaque(false);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(8, 5, 8, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        addField(formPanel, gbc, "Name", new JTextField("Aisha Khan"), 0, 0, 2);
+        addField(formPanel, gbc, "Gender", new JComboBox<>(new String[]{"Female", "Male"}), 0, 2, 2);
+        addField(formPanel, gbc, "Age", new JTextField("20"), 1, 0, 1);
+        addField(formPanel, gbc, "Academic Year", new JComboBox<>(new String[]{"Year 1", "Year 2"}), 1, 2, 1);
+        addField(formPanel, gbc, "Department", new JComboBox<>(new String[]{"Computer Science"}), 2, 0, 2);
+        addField(formPanel, gbc, "Preferred Room Type", new JComboBox<>(new String[]{"Single", "Double"}), 2, 2, 2);
+        addField(formPanel, gbc, "Sleep Type", new JComboBox<>(new String[]{"Early", "Night"}), 3, 0, 1);
+        addField(formPanel, gbc, "Room", new JTextField("A-101"), 3, 2, 1);
+        addField(formPanel, gbc, "Contact Info", new JTextField("aisha.k@example.com"), 4, 0, 4);
+        addField(formPanel, gbc, "Guardian Info", new JTextField("Mrs. Khan, Relation, Contact"), 5, 0, 4);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        buttonPanel.setOpaque(false);
+
+        RoundedButton saveBtn = new RoundedButton("Save", null, COLOR_PRIMARY_ACCENT, COLOR_PRIMARY_ACCENT.brighter());
+        saveBtn.setForeground(COLOR_WHITE);
+
+        RoundedButton deleteBtn = new RoundedButton("Delete", null, COLOR_DANGER_LIGHT, COLOR_DANGER_HOVER);
+        deleteBtn.setForeground(COLOR_DANGER);
+
+        RoundedButton cancelBtn = new RoundedButton("Cancel", null, COLOR_WHITE, COLOR_SIDEBAR);
+        cancelBtn.setForeground(COLOR_TEXT_DARK);
+
+        buttonPanel.add(cancelBtn);
+        buttonPanel.add(deleteBtn);
+        buttonPanel.add(saveBtn);
+
+        gbc.gridy = 6;
+        gbc.gridx = 0;
+        gbc.gridwidth = 4;
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.insets = new Insets(20, 5, 8, 5);
+        formPanel.add(buttonPanel, gbc);
+
+        panel.add(formPanel, BorderLayout.CENTER);
+        return panel;
+    }
+
+    private void addField(JPanel panel, GridBagConstraints gbc, String label, JComponent component, int y, int x, int width) {
+        gbc.gridy = y;
+        gbc.gridx = x;
+        gbc.gridwidth = width;
+        gbc.weightx = 1.0;
+
+        JPanel fieldPanel = new JPanel();
+        fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.Y_AXIS));
+        fieldPanel.setOpaque(false);
+
+        JLabel lbl = new JLabel(label);
+        lbl.setFont(FONT_BOLD);
+        lbl.setForeground(COLOR_TEXT_LIGHT);
+        lbl.setAlignmentX(Component.LEFT_ALIGNMENT);
+        fieldPanel.add(lbl);
+        fieldPanel.add(Box.createVerticalStrut(5));
+
+        component.setFont(FONT_MAIN);
+        component.setAlignmentX(Component.LEFT_ALIGNMENT);
+        fieldPanel.add(component);
+
+        panel.add(fieldPanel, gbc);
+    }
+
+    // =================================================================================
+    // Embedded Custom UI Components
+    // =================================================================================
+
+    private static class RoundedPanel extends JPanel {
+        public RoundedPanel() {
+            super();
+            setOpaque(false);
+            setBorder(BorderFactory.createEmptyBorder(20, 25, 20, 25));
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setColor(COLOR_WHITE);
+            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+            g2d.dispose();
+            super.paintComponent(g);
+        }
+    }
+
+    private static class RoundedButton extends JButton {
+        private final Color originalBgColor;
+        private final Color hoverBgColor;
+        private Color currentBgColor;
+        private final int cornerRadius = 20;
+
+        public RoundedButton(String text, Icon icon, Color background, Color hover) {
+            super(text);
+            this.originalBgColor = background;
+            this.hoverBgColor = hover;
+            this.currentBgColor = background;
+
+            setIcon(icon);
+            setFont(FONT_BOLD);
+            setCursor(new Cursor(Cursor.HAND_CURSOR));
+            setContentAreaFilled(false);
+            setFocusPainted(false);
+            setBorder(BorderFactory.createEmptyBorder(9, 16, 9, 16));
+
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    currentBgColor = hoverBgColor;
+                    repaint();
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    currentBgColor = originalBgColor;
+                    repaint();
+                }
+            });
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(currentBgColor);
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), cornerRadius, cornerRadius);
+            g2.dispose();
+            super.paintComponent(g);
+        }
+    }
+
+    private static class SearchField extends JPanel {
+        public SearchField(String placeholder, Icon icon) {
+            super(new BorderLayout(10, 0));
+            setBackground(COLOR_WHITE);
+            setBorder(BorderFactory.createEmptyBorder(5, 12, 5, 12));
+
+            JLabel iconLabel = new JLabel(icon);
+            JTextField textField = new JTextField(placeholder);
+            textField.setFont(FONT_MAIN);
+            textField.setForeground(COLOR_TEXT_LIGHT);
+            textField.setBorder(null);
+            textField.setOpaque(false);
+
+            textField.addFocusListener(new FocusAdapter() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    if (textField.getText().equals(placeholder)) {
+                        textField.setText("");
+                        textField.setForeground(COLOR_TEXT_DARK);
+                    }
+                }
+
+                @Override
+                public void focusLost(FocusEvent e) {
+                    if (textField.getText().isEmpty()) {
+                        textField.setText(placeholder);
+                        textField.setForeground(COLOR_TEXT_LIGHT);
+                    }
+                }
+            });
+
+            add(iconLabel, BorderLayout.WEST);
+            add(textField, BorderLayout.CENTER);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setColor(getBackground());
+            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+            g2d.setColor(COLOR_BORDER);
+            g2d.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 20, 20);
+            g2d.dispose();
+            super.paintComponent(g);
+        }
+    }
+
+    private static class IconFactory {
+        public enum IconType {
+            SEARCH, DEPARTMENT, CALENDAR, ROOM_TYPE, ADD, USER_AVATAR
+        }
+
+        public static Icon createIcon(IconType type) {
+            return new ScalableIcon(type);
+        }
+
+        private static class ScalableIcon implements Icon {
+            private final IconType type;
+            private final int size = 18;
+
+            public ScalableIcon(IconType type) {
+                this.type = type;
+            }
+
+            @Override
+            public void paintIcon(Component c, Graphics g, int x, int y) {
+                Graphics2D g2d = (Graphics2D) g.create();
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                g2d.setColor(c.getForeground());
+
+                int half = size / 2;
+                int quarter = size / 4;
+
+                switch (type) {
+                    case USER_AVATAR:
+                        g2d.drawOval(x + quarter, y + 2, half, half);
+                        g2d.drawArc(x + 2, y + half, size - 4, size - 4, 180, 180);
+                        break;
+                    case SEARCH:
+                        g2d.drawOval(x + 2, y + 2, size - 7, size - 7);
+                        g2d.drawLine(x + size - 6, y + size - 6, x + size - 2, y + size - 2);
+                        break;
+                    case DEPARTMENT:
+                        g2d.drawRect(x + 2, y + 2, size - 4, size - 4);
+                        g2d.drawLine(x + half, y + 2, x + half, y + size - 2);
+                        g2d.drawLine(x + 2, y + half, size - 2, y + half);
+                        break;
+                    case CALENDAR:
+                        g2d.drawRect(x + 2, y + 4, size - 4, size - 6);
+                        g2d.drawLine(x + 2, y + 8, x + size - 2, y + 8);
+                        g2d.drawLine(x + 5, y + 2, x + 5, y + 6);
+                        g2d.drawLine(x + size - 5, y + 2, x + size - 5, y + 6);
+                        break;
+                    case ROOM_TYPE:
+                        g2d.drawRect(x + 2, y + 8, size - 4, 8);
+                        g2d.drawRect(x + 5, y + 2, size - 10, 6);
+                        break;
+                    case ADD:
+                        g2d.drawLine(x + half, y + 3, x + half, y + size - 3);
+                        g2d.drawLine(x + 3, y + half, x + size - 3, y + half);
+                        break;
+                }
+                g2d.dispose();
+            }
+
+            @Override public int getIconWidth() { return size; }
+            @Override public int getIconHeight() { return size; }
+        }
+    }
+
+    private static class AvatarRenderer extends DefaultTableCellRenderer {
+        private final Icon avatarIcon = IconFactory.createIcon(IconFactory.IconType.USER_AVATAR);
+
+        public AvatarRenderer() {
+            setIconTextGap(15);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            setIcon(avatarIcon);
+            setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+            return this;
+        }
+    }
+
+
+}
+
