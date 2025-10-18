@@ -1,6 +1,7 @@
 package controllers;
 
 import dao.StudentDAO;
+import models.Student;
 import ui.screen.panels.StudentPanel;
 import utils.SessionManager;
 
@@ -14,6 +15,17 @@ public class StudentController {
        this.view = view;
 
        studentDAO = new StudentDAO();
+       handleGetAllStudents();
+   }
+
+
+
+   private void handleAddStudent(){
+       Student newStudent = new Student();
+
+   }
+
+   public void handleGetAllStudents(){
        view.setStudents( studentDAO.getAllStudents(SessionManager.getCurrentAdmin().getHostelId()));
    }
 }

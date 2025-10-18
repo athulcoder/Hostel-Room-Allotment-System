@@ -39,7 +39,9 @@ public class StudentPanel extends JPanel {
     private JTable table;
     private DefaultTableModel model;
     private Object[][] data;
+    private Student newStudent;
     //list of student
+
     private ArrayList<Student> students = new ArrayList<>();
 
     public StudentPanel() {
@@ -267,6 +269,7 @@ public class StudentPanel extends JPanel {
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         buttonPanel.setOpaque(false);
+
 
         RoundedButton saveBtn = new RoundedButton("Save", null, COLOR_PRIMARY_ACCENT, COLOR_PRIMARY_ACCENT.brighter());
         saveBtn.setForeground(COLOR_WHITE);
