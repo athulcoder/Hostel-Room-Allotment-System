@@ -96,11 +96,11 @@ public class RoomDAO {
     }
 
     //Delete a room
-    public boolean deleteRoom(int roomNumber) {
+    public boolean deleteRoom(String roomNumber) {
         String deleteSql = "DELETE FROM rooms WHERE roomNumber = ?";
 
         try (Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(deleteSql)) {
-            stmt.setInt(1, roomNumber);
+            stmt.setString(1, roomNumber);
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0)
                 return true;
@@ -111,9 +111,9 @@ public class RoomDAO {
     }
 
     //Fetch all rooms
-    public List<Room> getAllRooms() {
+    public ArrayList<Room> getAllRooms() {
         String sql = "SELECT * FROM rooms";
-        List<Room> rooms = new ArrayList<>();
+        ArrayList<Room> rooms = new ArrayList<>();
 
         try (Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
@@ -123,6 +123,7 @@ public class RoomDAO {
                 room.setRoomNumber(rs.getString("roomNumber"));
                 room.setCapacity(rs.getInt("capacity"));
                 room.setOccupancy(rs.getInt("occupancy"));
+                room.setFloorNumber(rs.getInt("floorNumber"));
                 room.setRoomType(rs.getString("roomType"));
                 room.setHostelId(rs.getString("hostelId"));
                 room.setRoomFull(rs.getBoolean("isFull"));
@@ -135,9 +136,9 @@ public class RoomDAO {
     }
 
     //Fetch all available rooms (rooms where occupied < capacity)
-    public List<Room> getAvailableRooms() {
+    public ArrayList<Room> getAvailableRooms() {
         String sql = "SELECT * FROM rooms WHERE isFull = 0"; // isFull = false
-        List<Room> rooms = new ArrayList<>();
+        ArrayList<Room> rooms = new ArrayList<>();
 
         try (Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();

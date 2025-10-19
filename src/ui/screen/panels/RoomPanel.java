@@ -1,13 +1,19 @@
 package ui.screen.panels;
 
+import dao.RoomDAO;
+import models.Room;
+import models.Student;
+import ui.screen.Dashboard;
 import ui.screen.components.AppColors;
 import ui.screen.components.AppFonts;
 import ui.screen.components.RoundedButton;
+import utils.SessionManager;
 // We will not import their RoundedPanel as it lacks painting logic.
 // Instead, we create our own inner class that works.
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
@@ -26,6 +32,9 @@ public class RoomPanel extends JPanel {
     private JLabel availableRoomsCard;
 
 
+    private RoundedButton refreshBtn;
+    Object[][] data;
+    ArrayList<Room> rooms;
     public RoomPanel() {
         // Main panel setup
         setLayout(new BorderLayout(0, 20)); // Increased gap
@@ -93,6 +102,7 @@ public class RoomPanel extends JPanel {
         });
 
         // Add Room Button
+
         RoundedButton addBtn = new RoundedButton(
                 "+ Add Room",
                 null,
@@ -101,11 +111,23 @@ public class RoomPanel extends JPanel {
         );
         addBtn.setForeground(AppColors.COLOR_WHITE);
         addBtn.addActionListener(e -> addNewRoom());
-
+        addBtn.setForeground(AppColors.COLOR_WHITE);
         right.add(search);
         // We can add styled JComboBoxes here if needed
         right.add(Box.createHorizontalStrut(10));
         right.add(addBtn);
+
+        //refresh button
+        refreshBtn = new RoundedButton(
+                "Refresh", null,
+                AppColors.COLOR_PRIMARY_ACCENT,
+                AppColors.COLOR_PRIMARY_ACCENT_LIGHT
+        );
+        refreshBtn.setForeground(AppColors.COLOR_WHITE);
+        refreshBtn.setForeground(AppColors.COLOR_WHITE);
+        right.add(Box.createHorizontalStrut(10));
+        right.add(refreshBtn);
+
 
         panel.add(left, BorderLayout.WEST);
         panel.add(right, BorderLayout.EAST);
@@ -226,19 +248,13 @@ public class RoomPanel extends JPanel {
         header.add(legend, BorderLayout.EAST);
         panel.add(header, BorderLayout.NORTH);
 
-        // Table Data
-        String[] cols = {"", "Room ID", "Room Type", "Capacity", "Occupancy", "Actions"};
-        Object[][] data = {
-                {"Partial", "A-101", "Single", 2, 1},
-                {"Partial", "A-102", "Double", 4, 2},
-                {"Full", "B-220", "Double", 4, 4},
-                {"Available", "B-118", "Single", 2, 0}
-        };
+        //Table Cols
+        String[] cols = {"", "Room ID", "Room Type", "Capacity", "Occupancy", "Floor Number", "Action"};
 
         tableModel = new DefaultTableModel(data, cols) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 5; // Only "Actions" column is "editable"
+                return column == 6; // Only "Actions" column is "editable"
             }
         };
 
@@ -250,9 +266,9 @@ public class RoomPanel extends JPanel {
         colModel.getColumn(0).setCellRenderer( new StatusRenderer());
         colModel.getColumn(0).setMaxWidth(40);
 
-        colModel.getColumn(5).setCellRenderer(new ButtonRenderer());
-        colModel.getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox()));
-        colModel.getColumn(5).setMinWidth(180); // Give buttons space
+        colModel.getColumn(6).setCellRenderer(new ButtonRenderer());
+        colModel.getColumn(6).setCellEditor(new ButtonEditor(new JCheckBox()));
+        colModel.getColumn(6).setMinWidth(180); // Give buttons space
 
         JScrollPane scrollPane = new JScrollPane(roomsTable);
         scrollPane.getViewport().setBackground(AppColors.COLOR_WHITE);
@@ -321,6 +337,7 @@ public class RoomPanel extends JPanel {
 
         if (dialog.isSaved()) {
             tableModel.addRow(dialog.getRoomData());
+            refreshBtn.doClick();
         }
     }
 
@@ -328,12 +345,13 @@ public class RoomPanel extends JPanel {
      * Handles the logic for showing the "Edit Room" dialog.
      */
     private void editRoom(int row) {
-        Object[] rowData = new Object[5];
+        Object[] rowData = new Object[6];
         rowData[0] = tableModel.getValueAt(row, 0); // Status
         rowData[1] = tableModel.getValueAt(row, 1); // ID
         rowData[2] = tableModel.getValueAt(row, 2); // Type
         rowData[3] = tableModel.getValueAt(row, 3); // Capacity
         rowData[4] = tableModel.getValueAt(row, 4); // Occupancy
+        rowData[5] = tableModel.getValueAt(row, 5); // floor
 
         RoomDialog dialog = new RoomDialog(
                 SwingUtilities.getWindowAncestor(this),
@@ -344,11 +362,13 @@ public class RoomPanel extends JPanel {
 
         if (dialog.isSaved()) {
             Object[] updatedData = dialog.getRoomData();
+            refreshBtn.doClick();
             // Update the model row
             for (int i = 0; i < updatedData.length; i++) {
                 tableModel.setValueAt(updatedData[i], row, i);
             }
         }
+        refreshBtn.doClick();
     }
 
     /**
@@ -365,7 +385,10 @@ public class RoomPanel extends JPanel {
         );
 
         if (confirm == JOptionPane.YES_OPTION) {
+            RoomDAO roomDAO = new RoomDAO();
+            roomDAO.deleteRoom(roomID);
             tableModel.removeRow(row);
+            refreshBtn.doClick();
         }
     }
 
@@ -418,14 +441,19 @@ public class RoomPanel extends JPanel {
         public Component getTableCellRendererComponent(JTable table, Object value,
                                                        boolean isSelected, boolean hasFocus, int row, int column) {
 
-            String status = (value != null) ? value.toString() : "";
+
+            String status = "Available";
+            if(value.equals(true)){
+                status="Full";
+            }
+
             switch (status) {
                 case "Available":
                     dotColor = new Color(34, 197, 94); // Green
                     break;
-                case "Partial":
-                    dotColor = new Color(249, 115, 22); // Orange
-                    break;
+//                case "Partial":
+//                    dotColor = new Color(249, 115, 22); // Orange
+//                    break;
                 case "Full":
                     dotColor = new Color(239, 68, 68); // Red
                     break;
@@ -536,6 +564,7 @@ public class RoomPanel extends JPanel {
             editBtn.addActionListener(e -> {
                 fireEditingStopped();
                 editRoom(row);
+
             });
 
             delBtn.addActionListener(e -> {
@@ -574,6 +603,7 @@ public class RoomPanel extends JPanel {
         private JComboBox<String> roomTypeCombo;
         private JTextField capacityField;
         private JTextField occupancyField;
+        private JTextField floorField;
         private Object[] initialData;
 
         public RoomDialog(Window owner, String title, Object[] data) {
@@ -597,15 +627,17 @@ public class RoomPanel extends JPanel {
 
             // Init components
             roomIdField = new JTextField(20);
-            roomTypeCombo = new JComboBox<>(new String[]{"Single", "Double"});
+            roomTypeCombo = new JComboBox<>(new String[]{"2 sharing", "4 sharing","6 sharing"});
             capacityField = new JTextField(20);
             occupancyField = new JTextField(20);
+            floorField = new JTextField(20);
 
             // Style components
             styleField(roomIdField);
             styleField(capacityField);
             styleField(occupancyField);
             styleField(roomTypeCombo);
+            styleField(floorField);
 
             // Add components to form
             gbc.gridx = 0; gbc.gridy = 0;
@@ -627,6 +659,11 @@ public class RoomPanel extends JPanel {
             formPanel.add(createLabel("Occupancy"), gbc);
             gbc.gridx = 1; gbc.gridy = 3;
             formPanel.add(occupancyField, gbc);
+
+            gbc.gridx = 0; gbc.gridy = 4;
+            formPanel.add(createLabel("floor Number"), gbc);
+            gbc.gridx = 1; gbc.gridy = 4;
+            formPanel.add(floorField, gbc);
 
             // Add spacer
             gbc.gridy = 4; gbc.weighty = 1.0;
@@ -664,9 +701,11 @@ public class RoomPanel extends JPanel {
             // Populate form if this is an edit
             if (initialData != null) {
                 roomIdField.setText(initialData[1].toString());
+                roomIdField.setEnabled(false);
                 roomTypeCombo.setSelectedItem(initialData[2].toString());
                 capacityField.setText(initialData[3].toString());
                 occupancyField.setText(initialData[4].toString());
+                floorField.setText(initialData[5].toString());
             }
         }
 
@@ -707,6 +746,7 @@ public class RoomPanel extends JPanel {
                 String type = (String) roomTypeCombo.getSelectedItem();
                 int capacity = Integer.parseInt(capacityField.getText());
                 int occupancy = Integer.parseInt(occupancyField.getText());
+                int floorNumber = Integer.parseInt(floorField.getText());
 
                 if (id.isEmpty()) {
                     JOptionPane.showMessageDialog(this, "Room ID cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -718,24 +758,39 @@ public class RoomPanel extends JPanel {
                 }
 
                 // Determine status
-                String status;
-                if (occupancy == 0) {
-                    status = "Available";
-                } else if (occupancy >= capacity) {
+                String status ="";
+                if (occupancy == capacity) {
                     status = "Full";
-                    occupancy = capacity; // Cap occupancy
-                } else {
-                    status = "Partial";
+                     // Cap occupancy
+                }
+                else{
+                    status ="Available";
                 }
 
                 // Store the result
-                this.initialData = new Object[]{status, id, type, capacity, occupancy};
+                //Create dao object to communicate with db
+                RoomDAO roomDAO = new RoomDAO();
+                Room room = new Room(roomIdField.getText(),String.valueOf(roomTypeCombo.getSelectedItem()),Integer.parseInt(floorField.getText()),Integer.parseInt(capacityField.getText()), SessionManager.getCurrentAdmin().getHostelId());
+                    room.setOccupancy(occupancy);
+                //if there was initial data that mean there was already room
+                if(initialData !=null){
+                    roomDAO.updateRoom(room);
+                }
+                else{
+                    roomDAO.createRoom(room);
+                }
+
+                this.initialData = new Object[]{status, id, type, capacity, occupancy,floorNumber};
                 this.saved = true;
-                dispose(); // Close the dialog
+
+
+                dispose();// Close the dialog
 
             } catch (NumberFormatException ex) {
+                System.out.println(ex.getStackTrace());
                 JOptionPane.showMessageDialog(this, "Capacity and Occupancy must be valid numbers.", "Error", JOptionPane.ERROR_MESSAGE);
             }
+
         }
     }
 
@@ -756,7 +811,6 @@ public class RoomPanel extends JPanel {
     //setters to set the header cards data
 
     public void setTotalRoomCard(int totalRoom){
-        System.out.println(totalRoom);
         totalRoomCard.setText(String.valueOf(totalRoom));
     }
 
@@ -772,4 +826,28 @@ public class RoomPanel extends JPanel {
         availableRoomsCard.setText(String.valueOf(availableRooms));
     }
 
+
+    public void setRooms(ArrayList<Room> rooms){
+        this.rooms = rooms;
+
+        tableModel.setRowCount(0);
+
+        for (Room room : rooms) {
+            Object[] row = {
+                    room.getRoomFull(),
+                    room.getRoomNumber(),
+                    room.getRoomType(),
+                    room.getCapacity(),
+                    room.getOccupancy(),
+                    room.getFloorNumber()
+            };
+
+            tableModel.addRow(row);
+        }
+
+    }
+
+    public RoundedButton getRefreshBtn(){
+        return refreshBtn;
+    }
 }
