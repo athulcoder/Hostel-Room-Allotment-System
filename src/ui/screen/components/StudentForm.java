@@ -16,6 +16,7 @@ public class StudentForm {
 
     private JDialog dialog;
     private RoundedButton saveBtn;
+    private RoundedButton deleteBtn;
     private RoundedButton updateBtn;
     private ArrayList<Student> students = new ArrayList<>();
     private JTextField studentIdField;
@@ -40,6 +41,7 @@ public class StudentForm {
             this.parent = parent;
             saveBtn = new RoundedButton("Save", null, COLOR_PRIMARY_ACCENT, COLOR_PRIMARY_ACCENT.brighter());
             updateBtn = new RoundedButton("Update", null, COLOR_PRIMARY_ACCENT, COLOR_PRIMARY_ACCENT.brighter());
+            deleteBtn = new RoundedButton("Delete", null, COLOR_DANGER_LIGHT, COLOR_DANGER_HOVER);
 
     }
 
@@ -153,9 +155,7 @@ public class StudentForm {
 
 
 
-        RoundedButton deleteBtn = new RoundedButton("Delete", null, COLOR_DANGER_LIGHT, COLOR_DANGER_HOVER);
         deleteBtn.setForeground(COLOR_DANGER);
-        deleteBtn.addActionListener(e -> parentDialog.dispose()); // Add delete logic here
         deleteBtn.setVisible(data != null); // Only show delete for existing students
 
         RoundedButton cancelBtn = new RoundedButton("Cancel", null, COLOR_WHITE, COLOR_SIDEBAR);
@@ -198,7 +198,7 @@ public class StudentForm {
         return yearCombo;
     }
     public JComboBox<String> getDeptCombo(){
-        return yearCombo;
+        return deptCombo;
     }
     public JComboBox<String> getRoomTypeCombo(){
         return roomTypeCombo;
@@ -229,6 +229,9 @@ public class StudentForm {
 
     public RoundedButton getSaveBtn(){
         return saveBtn;
+    }
+    public RoundedButton getDeleteBtn(){
+        return deleteBtn;
     }
     public RoundedButton getUpdateBtn(){
         return updateBtn;

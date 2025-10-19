@@ -18,6 +18,7 @@ public class StudentFormController {
 
         form.getSaveBtn().addActionListener(e->handleAddNewStudent());
         form.getUpdateBtn().addActionListener(e->handleUpdateStudent());
+        form.getDeleteBtn().addActionListener(e->handleDeleteStudent());
     }
 
 
@@ -39,6 +40,8 @@ public class StudentFormController {
         newStudent.setSleepType(String.valueOf(view.getSleepTypeCombo().getSelectedItem()));
         newStudent.setPreferredRoomType(String.valueOf(view.getRoomTypeCombo().getSelectedItem()));
         newStudent.setHostelId(SessionManager.getCurrentAdmin().getHostelId());
+
+        System.out.println(newStudent.getDepartment());
 
         if(!studentDAO.updateStudent(newStudent)) JOptionPane.showMessageDialog(null,"Error Occurred while updating student! check the studentId ");
         else  {
@@ -75,7 +78,7 @@ public class StudentFormController {
         newStudent.setPreferredRoomType(String.valueOf(view.getRoomTypeCombo().getSelectedItem()));
         newStudent.setHostelId(SessionManager.getCurrentAdmin().getHostelId());
 
-
+        System.out.println(newStudent.getDepartment());
 
 
 
@@ -88,6 +91,22 @@ public class StudentFormController {
             }
         }
 
+    }
+
+
+
+    private void handleDeleteStudent(){
+
+        int choice =JOptionPane.showConfirmDialog(null,"Student will be removed from the hostel. are you sure? ","Delete Student",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+
+        switch (choice){
+            case JOptionPane.OK_OPTION: studentDAO.deleteStudent(view.getStudentIdField().getText());
+                                        JOptionPane.showMessageDialog(null,"Student deleted !");
+                                        break;
+            case JOptionPane.CANCEL_OPTION: break;
+        }
+
+        view.getDialog().dispose();
     }
     }
 
