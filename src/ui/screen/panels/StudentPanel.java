@@ -1,7 +1,9 @@
 package ui.screen.panels;
 
+import controllers.StudentController;
 import models.Student;
 import ui.screen.components.RoundedButton;
+import utils.SessionManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -16,6 +18,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class StudentPanel extends JPanel {
@@ -45,6 +48,24 @@ public class StudentPanel extends JPanel {
     //list of student
     private RoundedButton refreshBtn;
     private ArrayList<Student> students = new ArrayList<>();
+    private JTextField studentIdField;
+    private JTextField nameField;
+    private JComboBox<String> genderCombo;
+    private JTextField ageField;
+    private JComboBox<String> yearCombo;
+    private JComboBox<String> deptCombo;
+    private JComboBox<String> roomTypeCombo;
+    private JComboBox<String> sleepTypeCombo;
+    private JTextField roomField;
+    private JTextField contactNumberField;
+    private JTextField emailField;
+    private JTextField guardianNameField;
+    private JTextField guardianPhoneField;
+
+
+    // save Button
+    private RoundedButton saveBtn;
+
 
     public StudentPanel() {
         super(new BorderLayout(0, 20));
@@ -109,7 +130,7 @@ public class StudentPanel extends JPanel {
         roomBtn.setForeground(COLOR_TEXT_DARK);
         actionBar.add(roomBtn);
 
-        refreshBtn = new RoundedButton("Refresh", IconFactory.createIcon(IconFactory.IconType.SEARCH), COLOR_PRIMARY_ACCENT, COLOR_SIDEBAR);
+        refreshBtn = new RoundedButton("Refresh", IconFactory.createIcon(IconFactory.IconType.REFRESH), COLOR_PRIMARY_ACCENT, COLOR_SIDEBAR);
         refreshBtn.setForeground(COLOR_TEXT_DARK);
         actionBar.add(refreshBtn);
         actionBar.add(Box.createHorizontalStrut(10));
@@ -174,6 +195,7 @@ public class StudentPanel extends JPanel {
                 int selectedRow = table.getSelectedRow();
                 Object[] rowData = new Object[model.getColumnCount()];
                 for (int i = 0; i < model.getColumnCount(); i++) {
+
                     rowData[i] = model.getValueAt(selectedRow, i);
                 }
                 showStudentDialog(rowData); // Show dialog for editing
@@ -186,6 +208,7 @@ public class StudentPanel extends JPanel {
         tableHeader.setBackground(COLOR_WHITE);
         tableHeader.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, COLOR_BORDER));
 
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.getColumnModel().getColumn(0).setCellRenderer(new AvatarRenderer());
 
         JScrollPane scrollPane = new JScrollPane(table);
@@ -198,6 +221,7 @@ public class StudentPanel extends JPanel {
 
     private void showStudentDialog(Object[] data) {
         Window parentWindow = SwingUtilities.getWindowAncestor(this);
+
         JDialog dialog = new JDialog((Frame) parentWindow, true); // Modal
 
         JPanel detailsPanel = createStudentDetailsPanel(dialog, data);
@@ -225,29 +249,33 @@ public class StudentPanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Create and populate fields
-        JTextField nameField = new JTextField(data != null ? data[1].toString() : "");
-        JComboBox<String> genderCombo = new JComboBox<>(new String[]{"Female", "Male"});
+        studentIdField = new JTextField(data!=null?data[0].toString():"");
+        if(data!=null)studentIdField.setEnabled(false);
+        nameField = new JTextField(data != null ? data[1].toString() : "");
+        genderCombo = new JComboBox<>(new String[]{"Female", "Male"});
         if (data != null) genderCombo.setSelectedItem(data[2]);
-        JTextField ageField = new JTextField(data != null ? data[3].toString() : "");
-        JComboBox<String> yearCombo = new JComboBox<>(new String[]{"Year 1", "Year 2", "Year 3", "Year 4"});
+        ageField = new JTextField(data != null ? data[3].toString() : "");
+        yearCombo = new JComboBox<>(new String[]{"Year 1", "Year 2", "Year 3", "Year 4"});
         if (data != null) yearCombo.setSelectedItem(data[5]);
-        JComboBox<String> deptCombo = new JComboBox<>(new String[]{"Computer Science", "Economics", "Mechanical Eng.", "Business Admin", "Biology"});
+        deptCombo = new JComboBox<>(new String[]{"Computer Science", "Economics", "Mechanical Eng.", "Business Admin", "Biology"});
         if (data != null) deptCombo.setSelectedItem(data[4]);
-        JComboBox<String> roomTypeCombo = new JComboBox<>(new String[]{"2-sharing", "4-sharing", "6-sharing"});
+         roomTypeCombo = new JComboBox<>(new String[]{"2-sharing", "4-sharing", "6-sharing"});
         if (data != null) roomTypeCombo.setSelectedItem(data[10]);
-        JComboBox<String> sleepTypeCombo = new JComboBox<>(new String[]{"Early", "Night"});
+        sleepTypeCombo = new JComboBox<>(new String[]{"Early", "Night"});
         if(data!=null) sleepTypeCombo.setSelectedItem(data[12]);
-        JTextField roomField = new JTextField(data != null ? data[11].toString() : ""); // Dummy data
-        JTextField contactNumberField = new JTextField(data != null ? data[6].toString() : "");// Dummy data
-        JTextField emailField = new JTextField(data != null ? data[7].toString() : "");// Dummy data
+        roomField = new JTextField(data != null ? data[11].toString() : ""); // Dummy data
+        contactNumberField = new JTextField(data != null ? data[6].toString() : "");// Dummy data
+        emailField = new JTextField(data != null ? data[7].toString() : "");// Dummy data
 
-        JTextField guardianNameField = new JTextField(data != null ?data[8].toString() : ""); // Dummy data
-        JTextField guardianPhoneField = new JTextField(data != null ? data[9].toString() : ""); // Dummy data
+        guardianNameField = new JTextField(data != null ?data[8].toString() : ""); // Dummy data
+         guardianPhoneField = new JTextField(data != null ? data[9].toString() : ""); // Dummy data
 
-        addField(formPanel, gbc, "Name", nameField, 0, 0, 2);
-        addField(formPanel, gbc, "Gender", genderCombo, 0, 2, 2);
-        addField(formPanel, gbc, "Age", ageField, 1, 0, 1);
-        addField(formPanel, gbc, "Academic Year", yearCombo, 1, 2, 1);
+
+        addField(formPanel, gbc, "StudentID", studentIdField, 0, 0, 2);
+        addField(formPanel, gbc, "Name", nameField, 0, 2, 2);
+        addField(formPanel, gbc, "Gender", genderCombo, 1, 0, 1);
+        addField(formPanel, gbc, "Age", ageField, 1, 1, 2);
+        addField(formPanel, gbc, "Academic Year", yearCombo, 1, 3, 1);
         addField(formPanel, gbc, "Department", deptCombo, 2, 0, 2);
         addField(formPanel, gbc, "Preferred Room Type", roomTypeCombo, 2, 2, 2);
         addField(formPanel, gbc, "Sleep Type", sleepTypeCombo, 3, 0, 1);
@@ -262,9 +290,35 @@ public class StudentPanel extends JPanel {
         buttonPanel.setOpaque(false);
 
 
-        RoundedButton saveBtn = new RoundedButton("Save", null, COLOR_PRIMARY_ACCENT, COLOR_PRIMARY_ACCENT.brighter());
+        saveBtn = new RoundedButton("Save", null, COLOR_PRIMARY_ACCENT, COLOR_PRIMARY_ACCENT.brighter());
         saveBtn.setForeground(COLOR_WHITE);
-        saveBtn.addActionListener(e -> parentDialog.dispose()); // Add save logic here
+
+        //logic to save student
+        saveBtn.addActionListener(e-> {
+
+            if (data == null) {
+                Student newStudent = new Student();
+                newStudent.setStudentId(studentIdField.getText());
+                newStudent.setName(nameField.getText());
+                newStudent.setAge(Integer.parseInt(ageField.getText()));
+                newStudent.setGender(String.valueOf(genderCombo.getSelectedItem()));
+                newStudent.setDepartment(String.valueOf(deptCombo.getSelectedItem()));
+                newStudent.setAcademicYear(String.valueOf(yearCombo.getSelectedItem()));
+                newStudent.setContactNumber(contactNumberField.getText());
+                newStudent.setEmail(emailField.getText());
+                newStudent.setAssignedRoom(roomField.getText());
+                newStudent.setDateOfAdmission(LocalDateTime.now());
+                newStudent.setGuardianName(guardianNameField.getText());
+                newStudent.setGuardianPhone(guardianPhoneField.getText());
+                newStudent.setSleepType(String.valueOf(sleepTypeCombo.getSelectedItem()));
+                newStudent.setPreferredRoomType(String.valueOf(roomTypeCombo.getSelectedItem()));
+                newStudent.setHostelId(SessionManager.getCurrentAdmin().getHostelId());
+
+
+            }
+
+        });
+
 
         RoundedButton deleteBtn = new RoundedButton("Delete", null, COLOR_DANGER_LIGHT, COLOR_DANGER_HOVER);
         deleteBtn.setForeground(COLOR_DANGER);
@@ -279,6 +333,8 @@ public class StudentPanel extends JPanel {
         buttonPanel.add(deleteBtn);
         buttonPanel.add(saveBtn);
 
+
+
         gbc.gridy = 6;
         gbc.gridx = 0;
         gbc.gridwidth = 4;
@@ -290,6 +346,7 @@ public class StudentPanel extends JPanel {
         panel.add(formPanel, BorderLayout.CENTER);
         panel.setPreferredSize(new Dimension(450, (int)panel.getPreferredSize().getHeight()));
         return panel;
+
     }
 
     private void addField(JPanel panel, GridBagConstraints gbc, String label, JComponent component, int y, int x, int width) {
@@ -389,7 +446,8 @@ public class StudentPanel extends JPanel {
 
     private static class IconFactory {
         public enum IconType {
-            SEARCH, DEPARTMENT, CALENDAR, ROOM_TYPE, ADD, USER_AVATAR
+            SEARCH, DEPARTMENT, CALENDAR, ROOM_TYPE, ADD, USER_AVATAR,DASHBOARD, STUDENTS, ROOMS, ALLOTMENTS, SETTINGS, REFRESH,
+            ALERTS, ADMIN, ROOMS_AVAILABLE, APP_LOGO
         }
 
         public static Icon createIcon(IconType type) {
@@ -415,6 +473,64 @@ public class StudentPanel extends JPanel {
                 int quarter = size / 4;
 
                 switch (type) {
+                    case DASHBOARD:
+                        g2d.drawRect(x + 2, y + 2, size - 4, size - 4);
+                        g2d.fillRect(x + 5, y + 5, quarter, quarter);
+                        g2d.fillRect(x + size - quarter - 5, y + 5, quarter, quarter);
+                        g2d.fillRect(x + 5, y + size - quarter - 5, quarter, quarter);
+                        g2d.fillRect(x + size - quarter - 5, y + size - quarter - 5, quarter, quarter);
+                        break;
+                    case STUDENTS:
+                    case ADMIN:
+                        g2d.drawOval(x + quarter, y + 2, half, half);
+                        g2d.drawArc(x + 2, y + half, size - 4, size - 4, 180, 180);
+                        break;
+                    case ROOMS:
+                        g2d.drawRect(x + 2, y + 6, size - 4, size - 8);
+                        g2d.drawLine(x + 2, y + 10, size - 2, y + 10);
+                        g2d.fillRect(x + 5, y + 3, quarter, 4);
+                        break;
+                    case ALLOTMENTS:
+                        g2d.drawOval(x + 2, y + 2, 8, 8);
+                        g2d.drawLine(x + 8, y + 8, x + size - 2, y + size - 2);
+                        g2d.drawLine(x + size - 6, y + size - 2, x + size - 2, y + size - 2);
+                        g2d.drawLine(x + size - 2, y + size - 6, x + size - 2, y + size - 2);
+                        break;
+                    case SETTINGS:
+                        g2d.drawOval(x + quarter, y + quarter, half, half);
+                        for(int i = 0; i < 8; i++) {
+                            double angle = Math.toRadians(i * 45);
+                            g2d.drawLine(
+                                    (int)(x + half + Math.cos(angle) * (half - 2)),
+                                    (int)(y + half + Math.sin(angle) * (half - 2)),
+                                    (int)(x + half + Math.cos(angle) * (half + 2)),
+                                    (int)(y + half + Math.sin(angle) * (half + 2))
+                            );
+                        }
+                        break;
+                    case REFRESH:
+                        g2d.drawArc(x + 2, y + 2, size - 4, size - 4, 30, 300);
+                        g2d.fillPolygon(new int[]{x + half, x + half - 4, x + half + 4}, new int[]{y, y + 6, y + 6}, 3);
+                        break;
+                    case ALERTS:
+                        g2d.drawArc(x + 2, y + 2, size - 4, 12, 0, 180);
+                        g2d.drawLine(x + 2, y + 8, x + size - 2, y + 8);
+                        g2d.drawArc(x + 6, y + 12, 6, 4, 180, 180);
+                        break;
+                    case ROOMS_AVAILABLE:
+                        g2d.drawRect(x + 2, y + 6, size - 4, size - 8);
+                        g2d.drawLine(x + 2, y + 10, size - 2, y + 10);
+                        g2d.fillRect(x + 5, y + 3, quarter, 4);
+                        g2d.drawLine(x + size - 6, y + 3, x + size - 2, y + 7);
+                        g2d.drawLine(x + size - 6, y + 7, x + size - 2, y + 3);
+                        break;
+                    case APP_LOGO:
+                        g2d.setColor(COLOR_PRIMARY_ACCENT);
+                        g2d.fillOval(x, y, size, size);
+                        g2d.setColor(COLOR_WHITE);
+                        g2d.fillPolygon(new int[]{x+5, x+half, x+size-5}, new int[]{y+size-5, y+5, y+size-5}, 3);
+                        break;
+
                     case USER_AVATAR:
                         g2d.drawOval(x + quarter, y + 2, half, half);
                         g2d.drawArc(x + 2, y + half, size - 4, size - 4, 180, 180);
@@ -442,7 +558,9 @@ public class StudentPanel extends JPanel {
                         g2d.drawLine(x + half, y + 3, x + half, y + size - 3);
                         g2d.drawLine(x + 3, y + half, x + size - 3, y + half);
                         break;
+
                 }
+
                 g2d.dispose();
             }
 
@@ -504,5 +622,55 @@ public class StudentPanel extends JPanel {
     public RoundedButton getRefreshBtn() {
         return refreshBtn;
     }
+
+
+    //getters for the form
+    public JTextField getStudentIdField(){
+        return studentIdField;
+    }
+    public JTextField getNameField(){
+        return nameField;
+    }
+    public JComboBox<String> getGenderCombo(){
+        return genderCombo;
+    }
+    public JComboBox<String> getYearCombo(){
+        return yearCombo;
+    }
+    public JComboBox<String> getDeptCombo(){
+        return yearCombo;
+    }
+    public JComboBox<String> getRoomTypeCombo(){
+        return roomTypeCombo;
+    }
+    public JComboBox<String> getSleepTypeCombo(){
+        return sleepTypeCombo;
+    }
+    public JTextField getAgeField(){
+        return  ageField;
+    }
+    public JTextField getRoomField(){
+        return roomField;
+    }
+    public JTextField getEmailField(){
+        return emailField;
+
+    }
+
+    public JTextField getContactNumberField(){
+        return contactNumberField;
+    }
+    public JTextField getGuardianNameField(){
+        return guardianNameField;
+    }
+    public JTextField getGuardianPhoneField(){
+        return guardianPhoneField;
+    }
+
+    public RoundedButton getSaveBtn(){
+        return saveBtn;
+    }
 }
+
+
 
