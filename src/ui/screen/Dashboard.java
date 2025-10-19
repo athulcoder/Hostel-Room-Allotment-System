@@ -37,8 +37,8 @@ public class Dashboard extends JPanel {
     public static final Font FONT_HEADER = new Font("Segoe UI", Font.BOLD, 28);
     public static final Font FONT_CARD_VALUE = new Font("Segoe UI", Font.BOLD, 36);
 
-    private JPanel contentSwitchPanel;
-    private CardLayout cardLayout;
+    private final JPanel contentSwitchPanel;
+    private final CardLayout cardLayout;
     private final Map<String, SidebarButton> sidebarButtons = new HashMap<>();
 
     public Dashboard() {
@@ -228,7 +228,6 @@ public class Dashboard extends JPanel {
             private final Color originalBgColor;
             private final Color hoverBgColor;
             private Color currentBgColor;
-            private final int cornerRadius = 20;
 
             public RoundedButton(String text, Icon icon, Color background, Color hover) {
                 super(text);
@@ -262,6 +261,7 @@ public class Dashboard extends JPanel {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(currentBgColor);
+                int cornerRadius = 20;
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), cornerRadius, cornerRadius);
                 g2.dispose();
 
