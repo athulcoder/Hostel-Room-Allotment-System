@@ -139,7 +139,7 @@ public class RoomPanel extends JPanel {
         totalRoomCard = new JLabel();
         totalRoomCard.setFont(AppFonts.FONT_HEADER.deriveFont(32f));
         totalRoomCard.setForeground(AppColors.COLOR_TEXT_DARK);
-
+        card1.add(totalRoomCard);
 
         JPanel card2 =createCard("Rooms Allotted");
         roomAllottedCard = new JLabel();
@@ -748,7 +748,7 @@ public class RoomPanel extends JPanel {
         return roomAllottedCard;
     }
     public JLabel getTotalStudents(){
-        return totalRoomCard;
+        return totalStudentCard;
     }
     public JLabel getAvailableRoomsCard(){
         return availableRoomsCard;
@@ -756,6 +756,7 @@ public class RoomPanel extends JPanel {
     //setters to set the header cards data
 
     public void setTotalRoomCard(int totalRoom){
+        System.out.println(totalRoom);
         totalRoomCard.setText(String.valueOf(totalRoom));
     }
 
