@@ -37,7 +37,7 @@ public class StudentFormController {
         newStudent.setDateOfAdmission(LocalDateTime.now());
         newStudent.setGuardianName(view.getGuardianNameField().getText());
         newStudent.setGuardianPhone(view.getGuardianPhoneField().getText());
-        newStudent.setSleepType(String.valueOf(view.getSleepTypeCombo().getSelectedItem()));
+//        newStudent.setSleepType(String.valueOf(view.getSleepTypeCombo().getSelectedItem()));
         newStudent.setPreferredRoomType(String.valueOf(view.getRoomTypeCombo().getSelectedItem()));
         newStudent.setHostelId(SessionManager.getCurrentAdmin().getHostelId());
 
@@ -74,7 +74,7 @@ public class StudentFormController {
         newStudent.setDateOfAdmission(LocalDateTime.now());
         newStudent.setGuardianName(view.getGuardianNameField().getText());
         newStudent.setGuardianPhone(view.getGuardianPhoneField().getText());
-        newStudent.setSleepType(String.valueOf(view.getSleepTypeCombo().getSelectedItem()));
+//        newStudent.setSleepType(String.valueOf(view.getSleepTypeCombo().getSelectedItem()));
         newStudent.setPreferredRoomType(String.valueOf(view.getRoomTypeCombo().getSelectedItem()));
         newStudent.setHostelId(SessionManager.getCurrentAdmin().getHostelId());
 
