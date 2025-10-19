@@ -80,7 +80,8 @@ public class StudentDAO {
                     guardianPhone =?,
                     preferredRoomType =?,
                     assignedRoom = ?,
-                    sleepType = ?
+                    sleepType = ?,
+                    gender=?
                 WHERE studentId = ?;
                 """;
 
@@ -97,7 +98,8 @@ public class StudentDAO {
             updateStmt.setString(9, student.getPreferredRoomType());
             updateStmt.setString(10, student.getAssignedRoom());
             updateStmt.setString(11, student.getSleepType());
-            updateStmt.setString(12, student.getStudentId());
+            updateStmt.setString(12,student.getGender());
+            updateStmt.setString(13, student.getStudentId());
 
             int rowsInserted = updateStmt.executeUpdate();
 

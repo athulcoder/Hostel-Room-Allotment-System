@@ -6,6 +6,7 @@ import ui.screen.panels.StudentPanel;
 import utils.SessionManager;
 
 import javax.swing.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -26,10 +27,7 @@ public class StudentController {
 
 
 
-   private  void handleAddNewStudent(Student s){
-       studentDAO.addStudent(s);
-       handleGetAllStudents();
-   }
+
 
    public void handleGetAllStudents(){
 

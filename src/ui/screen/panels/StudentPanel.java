@@ -1,8 +1,11 @@
 package ui.screen.panels;
 
 import controllers.StudentController;
+import controllers.StudentFormController;
 import models.Student;
 import ui.screen.components.RoundedButton;
+import ui.screen.components.RoundedPanel;
+import ui.screen.components.StudentForm;
 import utils.SessionManager;
 
 import javax.swing.*;
@@ -21,24 +24,13 @@ import java.awt.geom.RoundRectangle2D;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import static ui.screen.components.AppColors.*;
+import static ui.screen.components.AppFonts.*;
+
 public class StudentPanel extends JPanel {
 
     // --- Embedded Theme Constants ---
-    public static final Color COLOR_BACKGROUND = new Color(245, 250, 248);
-    public static final Color COLOR_SIDEBAR = new Color(236, 244, 241);
-    public static final Color COLOR_PRIMARY_ACCENT = new Color(13, 156, 116);
-    public static final Color COLOR_PRIMARY_ACCENT_LIGHT = new Color(224, 243, 239);
-    public static final Color COLOR_WHITE = Color.WHITE;
-    public static final Color COLOR_TEXT_DARK = new Color(40, 40, 40);
-    public static final Color COLOR_TEXT_LIGHT = new Color(150, 150, 150);
-    public static final Color COLOR_BORDER = new Color(220, 220, 220);
-    public static final Color COLOR_DANGER = new Color(220, 38, 38);
-    public static final Color COLOR_DANGER_LIGHT = new Color(255, 235, 238);
-    public static final Color COLOR_DANGER_HOVER = new Color(254, 215, 215);
 
-    public static final Font FONT_MAIN = new Font("Segoe UI", Font.PLAIN, 14);
-    public static final Font FONT_BOLD = new Font("Segoe UI", Font.BOLD, 14);
-    public static final Font FONT_HEADER = new Font("Segoe UI", Font.BOLD, 28);
 
     private JTable table;
     private DefaultTableModel model;
@@ -48,6 +40,8 @@ public class StudentPanel extends JPanel {
     //list of student
     private RoundedButton refreshBtn;
     private ArrayList<Student> students = new ArrayList<>();
+
+
     private JTextField studentIdField;
     private JTextField nameField;
     private JComboBox<String> genderCombo;
@@ -102,7 +96,16 @@ public class StudentPanel extends JPanel {
 
         RoundedButton addStudentBtn = new RoundedButton("Add Student", IconFactory.createIcon(IconFactory.IconType.ADD), COLOR_PRIMARY_ACCENT, COLOR_PRIMARY_ACCENT.brighter());
         addStudentBtn.setForeground(COLOR_WHITE);
-        addStudentBtn.addActionListener(e -> showStudentDialog(null)); // Show dialog for adding
+        addStudentBtn.addActionListener(e ->
+                {
+                   StudentForm form = new StudentForm(null,this);
+                   new StudentFormController(form);
+                    form.showStudentDialog();
+
+
+                }
+                // Show dialog for adding
+        );
         headerPanel.add(addStudentBtn, BorderLayout.EAST);
 
         topPanel.add(headerPanel);
@@ -198,7 +201,10 @@ public class StudentPanel extends JPanel {
 
                     rowData[i] = model.getValueAt(selectedRow, i);
                 }
-                showStudentDialog(rowData); // Show dialog for editing
+                StudentForm form = new StudentForm(rowData,this);
+                new StudentFormController(form);
+                form.showStudentDialog();
+                // Show dialog for editing
             }
         });
 
@@ -219,170 +225,15 @@ public class StudentPanel extends JPanel {
         return panel;
     }
 
-    private void showStudentDialog(Object[] data) {
-        Window parentWindow = SwingUtilities.getWindowAncestor(this);
-
-        JDialog dialog = new JDialog((Frame) parentWindow, true); // Modal
-
-        JPanel detailsPanel = createStudentDetailsPanel(dialog, data);
-
-        dialog.setTitle(data == null ? "Add New Student" : "Edit Student Details");
-        dialog.getContentPane().add(detailsPanel);
-        dialog.pack();
-        dialog.setLocationRelativeTo(parentWindow);
-        dialog.setVisible(true);
-    }
-
-    private JPanel createStudentDetailsPanel(JDialog parentDialog, Object[] data) {
-        RoundedPanel panel = new RoundedPanel();
-        panel.setLayout(new BorderLayout());
-
-        JLabel title = new JLabel(data == null ? "New Student Profile" : "Student Details");
-        title.setFont(FONT_BOLD);
-        title.setForeground(COLOR_TEXT_DARK);
-        panel.add(title, BorderLayout.NORTH);
-
-        JPanel formPanel = new JPanel(new GridBagLayout());
-        formPanel.setOpaque(false);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 5, 8, 5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // Create and populate fields
-        studentIdField = new JTextField(data!=null?data[0].toString():"");
-        if(data!=null)studentIdField.setEnabled(false);
-        nameField = new JTextField(data != null ? data[1].toString() : "");
-        genderCombo = new JComboBox<>(new String[]{"Female", "Male"});
-        if (data != null) genderCombo.setSelectedItem(data[2]);
-        ageField = new JTextField(data != null ? data[3].toString() : "");
-        yearCombo = new JComboBox<>(new String[]{"Year 1", "Year 2", "Year 3", "Year 4"});
-        if (data != null) yearCombo.setSelectedItem(data[5]);
-        deptCombo = new JComboBox<>(new String[]{"Computer Science", "Economics", "Mechanical Eng.", "Business Admin", "Biology"});
-        if (data != null) deptCombo.setSelectedItem(data[4]);
-         roomTypeCombo = new JComboBox<>(new String[]{"2-sharing", "4-sharing", "6-sharing"});
-        if (data != null) roomTypeCombo.setSelectedItem(data[10]);
-        sleepTypeCombo = new JComboBox<>(new String[]{"Early", "Night"});
-        if(data!=null) sleepTypeCombo.setSelectedItem(data[12]);
-        roomField = new JTextField(data != null ? data[11].toString() : ""); // Dummy data
-        contactNumberField = new JTextField(data != null ? data[6].toString() : "");// Dummy data
-        emailField = new JTextField(data != null ? data[7].toString() : "");// Dummy data
-
-        guardianNameField = new JTextField(data != null ?data[8].toString() : ""); // Dummy data
-         guardianPhoneField = new JTextField(data != null ? data[9].toString() : ""); // Dummy data
-
-
-        addField(formPanel, gbc, "StudentID", studentIdField, 0, 0, 2);
-        addField(formPanel, gbc, "Name", nameField, 0, 2, 2);
-        addField(formPanel, gbc, "Gender", genderCombo, 1, 0, 1);
-        addField(formPanel, gbc, "Age", ageField, 1, 1, 2);
-        addField(formPanel, gbc, "Academic Year", yearCombo, 1, 3, 1);
-        addField(formPanel, gbc, "Department", deptCombo, 2, 0, 2);
-        addField(formPanel, gbc, "Preferred Room Type", roomTypeCombo, 2, 2, 2);
-        addField(formPanel, gbc, "Sleep Type", sleepTypeCombo, 3, 0, 1);
-        addField(formPanel, gbc, "Room", roomField, 3, 2, 1);
-        addField(formPanel, gbc, "Contact Number", contactNumberField, 4, 0, 2);
-        addField(formPanel, gbc, "Contact Number", emailField, 4, 2, 2);
-
-        addField(formPanel, gbc, "Guardian Name", guardianNameField, 5, 0, 2);
-        addField(formPanel, gbc, "Guardian Phone", guardianPhoneField, 5, 2, 2);
-
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
-        buttonPanel.setOpaque(false);
-
-
-        saveBtn = new RoundedButton("Save", null, COLOR_PRIMARY_ACCENT, COLOR_PRIMARY_ACCENT.brighter());
-        saveBtn.setForeground(COLOR_WHITE);
-
-        //logic to save student
-        saveBtn.addActionListener(e-> {
-
-            if (data == null) {
-                Student newStudent = new Student();
-                newStudent.setStudentId(studentIdField.getText());
-                newStudent.setName(nameField.getText());
-                newStudent.setAge(Integer.parseInt(ageField.getText()));
-                newStudent.setGender(String.valueOf(genderCombo.getSelectedItem()));
-                newStudent.setDepartment(String.valueOf(deptCombo.getSelectedItem()));
-                newStudent.setAcademicYear(String.valueOf(yearCombo.getSelectedItem()));
-                newStudent.setContactNumber(contactNumberField.getText());
-                newStudent.setEmail(emailField.getText());
-                newStudent.setAssignedRoom(roomField.getText());
-                newStudent.setDateOfAdmission(LocalDateTime.now());
-                newStudent.setGuardianName(guardianNameField.getText());
-                newStudent.setGuardianPhone(guardianPhoneField.getText());
-                newStudent.setSleepType(String.valueOf(sleepTypeCombo.getSelectedItem()));
-                newStudent.setPreferredRoomType(String.valueOf(roomTypeCombo.getSelectedItem()));
-                newStudent.setHostelId(SessionManager.getCurrentAdmin().getHostelId());
-
-
-            }
-
-        });
-
-
-        RoundedButton deleteBtn = new RoundedButton("Delete", null, COLOR_DANGER_LIGHT, COLOR_DANGER_HOVER);
-        deleteBtn.setForeground(COLOR_DANGER);
-        deleteBtn.addActionListener(e -> parentDialog.dispose()); // Add delete logic here
-        deleteBtn.setVisible(data != null); // Only show delete for existing students
-
-        RoundedButton cancelBtn = new RoundedButton("Cancel", null, COLOR_WHITE, COLOR_SIDEBAR);
-        cancelBtn.setForeground(COLOR_TEXT_DARK);
-        cancelBtn.addActionListener(e -> parentDialog.dispose());
-
-        buttonPanel.add(cancelBtn);
-        buttonPanel.add(deleteBtn);
-        buttonPanel.add(saveBtn);
 
 
 
-        gbc.gridy = 6;
-        gbc.gridx = 0;
-        gbc.gridwidth = 4;
-        gbc.anchor = GridBagConstraints.EAST;
-        gbc.fill = GridBagConstraints.NONE;
-        gbc.insets = new Insets(20, 5, 8, 5);
-        formPanel.add(buttonPanel, gbc);
-
-        panel.add(formPanel, BorderLayout.CENTER);
-        panel.setPreferredSize(new Dimension(450, (int)panel.getPreferredSize().getHeight()));
-        return panel;
-
-    }
-
-    private void addField(JPanel panel, GridBagConstraints gbc, String label, JComponent component, int y, int x, int width) {
-        gbc.gridy = y;
-        gbc.gridx = x;
-        gbc.gridwidth = width;
-        gbc.weightx = 1.0;
-
-        JPanel fieldPanel = new JPanel();
-        fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.Y_AXIS));
-        fieldPanel.setOpaque(false);
-
-        JLabel lbl = new JLabel(label);
-        lbl.setFont(FONT_BOLD);
-        lbl.setForeground(COLOR_TEXT_LIGHT);
-        lbl.setAlignmentX(Component.LEFT_ALIGNMENT);
-        fieldPanel.add(lbl);
-        fieldPanel.add(Box.createVerticalStrut(5));
-
-        component.setFont(FONT_MAIN);
-        component.setAlignmentX(Component.LEFT_ALIGNMENT);
-        fieldPanel.add(component);
-
-        panel.add(fieldPanel, gbc);
-    }
 
     // =================================================================================
     // Embedded Custom UI Components
     // =================================================================================
 
-    private static class RoundedPanel extends JPanel {
-        public RoundedPanel() {
-            super();
-            setOpaque(false);
-            setBorder(BorderFactory.createEmptyBorder(20, 25, 20, 25));
-        }
+
 
         @Override
         protected void paintComponent(Graphics g) {
@@ -393,7 +244,7 @@ public class StudentPanel extends JPanel {
             g2d.dispose();
             super.paintComponent(g);
         }
-    }
+
 
 
     private static class SearchField extends JPanel {
@@ -623,54 +474,5 @@ public class StudentPanel extends JPanel {
         return refreshBtn;
     }
 
-
-    //getters for the form
-    public JTextField getStudentIdField(){
-        return studentIdField;
-    }
-    public JTextField getNameField(){
-        return nameField;
-    }
-    public JComboBox<String> getGenderCombo(){
-        return genderCombo;
-    }
-    public JComboBox<String> getYearCombo(){
-        return yearCombo;
-    }
-    public JComboBox<String> getDeptCombo(){
-        return yearCombo;
-    }
-    public JComboBox<String> getRoomTypeCombo(){
-        return roomTypeCombo;
-    }
-    public JComboBox<String> getSleepTypeCombo(){
-        return sleepTypeCombo;
-    }
-    public JTextField getAgeField(){
-        return  ageField;
-    }
-    public JTextField getRoomField(){
-        return roomField;
-    }
-    public JTextField getEmailField(){
-        return emailField;
-
-    }
-
-    public JTextField getContactNumberField(){
-        return contactNumberField;
-    }
-    public JTextField getGuardianNameField(){
-        return guardianNameField;
-    }
-    public JTextField getGuardianPhoneField(){
-        return guardianPhoneField;
-    }
-
-    public RoundedButton getSaveBtn(){
-        return saveBtn;
-    }
 }
-
-
 
