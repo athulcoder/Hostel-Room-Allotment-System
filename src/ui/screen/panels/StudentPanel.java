@@ -102,7 +102,7 @@ public class StudentPanel extends JPanel {
                    StudentForm form = new StudentForm(null,this);
                    new StudentFormController(form);
                     form.showStudentDialog();
-
+                    refreshBtn.doClick();
 
                 }
                 // Show dialog for adding
@@ -184,6 +184,11 @@ public class StudentPanel extends JPanel {
             }
         };
 
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        centerRenderer.setVerticalAlignment(JLabel.CENTER);
+
+
         table = new JTable(model);
         table.setRowHeight(40);
         table.setFont(FONT_MAIN);
@@ -194,6 +199,10 @@ public class StudentPanel extends JPanel {
         table.setGridColor(COLOR_BORDER);
         table.setShowVerticalLines(false);
 
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            if(i==1) continue;
+            table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
         table.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
                 int selectedRow = table.getSelectedRow();
@@ -205,6 +214,7 @@ public class StudentPanel extends JPanel {
                 StudentForm form = new StudentForm(rowData,this);
                 new StudentFormController(form);
                 form.showStudentDialog();
+                refreshBtn.doClick();
                 // Show dialog for editing
             }
         });
@@ -218,10 +228,10 @@ public class StudentPanel extends JPanel {
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
         TableColumnModel colModel = table.getColumnModel();
-        colModel.getColumn(0).setMinWidth(100);
+        colModel.getColumn(0).setMinWidth(50);
 
         for(int i =1; i<colModel.getColumnCount();i++){
-            colModel.getColumn(i).setMinWidth(200);
+            colModel.getColumn(i).setMinWidth(160);
         }
 
         JScrollPane scrollPane = new JScrollPane(table);
