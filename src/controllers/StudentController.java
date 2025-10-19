@@ -14,7 +14,7 @@ public class StudentController {
    private StudentPanel view;
    private StudentDAO studentDAO ;
 
-   public StudentController(StudentPanel view, JPanel mainUI){
+   public StudentController(StudentPanel view){
        this.view = view;
 
        studentDAO = new StudentDAO();

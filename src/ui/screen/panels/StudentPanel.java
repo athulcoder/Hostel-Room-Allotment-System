@@ -15,6 +15,7 @@ import javax.swing.plaf.basic.BasicSplitPaneUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -215,7 +216,13 @@ public class StudentPanel extends JPanel {
         tableHeader.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, COLOR_BORDER));
 
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        table.getColumnModel().getColumn(0).setCellRenderer(new AvatarRenderer());
+
+        TableColumnModel colModel = table.getColumnModel();
+        colModel.getColumn(0).setMinWidth(100);
+
+        for(int i =1; i<colModel.getColumnCount();i++){
+            colModel.getColumn(i).setMinWidth(200);
+        }
 
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.getViewport().setBackground(COLOR_WHITE);
