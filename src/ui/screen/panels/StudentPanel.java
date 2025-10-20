@@ -477,7 +477,7 @@ public class StudentPanel extends JPanel {
                     s.getPreferredRoomType(),
                     s.getAssignedRoom(),
                     s.getSleepType(),
-                    s.getDateOfAdmission(),
+                    s.getDateOfAdmissionFormated(),
                     s.getHostelId()
             };
             model.addRow(row);

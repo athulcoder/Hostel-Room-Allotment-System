@@ -24,6 +24,20 @@ public class Student {
     private LocalDateTime dateOfAdmission;
     private String hostelId;
 
+
+    // newly added attributes to calculate the compatibility
+
+    private String studyPreference;     // "Prefers Quiet Study" or "Studies with Music"
+    private String lifestyle;           // "Tidy / Organized", "Prefers Quiet Room"
+    private boolean vegetarian;         // true/false
+    private String socialPreference;    // "Introvert" or "Extrovert"
+    private String activityPreference;  // "Group" or "Solo"
+    private String hobbies;             // "Coding, Gaming, Music"
+    private String sharingHabits;       // "Share Food, Share Supplies"
+    private String roomPresence;        // "Mostly In" or "Mostly Out"
+
+
+
     // default constructor
     public Student() {
 
@@ -103,13 +117,27 @@ public class Student {
     }
     public String getDateOfAdmission() {
 
-//        return dateOfAdmission.getDayOfMonth() +" " + dateOfAdmission.getMonth() + " "+dateOfAdmission.getYear() +"  "+dateOfAdmission.getHour() +":"+dateOfAdmission.getMinute() +":"+dateOfAdmission.getSecond();
         return dateOfAdmission.toString();
+    }
+    public String getDateOfAdmissionFormated(){
+        return dateOfAdmission.getDayOfMonth() +" " + dateOfAdmission.getMonth() + " "+dateOfAdmission.getYear() +"  "+dateOfAdmission.getHour() +":"+dateOfAdmission.getMinute() +":"+dateOfAdmission.getSecond();
+
     }
     public String getHostelId(){
         return hostelId;
     }
-    // Setters
+
+
+    public String getStudyPreference(){return studyPreference;}
+    public String getLifestyle(){return lifestyle;}
+    public String getSocialPreference(){return socialPreference;}
+    public String getHobbies(){return hobbies;}
+    public String getActivityPreference(){return activityPreference;}
+    public String getSharingHabits(){return sharingHabits;}
+    public String getRoomPresence(){return roomPresence;}
+    public boolean isVegetarian() {return vegetarian;}
+
+// Setters
 
     public void setStudentId(String studentId){
         this.studentId = studentId;
@@ -170,4 +198,14 @@ public class Student {
     public void setDateOfAdmission(LocalDateTime dateOfAdmission) {
         this.dateOfAdmission = dateOfAdmission;
     }
+
+    public void setStudyPreference(String studyPreference){ this.studyPreference = studyPreference;}
+    public void setLifestyle(String lifestyle){ this.studyPreference = lifestyle;}
+    public void setVegetarian(boolean vegetarian){ this.vegetarian = vegetarian;}
+    public void setSocialPreference(String studyPreference){ this.socialPreference = socialPreference;}
+    public void setActivityPreference(String activityPreference){ this.activityPreference = activityPreference;}
+    public void setHobbies(String hobbies){ this.hobbies = hobbies;}
+    public void setSharingHabits(String sharingHabits){ this.sharingHabits=sharingHabits;}
+    public void setRoomPresence(String roomPresence){ this.roomPresence = roomPresence;}
+
 }
