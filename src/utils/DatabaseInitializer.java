@@ -36,6 +36,8 @@ public class DatabaseInitializer {
 
 
     private static void createStudentTable() {
+
+        // 23 attributes including hostel ID
         String sql = """
             CREATE TABLE IF NOT EXISTS students (
                 studentId TEXT PRIMARY KEY,
@@ -51,6 +53,14 @@ public class DatabaseInitializer {
                 preferredRoomType TEXT,
                 assignedRoom TEXT,
                 sleepType TEXT,
+                studyPreference TEXT,
+                lifestyle TEXT,
+                vegetarian BOOLEAN,
+                socialPreference TEXT,
+                activityPreference TEXT,
+                hobbies TEXT,
+                sharingHabits TEXT,
+                roomPresence TEXT,
                 dateOfAdmission TEXT,
                 hostelId TEXT,
                 FOREIGN KEY (hostelId) REFERENCES hostels(hostelId)

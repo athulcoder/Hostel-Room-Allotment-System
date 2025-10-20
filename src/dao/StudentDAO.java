@@ -20,7 +20,7 @@ public class StudentDAO {
 
         //Sql strings to check whether student already exists
         String checkSql = "SELECT COUNT(*) FROM students WHERE studentId =?";
-        String insertSql = "INSERT INTO students (studentId, name, gender, age, department, academicYear, contactNumber, email, guardianName, guardianPhone, preferredRoomType, assignedRoom, sleepType, dateOfAdmission, hostelId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String insertSql = "INSERT INTO students (studentId, name, gender, age, department, academicYear, contactNumber, email, guardianName, guardianPhone, preferredRoomType, assignedRoom, sleepType, studyPreference, lifestyle, vegetarian, socialPreference,activityPreference,hobbies,sharingHabits,roomPresence, dateOfAdmission, hostelId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?, ?)";
         try(Connection conn= DatabaseInitializer.getConnection(); PreparedStatement checkStmt = conn.prepareStatement(checkSql);PreparedStatement insertStmt = conn.prepareStatement(insertSql)){
             checkStmt.setString(1,student.getStudentId());
             ResultSet checkRes = checkStmt.executeQuery();
@@ -47,9 +47,17 @@ public class StudentDAO {
 
             insertStmt.setString(12,student.getAssignedRoom());
             insertStmt.setString(13,student.getSleepType());
-            insertStmt.setString(14,student.getDateOfAdmission());
+            insertStmt.setString(14,student.getStudyPreference());
+            insertStmt.setString(15,student.getLifestyle());
+            insertStmt.setBoolean(16,student.isVegetarian());
+            insertStmt.setString(17,student.getSocialPreference());
+            insertStmt.setString(18,student.getActivityPreference());
+            insertStmt.setString(19,student.getHobbies());
+            insertStmt.setString(20,student.getSharingHabits());
+            insertStmt.setString(21,student.getRoomPresence());
+            insertStmt.setString(22,student.getDateOfAdmission());
 
-            insertStmt.setString(15, student.getHostelId());
+            insertStmt.setString(23, student.getHostelId());
 
             int rowsInserted = insertStmt.executeUpdate();
 
@@ -81,6 +89,14 @@ public class StudentDAO {
                     preferredRoomType =?,
                     assignedRoom = ?,
                     sleepType = ?,
+                    studyPreference =?,
+                    lifestyle=?,
+                    vegetarian=?,
+                    socialPreference=?,
+                    activityPreference=?,
+                    hobbies=?,
+                    sharingHabits=?,
+                    roomPresence=?,
                     gender=?
                 WHERE studentId = ?;
                 """;
@@ -98,8 +114,16 @@ public class StudentDAO {
             updateStmt.setString(9, student.getPreferredRoomType());
             updateStmt.setString(10, student.getAssignedRoom());
             updateStmt.setString(11, student.getSleepType());
-            updateStmt.setString(12,student.getGender());
-            updateStmt.setString(13, student.getStudentId());
+            updateStmt.setString(12, student.getStudyPreference());
+            updateStmt.setString(13, student.getLifestyle());
+            updateStmt.setBoolean(14, student.isVegetarian());
+            updateStmt.setString(15, student.getSocialPreference());
+            updateStmt.setString(16, student.getActivityPreference());
+            updateStmt.setString(17, student.getHobbies());
+            updateStmt.setString(18, student.getSharingHabits());
+            updateStmt.setString(19, student.getRoomPresence());
+            updateStmt.setString(20,student.getGender());
+            updateStmt.setString(21, student.getStudentId());
 
             int rowsInserted = updateStmt.executeUpdate();
 
@@ -153,6 +177,14 @@ public class StudentDAO {
                 student.setPreferredRoomType(rs.getString("preferredRoomType"));
                 student.setAssignedRoom(rs.getString("assignedRoom"));
                 student.setSleepType(rs.getString("sleepType"));
+                student.setStudyPreference(rs.getString("studyPreference"));
+                student.setLifestyle(rs.getString("lifestyle"));
+                student.setVegetarian(rs.getBoolean("vegetarian"));
+                student.setSocialPreference(rs.getString("socialPreference"));
+                student.setActivityPreference(rs.getString("activityPreference"));
+                student.setHobbies(rs.getString("hobbies"));
+                student.setSharingHabits(rs.getString("sharingHabits"));
+                student.setRoomPresence(rs.getString("roomPresence"));
                 student.setDateOfAdmission(LocalDateTime.parse(rs.getString("dateOfAdmission")));
                 student.setHostelId(rs.getString("hostelId"));
 
@@ -193,6 +225,14 @@ public class StudentDAO {
                 student.setPreferredRoomType(rs.getString("preferredRoomType"));
                 student.setAssignedRoom(rs.getString("assignedRoom"));
                 student.setSleepType(rs.getString("sleepType"));
+                student.setStudyPreference(rs.getString("studyPreference"));
+                student.setLifestyle(rs.getString("lifestyle"));
+                student.setVegetarian(rs.getBoolean("vegetarian"));
+                student.setSocialPreference(rs.getString("socialPreference"));
+                student.setActivityPreference(rs.getString("activityPreference"));
+                student.setHobbies(rs.getString("hobbies"));
+                student.setSharingHabits(rs.getString("sharingHabits"));
+                student.setRoomPresence(rs.getString("roomPresence"));
                 student.setDateOfAdmission(LocalDateTime.parse(rs.getString("dateOfAdmission")));
                 student.setHostelId(rs.getString("hostelId"));
 
@@ -229,6 +269,14 @@ public class StudentDAO {
                 student.setPreferredRoomType(rs.getString("preferredRoomType"));
                 student.setAssignedRoom(rs.getString("assignedRoom"));
                 student.setSleepType(rs.getString("sleepType"));
+                student.setStudyPreference(rs.getString("studyPreference"));
+                student.setLifestyle(rs.getString("lifestyle"));
+                student.setVegetarian(rs.getBoolean("vegetarian"));
+                student.setSocialPreference(rs.getString("socialPreference"));
+                student.setActivityPreference(rs.getString("activityPreference"));
+                student.setHobbies(rs.getString("hobbies"));
+                student.setSharingHabits(rs.getString("sharingHabits"));
+                student.setRoomPresence(rs.getString("roomPresence"));
                 student.setDateOfAdmission(LocalDateTime.parse(rs.getString("dateOfAdmission")));
                 student.setHostelId(rs.getString("hostelId"));
 
@@ -269,6 +317,14 @@ public class StudentDAO {
                 student.setPreferredRoomType(rs.getString("preferredRoomType"));
                 student.setAssignedRoom(rs.getString("assignedRoom"));
                 student.setSleepType(rs.getString("sleepType"));
+                student.setStudyPreference(rs.getString("studyPreference"));
+                student.setLifestyle(rs.getString("lifestyle"));
+                student.setVegetarian(rs.getBoolean("vegetarian"));
+                student.setSocialPreference(rs.getString("socialPreference"));
+                student.setActivityPreference(rs.getString("activityPreference"));
+                student.setHobbies(rs.getString("hobbies"));
+                student.setSharingHabits(rs.getString("sharingHabits"));
+                student.setRoomPresence(rs.getString("roomPresence"));
                 student.setDateOfAdmission(LocalDateTime.parse(rs.getString("dateOfAdmission")));
                 student.setHostelId(rs.getString("hostelId"));
 

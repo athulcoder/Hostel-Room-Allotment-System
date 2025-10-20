@@ -2,6 +2,7 @@ package models;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class Student {
 
@@ -200,12 +201,15 @@ public class Student {
     }
 
     public void setStudyPreference(String studyPreference){ this.studyPreference = studyPreference;}
-    public void setLifestyle(String lifestyle){ this.studyPreference = lifestyle;}
+    public void setLifestyle(String lifestyle){ this.lifestyle = lifestyle;}
+    public void setLifestyle(ArrayList<String> lifestyle){ this.lifestyle = String.join(", ", lifestyle);}
     public void setVegetarian(boolean vegetarian){ this.vegetarian = vegetarian;}
-    public void setSocialPreference(String studyPreference){ this.socialPreference = socialPreference;}
+    public void setSocialPreference(String socialPreference){ this.socialPreference = socialPreference;}
     public void setActivityPreference(String activityPreference){ this.activityPreference = activityPreference;}
     public void setHobbies(String hobbies){ this.hobbies = hobbies;}
+    public void setHobbies(ArrayList<String> hobbies){this.hobbies = String.join(", ", hobbies);}
     public void setSharingHabits(String sharingHabits){ this.sharingHabits=sharingHabits;}
+    public void setSharingHabits(ArrayList<String> sharingHabits){  this.sharingHabits = String.join(", ", sharingHabits);}
     public void setRoomPresence(String roomPresence){ this.roomPresence = roomPresence;}
 
 }

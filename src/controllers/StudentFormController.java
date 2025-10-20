@@ -3,8 +3,9 @@ package controllers;
 import dao.StudentDAO;
 import models.Student;
 import ui.screen.components.StudentForm;
+import utils.PreferenceConstants;
 import utils.SessionManager;
-
+import utils.PreferenceConstants.*;
 import javax.swing.*;
 import java.time.LocalDateTime;
 
@@ -42,6 +43,7 @@ public class StudentFormController {
         newStudent.setHostelId(SessionManager.getCurrentAdmin().getHostelId());
 
         System.out.println(newStudent.getDepartment());
+        newStudent = mapStudentsPreferences(newStudent);
 
         if(!studentDAO.updateStudent(newStudent)) JOptionPane.showMessageDialog(null,"Error Occurred while updating student! check the studentId ");
         else  {
@@ -53,6 +55,11 @@ public class StudentFormController {
     }
     private  void handleAddNewStudent(){
         Student newStudent = new Student();
+
+
+
+
+
 
         if(view.getNameField().getText().isEmpty() || view.getNameField().getText().isEmpty() || view.getStudentIdField().getText().isEmpty() || view.getContactNumberField().getText().isEmpty() || view.getEmailField().getText().isEmpty()||view.getGuardianNameField().getText().isEmpty() ||view.getGuardianPhoneField().getText().isEmpty())
         {
@@ -78,9 +85,8 @@ public class StudentFormController {
         newStudent.setPreferredRoomType(String.valueOf(view.getRoomTypeCombo().getSelectedItem()));
         newStudent.setHostelId(SessionManager.getCurrentAdmin().getHostelId());
 
-        System.out.println(newStudent.getDepartment());
 
-
+        newStudent = mapStudentsPreferences(newStudent);
 
 
             if(!studentDAO.addStudent(newStudent)) JOptionPane.showMessageDialog(null,"Student with given Id already exists","already Exists",JOptionPane.ERROR_MESSAGE);
@@ -107,6 +113,46 @@ public class StudentFormController {
         }
 
         view.getDialog().dispose();
+    }
+
+
+
+    private  Student mapStudentsPreferences(Student student){
+
+        if(view.isEarlyBirdRadioSelected()){
+            student.setSleepType(PreferenceConstants.EARLY_SLEEP);
+        }
+        else{
+            student.setSleepType(PreferenceConstants.LATE_SLEEP);
+        }
+
+        // studyPreference
+        if(view.isMusicStudyRadioSelected()) student.setStudyPreference(PreferenceConstants.MUSIC_STUDY);
+        else student.setStudyPreference(PreferenceConstants.QUIET_STUDY);
+
+        // lifestyle
+        student.setLifestyle(view.getSelectedLifeStyles());
+        //veg
+        student.setVegetarian(view.isVegetarianCheckSelected());
+
+        //social
+        if(view.isIntrovertRadioSelected()) student.setSocialPreference(PreferenceConstants.INTROVERT);
+        else student.setSocialPreference(PreferenceConstants.EXTROVERT);
+
+        //activity
+        if(view.isGroupActivitiesRadioSelected()) student.setActivityPreference(PreferenceConstants.GROUP_ACT);
+        else student.setActivityPreference(PreferenceConstants.SOLO_ACT);
+
+        //hobbies
+        student.setHobbies(view.getSelectedHobbies());
+
+        //sharing
+        student.setSharingHabits(view.getSharingHabits());
+        // room presence
+        if(view.isMostlyOutRadioSelected()) student.setRoomPresence(PreferenceConstants.MOSTLY_OUT);
+        else student.setRoomPresence(PreferenceConstants.MOSTLY_IN);
+
+        return student;
     }
     }
 

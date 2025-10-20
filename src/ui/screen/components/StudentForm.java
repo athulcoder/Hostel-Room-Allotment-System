@@ -2,6 +2,8 @@ package ui.screen.components;
 
 import models.Student;
 import ui.screen.panels.*;
+import utils.PreferenceConstants;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
@@ -431,6 +433,37 @@ public class StudentForm {
     public boolean isShareSuppliesCheckSelected() { return shareSuppliesCheck.isSelected(); }
     public boolean isHomebodyRadioSelected() { return homebodyRadio.isSelected(); }
     public boolean isMostlyOutRadioSelected() { return mostlyOutRadio.isSelected(); }
+
+    public ArrayList<String> getSelectedHobbies(){
+        ArrayList<String> selectedHobbies = new ArrayList<String>();
+        if (isCodingCheckSelected()) selectedHobbies.add(PreferenceConstants.CODING);
+        if (isGamingCheckSelected()) selectedHobbies.add(PreferenceConstants.GAMING);
+        if (isGymCheckSelected()) selectedHobbies.add(PreferenceConstants.GYM);
+        if (isReadingCheckSelected()) selectedHobbies.add(PreferenceConstants.READING);
+        if (isMusicCheckSelected()) selectedHobbies.add(PreferenceConstants.MUSIC);
+        if (isSportsCheckSelected()) selectedHobbies.add(PreferenceConstants.SPORT);
+
+        return selectedHobbies;
+    }
+
+    public ArrayList<String> getSelectedLifeStyles(){
+        ArrayList<String> lifestylePrefs = new ArrayList<>();
+
+        if (isTidyCheckSelected()) lifestylePrefs.add(PreferenceConstants.TIDY_ORG);
+        if (isQuietRoomCheckSelected()) lifestylePrefs.add(PreferenceConstants.QUIET_ROOM);
+
+        return lifestylePrefs;
+
+    }
+
+    public ArrayList<String> getSharingHabits(){
+        ArrayList<String> habits = new ArrayList<>();
+        if(isShareSuppliesCheckSelected()) habits.add(PreferenceConstants.SHARE_SUPPLIES);
+        if(isShareFoodCheckSelected()) habits.add(PreferenceConstants.SHARE_FOOD);
+
+        return habits;
+    }
+
     // REMOVED: isNonSmokerRadioSelected, isSmokerRadioSelected, isNoAlcoholRadioSelected, isAlcoholOkRadioSelected
 
 

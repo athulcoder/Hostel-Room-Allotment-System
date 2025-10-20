@@ -174,6 +174,14 @@ public class StudentPanel extends JPanel {
                 "preferredRoomType",
                 "assignedRoom",
                 "sleepType",
+                "studyPreference",
+                "lifestyle",
+                "vegetarian",
+                "socialPreference",
+                "activityPreference",
+                "hobbies",
+                "sharingHabits",
+                "roomPresence",
                 "dateOfAdmission",
                 "hostelId"
         };
@@ -185,7 +193,7 @@ public class StudentPanel extends JPanel {
         };
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        centerRenderer.setHorizontalAlignment(JLabel.LEFT);
         centerRenderer.setVerticalAlignment(JLabel.CENTER);
 
 
@@ -477,6 +485,14 @@ public class StudentPanel extends JPanel {
                     s.getPreferredRoomType(),
                     s.getAssignedRoom(),
                     s.getSleepType(),
+                    s.getStudyPreference(),
+                    s.getLifestyle(),
+                    s.isVegetarian(),
+                    s.getSocialPreference(),
+                    s.getActivityPreference(),
+                    s.getHobbies(),
+                    s.getSharingHabits(),
+                    s.getRoomPresence(),
                     s.getDateOfAdmissionFormated(),
                     s.getHostelId()
             };
