@@ -51,6 +51,7 @@ public class StudentForm {
     private JCheckBox musicCheck;
     private JCheckBox gamingCheck;
     private JCheckBox readingCheck;
+    private JCheckBox gymCheck;
 
     // --- NEW Compatibility Fields ---
     // REMOVED: guestsRarelyRadio, guestsOftenRadio, overnightGuestsOkCheck
@@ -213,15 +214,15 @@ public class StudentForm {
         mainFormPanel.add(rightPanel);
 
         // Add preference sections to Right Column
-        rightPanel.add(createSingleSelectRadioGroup("1️⃣ Sleep Habits", earlyBirdRadio, nightOwlRadio));
-        rightPanel.add(createSingleSelectRadioGroup("2️⃣ Study Preference", quietStudyRadio, musicStudyRadio));
-        rightPanel.add(createMultiSelectCheckboxGroup("3️⃣ Lifestyle & Food", tidyCheck, quietRoomCheck, vegetarianCheck));
-        rightPanel.add(createSingleSelectRadioGroup("4️⃣ Social Preference", introvertRadio, extrovertRadio));
-        rightPanel.add(createSingleSelectRadioGroup("5️⃣ Activity Preference", groupActivitiesRadio, soloActivitiesRadio));
-        rightPanel.add(createMultiSelectCheckboxGroup("6️⃣ Hobbies / Interests", codingCheck, sportsCheck, musicCheck, gamingCheck, readingCheck));
+        rightPanel.add(createSingleSelectRadioGroup("1 Sleep Habits", earlyBirdRadio, nightOwlRadio));
+        rightPanel.add(createSingleSelectRadioGroup("2 Study Preference", quietStudyRadio, musicStudyRadio));
+        rightPanel.add(createMultiSelectCheckboxGroup("3 Lifestyle & Food", tidyCheck, quietRoomCheck, vegetarianCheck));
+        rightPanel.add(createSingleSelectRadioGroup("4 Social Preference", introvertRadio, extrovertRadio));
+        rightPanel.add(createSingleSelectRadioGroup("5Activity Preference", groupActivitiesRadio, soloActivitiesRadio));
+        rightPanel.add(createMultiSelectCheckboxGroup("6 Hobbies / Interests", codingCheck, sportsCheck, musicCheck, gamingCheck, readingCheck,gymCheck));
         // --- NEW sections added to right ---
-        rightPanel.add(createMultiSelectCheckboxGroup("7️⃣ Sharing Habits", shareFoodCheck, shareSuppliesCheck));
-        rightPanel.add(createSingleSelectRadioGroup("8️⃣ Room Presence", homebodyRadio, mostlyOutRadio));
+        rightPanel.add(createMultiSelectCheckboxGroup("7 Sharing Habits", shareFoodCheck, shareSuppliesCheck));
+        rightPanel.add(createSingleSelectRadioGroup("8 Room Presence", homebodyRadio, mostlyOutRadio));
         rightPanel.add(Box.createVerticalGlue()); // Pushes sections to the top
 
         return panel;
@@ -312,12 +313,12 @@ public class StudentForm {
         studentIdField = new JTextField(data != null ? data[0].toString() : "");
         if (data != null) studentIdField.setEnabled(false);
         nameField = new JTextField(data != null ? data[1].toString() : "");
-        genderCombo = new JComboBox<>(new String[]{"Female", "Male"});
+        genderCombo = new JComboBox<>(new String[]{"Male", "Female"});
         if (data != null) genderCombo.setSelectedItem(data[2]);
         ageField = new JTextField(data != null ? data[3].toString() : "");
         yearCombo = new JComboBox<>(new String[]{"Year 1", "Year 2", "Year 3", "Year 4"});
         if (data != null) yearCombo.setSelectedItem(data[5]);
-        deptCombo = new JComboBox<>(new String[]{"Computer Science", "Economics", "Mechanical Eng.", "Business Admin", "Biology"});
+        deptCombo = new JComboBox<>(new String[]{"Computer Science & Engineering","Electronics & Communication Engineering ", "Electrical & Electronics Engineering", "Mechanical Engineering", "Civil Engineering", "Computer Science & Cyber Security", "Computer Science & AI", "Artificial Intelligence and Data Science"});
         if (data != null) deptCombo.setSelectedItem(data[4]);
         roomTypeCombo = new JComboBox<>(new String[]{"2-sharing", "4-sharing", "6-sharing"});
         if (data != null) roomTypeCombo.setSelectedItem(data[10]);
@@ -328,8 +329,8 @@ public class StudentForm {
         guardianPhoneField = new JTextField(data != null ? data[9].toString() : "");
 
         // --- Preferences ---
-        earlyBirdRadio = new JRadioButton("Early Bird");
-        nightOwlRadio = new JRadioButton("Night Owl");
+        earlyBirdRadio = new JRadioButton("Early Sleeper");
+        nightOwlRadio = new JRadioButton("Late Night Sleeper");
         quietStudyRadio = new JRadioButton("Prefers Quiet Study");
         musicStudyRadio = new JRadioButton("Studies with Music");
         tidyCheck = new JCheckBox("Tidy / Organized");
@@ -344,6 +345,7 @@ public class StudentForm {
         musicCheck = new JCheckBox("Music");
         gamingCheck = new JCheckBox("Gaming");
         readingCheck = new JCheckBox("Reading");
+        gymCheck = new JCheckBox("Gym");
 
         // --- New Compatibility Fields ---
         // REMOVED: guestsRarelyRadio, guestsOftenRadio, overnightGuestsOkCheck
@@ -358,7 +360,7 @@ public class StudentForm {
                 earlyBirdRadio, nightOwlRadio, quietStudyRadio, musicStudyRadio,
                 tidyCheck, quietRoomCheck, vegetarianCheck, introvertRadio, extrovertRadio,
                 groupActivitiesRadio, soloActivitiesRadio, codingCheck, sportsCheck,
-                musicCheck, gamingCheck, readingCheck,
+                musicCheck, gamingCheck, readingCheck,gymCheck,
                 shareFoodCheck, shareSuppliesCheck, homebodyRadio,
                 mostlyOutRadio
         };
@@ -421,6 +423,7 @@ public class StudentForm {
     public boolean isMusicCheckSelected() { return musicCheck.isSelected(); }
     public boolean isGamingCheckSelected() { return gamingCheck.isSelected(); }
     public boolean isReadingCheckSelected() { return readingCheck.isSelected(); }
+    public boolean isGymCheckSelected() { return gymCheck.isSelected(); }
 
     // --- Getters for NEW Compatibility fields ---
     // REMOVED: isGuestsRarelyRadioSelected, isGuestsOftenRadioSelected, isOvernightGuestsOkCheckSelected
