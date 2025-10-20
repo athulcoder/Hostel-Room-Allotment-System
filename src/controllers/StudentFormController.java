@@ -42,7 +42,6 @@ public class StudentFormController {
         newStudent.setPreferredRoomType(String.valueOf(view.getRoomTypeCombo().getSelectedItem()));
         newStudent.setHostelId(SessionManager.getCurrentAdmin().getHostelId());
 
-        System.out.println(newStudent.getDepartment());
         newStudent = mapStudentsPreferences(newStudent);
 
         if(!studentDAO.updateStudent(newStudent)) JOptionPane.showMessageDialog(null,"Error Occurred while updating student! check the studentId ");

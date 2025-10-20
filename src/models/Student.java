@@ -47,7 +47,7 @@ public class Student {
     // constructor
     public Student(String studentId, String name, String gender, int age, String department, String academicYear,
             String contactNumber, String email, String guardianName, String guardianPhone, String preferredRoomType, String assignedRoom, String sleepType) {
-        this.studentId = studentId;
+        this.studentId = studentId.toLowerCase();
         this.name = name;
         this.gender = gender;
         this.age = age;
@@ -69,7 +69,7 @@ public class Student {
     }
 
     public String getStudentId() {
-        return studentId;
+        return studentId.toLowerCase();
     }
 
     public String getGender() {
@@ -141,7 +141,7 @@ public class Student {
 // Setters
 
     public void setStudentId(String studentId){
-        this.studentId = studentId;
+        this.studentId = studentId.toLowerCase();
     }
     public void setName(String name) {
         this.name = name;

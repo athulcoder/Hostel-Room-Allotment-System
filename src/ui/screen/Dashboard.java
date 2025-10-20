@@ -2,7 +2,9 @@ package ui.screen;
 
 import controllers.RoomController;
 import controllers.StudentController;
+import ui.screen.panels.AllotmentPanel;
 import ui.screen.panels.RoomPanel;
+import ui.screen.panels.SettingsPanel;
 import ui.screen.panels.StudentPanel;
 
 import javax.swing.*;
@@ -60,8 +62,8 @@ public class Dashboard extends JPanel {
             new StudentController(studentsView);
         RoomPanel roomsView = new RoomPanel();
             new RoomController(roomsView);
-        JPanel allotmentsView = new PlaceholderPanel("Allotments Management");
-        JPanel settingsView = new PlaceholderPanel("Application Settings");
+        JPanel allotmentsView = new AllotmentPanel();
+        JPanel settingsView = new SettingsPanel();
 
         contentSwitchPanel.add(dashboardView, "Dashboard");
         contentSwitchPanel.add(studentsView, "Students");

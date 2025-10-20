@@ -627,10 +627,25 @@ public class RoomPanel extends JPanel {
 
             // Init components
             roomIdField = new JTextField(20);
-            roomTypeCombo = new JComboBox<>(new String[]{"2 sharing", "4 sharing","6 sharing"});
-            capacityField = new JTextField(20);
+            roomTypeCombo = new JComboBox<>(new String[]{"2-sharing", "4-sharing","6-sharing"});
+
+            capacityField = new JTextField("2",20);
+            capacityField.setEditable(false);
             occupancyField = new JTextField(20);
             floorField = new JTextField(20);
+
+            roomTypeCombo.addActionListener(e->{
+
+                if(String.valueOf(roomTypeCombo.getSelectedItem()).equals("2-sharing")){
+                capacityField.setText("2");
+                }
+                else if(String.valueOf(roomTypeCombo.getSelectedItem()).equals("4-sharing")){
+                    capacityField.setText("4");
+                }
+                else{
+                    capacityField.setText("6");
+                }
+            });
 
             // Style components
             styleField(roomIdField);
