@@ -20,6 +20,6 @@ public class PreferenceConstants {
    public static final String SHARE_FOOD  = "Share Food";
    public static final String SHARE_SUPPLIES = "Share Supplies";
    public static final String MOSTLY_IN = "Mostly In";
-   public static final String MOSTLY_OUT = "Mostly OUT";
+   public static final String MOSTLY_OUT = "Mostly Out";
 
 }

@@ -349,15 +349,47 @@ public class StudentForm {
         readingCheck = new JCheckBox("Reading");
         gymCheck = new JCheckBox("Gym");
 
-        // --- New Compatibility Fields ---
-        // REMOVED: guestsRarelyRadio, guestsOftenRadio, overnightGuestsOkCheck
+
         shareFoodCheck = new JCheckBox("Share Food");
         shareSuppliesCheck = new JCheckBox("Share Supplies");
         homebodyRadio = new JRadioButton("Mostly In");
         mostlyOutRadio = new JRadioButton("Mostly Out");
-        // REMOVED: nonSmokerRadio, smokerRadio, noAlcoholRadio, alcoholOkRadio
 
-        // --- Apply Modern Icons and Styles ---
+        //if data not null then show the existing info
+        if(data !=null){
+            earlyBirdRadio.setSelected(String.valueOf(data[12]).equals(PreferenceConstants.EARLY_SLEEP));
+            nightOwlRadio.setSelected(String.valueOf(data[12]).equals(PreferenceConstants.LATE_SLEEP));
+
+            quietStudyRadio.setSelected(String.valueOf(data[13]).equals(PreferenceConstants.QUIET_STUDY));
+            musicStudyRadio.setSelected(String.valueOf(data[13]).equals(PreferenceConstants.MUSIC_STUDY));
+
+            tidyCheck.setSelected(String.valueOf(data[14]).contains(PreferenceConstants.TIDY_ORG));
+            quietRoomCheck.setSelected(String.valueOf(data[14]).contains(PreferenceConstants.QUIET_ROOM));
+
+            vegetarianCheck.setSelected(Boolean.getBoolean(String.valueOf(data[15])));
+
+            introvertRadio.setSelected(String.valueOf(data[16]).equals(PreferenceConstants.INTROVERT));
+            extrovertRadio.setSelected(String.valueOf(data[16]).equals(PreferenceConstants.EXTROVERT));
+
+            groupActivitiesRadio.setSelected(String.valueOf(data[17]).equals(PreferenceConstants.GROUP_ACT));
+            soloActivitiesRadio.setSelected(String.valueOf(data[17]).equals(PreferenceConstants.SOLO_ACT));
+
+            codingCheck.setSelected(String.valueOf(data[18]).contains(PreferenceConstants.CODING));
+            readingCheck.setSelected(String.valueOf(data[18]).contains(PreferenceConstants.READING));
+            gymCheck.setSelected(String.valueOf(data[18]).contains(PreferenceConstants.GYM));
+            sportsCheck.setSelected(String.valueOf(data[18]).contains(PreferenceConstants.SPORT));
+            gamingCheck.setSelected(String.valueOf(data[18]).contains(PreferenceConstants.GAMING));
+            musicCheck.setSelected(String.valueOf(data[18]).contains(PreferenceConstants.MUSIC));
+
+            shareFoodCheck.setSelected(String.valueOf(data[19]).contains(PreferenceConstants.SHARE_FOOD));
+            shareSuppliesCheck.setSelected(String.valueOf(data[19]).contains(PreferenceConstants.SHARE_SUPPLIES));
+
+            mostlyOutRadio.setSelected(String.valueOf(data[20]).equals(PreferenceConstants.MOSTLY_OUT));
+            homebodyRadio.setSelected(String.valueOf(data[20]).equals(PreferenceConstants.MOSTLY_IN));
+
+
+        }
+
         JComponent[] components = {
                 earlyBirdRadio, nightOwlRadio, quietStudyRadio, musicStudyRadio,
                 tidyCheck, quietRoomCheck, vegetarianCheck, introvertRadio, extrovertRadio,
