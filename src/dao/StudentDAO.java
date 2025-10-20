@@ -244,7 +244,100 @@ public class StudentDAO {
 
         return students;
     }
+    //Function to fetch all students without room number
+    public ArrayList<Student> getStudentsWithUnAssignedRoom(String hostelId){
+        String sql = """
+                SELECT * FROM students
+                WHERE hostelId = ?
+                AND (assignedRoom IS NULL OR assignedRoom = '');""";
+        ArrayList<Student> students = new ArrayList<Student>();
+        try(Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setString(1,hostelId);
 
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+
+                Student student = new Student();
+                student.setStudentId(rs.getString("studentId"));
+                student.setName(rs.getString("name"));
+                student.setGender(rs.getString("gender"));
+                student.setAge(rs.getInt("age"));
+                student.setDepartment(rs.getString("department"));
+                student.setAcademicYear(rs.getString("academicYear"));
+                student.setContactNumber(rs.getString("contactNumber"));
+                student.setEmail(rs.getString("email"));
+                student.setGuardianName(rs.getString("guardianName"));
+                student.setGuardianPhone(rs.getString("guardianPhone"));
+                student.setPreferredRoomType(rs.getString("preferredRoomType"));
+                student.setAssignedRoom(rs.getString("assignedRoom"));
+                student.setSleepType(rs.getString("sleepType"));
+                student.setStudyPreference(rs.getString("studyPreference"));
+                student.setLifestyle(rs.getString("lifestyle"));
+                student.setVegetarian(rs.getBoolean("vegetarian"));
+                student.setSocialPreference(rs.getString("socialPreference"));
+                student.setActivityPreference(rs.getString("activityPreference"));
+                student.setHobbies(rs.getString("hobbies"));
+                student.setSharingHabits(rs.getString("sharingHabits"));
+                student.setRoomPresence(rs.getString("roomPresence"));
+                student.setDateOfAdmission(LocalDateTime.parse(rs.getString("dateOfAdmission")));
+                student.setHostelId(rs.getString("hostelId"));
+
+                students.add(student);
+            }
+        }catch (SQLException e ){
+            System.out.println("Error while fetching all students details : "+e);
+        }
+
+        return students;
+    }
+
+    public ArrayList<Student> getAllottedStudents(String hostelId){
+        String sql = """
+                        SELECT * FROM students
+                        WHERE hostelId = ?
+                        AND assignedRoom IS NOT NULL
+                        AND assignedRoom != '';
+                        """;
+        ArrayList<Student> students = new ArrayList<Student>();
+        try(Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setString(1,hostelId);
+
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+
+                Student student = new Student();
+                student.setStudentId(rs.getString("studentId"));
+                student.setName(rs.getString("name"));
+                student.setGender(rs.getString("gender"));
+                student.setAge(rs.getInt("age"));
+                student.setDepartment(rs.getString("department"));
+                student.setAcademicYear(rs.getString("academicYear"));
+                student.setContactNumber(rs.getString("contactNumber"));
+                student.setEmail(rs.getString("email"));
+                student.setGuardianName(rs.getString("guardianName"));
+                student.setGuardianPhone(rs.getString("guardianPhone"));
+                student.setPreferredRoomType(rs.getString("preferredRoomType"));
+                student.setAssignedRoom(rs.getString("assignedRoom"));
+                student.setSleepType(rs.getString("sleepType"));
+                student.setStudyPreference(rs.getString("studyPreference"));
+                student.setLifestyle(rs.getString("lifestyle"));
+                student.setVegetarian(rs.getBoolean("vegetarian"));
+                student.setSocialPreference(rs.getString("socialPreference"));
+                student.setActivityPreference(rs.getString("activityPreference"));
+                student.setHobbies(rs.getString("hobbies"));
+                student.setSharingHabits(rs.getString("sharingHabits"));
+                student.setRoomPresence(rs.getString("roomPresence"));
+                student.setDateOfAdmission(LocalDateTime.parse(rs.getString("dateOfAdmission")));
+                student.setHostelId(rs.getString("hostelId"));
+
+                students.add(student);
+            }
+        }catch (SQLException e ){
+            System.out.println("Error while fetching all students details : "+e);
+        }
+
+        return students;
+    }
 
     //Fetch a student based on Admission No
 
@@ -341,5 +434,19 @@ public class StudentDAO {
         return  null;
     }
 
+    //clear room number for all students
 
+    public boolean clearAssignedRoomForAllStudents(){
+
+        String sql = """
+                UPDATE students SET assignedRoom = '';
+                """;
+        try(Connection conn = DatabaseInitializer.getConnection()) {
+           int c=  conn.createStatement().executeUpdate(sql);
+
+           return c>0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

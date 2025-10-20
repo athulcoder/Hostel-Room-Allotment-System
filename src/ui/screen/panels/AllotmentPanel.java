@@ -1,87 +1,82 @@
 package ui.screen.panels;
 
-import ui.screen.components.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.table.*;
-import java.awt.*;
-import java.awt.event.*;
+import models.Student;
+import ui.screen.components.AppColors;
+import ui.screen.components.AppFonts;
+import ui.screen.components.RoundedButton;
 
+import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import java.awt.*;
+import java.util.List;
+
+/**
+ * A panel for controlling and monitoring the student allotment process.
+ * Features a split view for pending and allotted students.
+ */
 public class AllotmentPanel extends JPanel {
 
-    private DefaultTableModel tableModel;
-    private JTable allotmentTable;
+    // --- UI Components ---
+
+    // Metric Cards
+    private JLabel unassignedStudentsCard;
+    private JLabel availableCapacityCard;
+    private JLabel assignedStudentsCard;
+
+    // Controls
     private RoundedButton refreshBtn;
+    private RoundedButton clearRoomsBtn;
     private RoundedButton runAllotmentBtn;
 
-    private JComboBox<String> yearBox, roomTypeBox, genderBox;
+    // --- MODIFIED ---: Two panels for the two lists
+    private JPanel pendingListPanel;
+    private JPanel allottedListPanel;
 
+    /**
+     * Creates the main Allotment Panel.
+     */
     public AllotmentPanel() {
+        // Main panel setup
         setLayout(new BorderLayout(0, 20));
         setBackground(AppColors.COLOR_BACKGROUND);
         setBorder(new EmptyBorder(25, 30, 25, 30));
 
+        // Create and add components
         add(createHeader(), BorderLayout.NORTH);
-
-        // --- CENTER SCROLL PANE ---
-        // This makes the entire content area (weights + table) scrollable
-        JScrollPane scrollPane = new JScrollPane(createCenterContent());
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // Faster scrolling
-        scrollPane.setOpaque(false);
-        scrollPane.getViewport().setOpaque(false);
-
-        add(scrollPane, BorderLayout.CENTER);
+        add(createCenterContent(), BorderLayout.CENTER);
     }
 
+    /**
+     * Creates the top header with title and action buttons.
+     */
     private JPanel createHeader() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
 
-        // --- LEFT TITLE ---
+        // Left side: Title and Subtitle
         JPanel left = new JPanel();
-        left.setOpaque(false);
         left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
-        JLabel title = new JLabel("Room Allotment Panel");
+        left.setOpaque(false);
+        JLabel title = new JLabel("Allotment Engine");
         title.setFont(AppFonts.FONT_HEADER);
         title.setForeground(AppColors.COLOR_TEXT_DARK);
-        JLabel subtitle = new JLabel("Auto-allot compatible roommates based on preferences");
+        JLabel subtitle = new JLabel("Assign unallocated students to available rooms automatically");
         subtitle.setFont(AppFonts.FONT_MAIN);
         subtitle.setForeground(AppColors.COLOR_TEXT_LIGHT);
         left.add(title);
         left.add(Box.createVerticalStrut(5));
         left.add(subtitle);
 
-        // --- RIGHT FILTER PANEL ---
+        // Right side: Action Buttons
         JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         right.setOpaque(false);
-
-        yearBox = new JComboBox<>(new String[]{"All Years", "1st Year", "2nd Year", "3rd Year", "4th Year"});
-        roomTypeBox = new JComboBox<>(new String[]{"All Types", "2-Sharing", "4-Sharing", "6-Sharing"});
-        genderBox = new JComboBox<>(new String[]{"All", "Male", "Female"});
-
-        for (JComboBox<?> combo : new JComboBox[]{yearBox, roomTypeBox, genderBox}) {
-            combo.setFont(AppFonts.FONT_MAIN);
-            combo.setPreferredSize(new Dimension(130, 35));
-            combo.setBackground(AppColors.COLOR_WHITE);
-        }
-
-        runAllotmentBtn = new RoundedButton(
-                "⚙ Run AI Allotment",
-                null,
-                AppColors.COLOR_PRIMARY_ACCENT,
-                AppColors.COLOR_PRIMARY_ACCENT.darker()
-        );
-        runAllotmentBtn.setForeground(Color.WHITE);
-        runAllotmentBtn.addActionListener(e -> onRunAllotment());
-
-        refreshBtn = new RoundedButton("↻ Refresh", null, AppColors.COLOR_PRIMARY_ACCENT_LIGHT, AppColors.COLOR_PRIMARY_ACCENT);
-        refreshBtn.setForeground(Color.WHITE);
-
-        right.add(yearBox);
-        right.add(roomTypeBox);
-        right.add(genderBox);
-        right.add(runAllotmentBtn);
+        clearRoomsBtn = new RoundedButton("Clear Current Rooms", null, AppColors.COLOR_DANGER_LIGHT, AppColors.COLOR_DANGER_HOVER);
+        clearRoomsBtn.setForeground(AppColors.COLOR_DANGER);
+        right.add(clearRoomsBtn);
+        refreshBtn = new RoundedButton("Refresh Stats", null, AppColors.COLOR_PRIMARY_ACCENT, AppColors.COLOR_PRIMARY_ACCENT_LIGHT);
+        refreshBtn.setForeground(AppColors.COLOR_WHITE);
         right.add(refreshBtn);
 
         panel.add(left, BorderLayout.WEST);
@@ -89,234 +84,250 @@ public class AllotmentPanel extends JPanel {
         return panel;
     }
 
+    /**
+     * Creates the main content area (metrics, controls, and the split view).
+     */
     private JPanel createCenterContent() {
         JPanel panel = new JPanel(new BorderLayout(0, 20));
         panel.setOpaque(false);
 
-        // Add weight control panel at top
-        panel.add(createWeightPanel(), BorderLayout.NORTH);
-        panel.add(createTablePanel(), BorderLayout.CENTER);
+        // Panel to hold controls and metrics
+        JPanel topSection = new JPanel(new BorderLayout(0, 20));
+        topSection.setOpaque(false);
+        topSection.add(createMetrics(), BorderLayout.NORTH);
+        topSection.add(createControlPanel(), BorderLayout.CENTER);
+
+        // Panel for the two lists
+        JPanel listSection = new JPanel(new GridLayout(1, 2, 20, 0)); // 1 row, 2 cols, 20px gap
+        listSection.setOpaque(false);
+        listSection.add(createStudentListPanel("Pending Allotment", true));
+        listSection.add(createStudentListPanel("Allotted Students", false));
+
+        panel.add(topSection, BorderLayout.NORTH);
+        panel.add(listSection, BorderLayout.CENTER);
         return panel;
     }
 
     /**
-     * A modernized preference weight control panel.
+     * Creates the panel holding the metric cards.
      */
-    private JPanel createWeightPanel() {
-        ModernRoundedPanel weightPanel = new ModernRoundedPanel();
-        weightPanel.setBackground(AppColors.COLOR_WHITE);
-        // Use BorderLayout to separate title from the grid
-        weightPanel.setLayout(new BorderLayout(0, 15));
-
-        JLabel lbl = new JLabel("⚖ Preference Weight Controls:");
-        lbl.setFont(AppFonts.FONT_BOLD.deriveFont(16f));
-        lbl.setForeground(AppColors.COLOR_TEXT_DARK);
-        // Add padding below the title
-        lbl.setBorder(new EmptyBorder(0, 0, 5, 0));
-        weightPanel.add(lbl, BorderLayout.NORTH); // Title at the top
-
-        // Create a grid for the sliders
-        // 0 rows = as many as needed, 4 columns, with 20px h-gap and 15px v-gap
-        JPanel sliderGrid = new JPanel(new GridLayout(0, 4, 20, 15));
-        sliderGrid.setOpaque(false);
-
-        // Add the new slider panels
-        sliderGrid.add(createWeightSliderPanel("Sleep"));
-        sliderGrid.add(createWeightSliderPanel("Study"));
-        sliderGrid.add(createWeightSliderPanel("Social"));
-        sliderGrid.add(createWeightSliderPanel("Hobbies"));
-        sliderGrid.add(createWeightSliderPanel("Lifestyle"));
-        sliderGrid.add(createWeightSliderPanel("Activity"));
-        sliderGrid.add(createWeightSliderPanel("Sharing"));
-        sliderGrid.add(createWeightSliderPanel("Presence"));
-
-        weightPanel.add(sliderGrid, BorderLayout.CENTER); // Grid in the center
-
-        return weightPanel;
+    private JPanel createMetrics() {
+        JPanel panel = new JPanel(new GridLayout(1, 3, 20, 0));
+        panel.setOpaque(false);
+        unassignedStudentsCard = new JLabel("0");
+        availableCapacityCard = new JLabel("0");
+        assignedStudentsCard = new JLabel("0");
+        styleCardLabel(unassignedStudentsCard);
+        styleCardLabel(availableCapacityCard);
+        styleCardLabel(assignedStudentsCard);
+        panel.add(createCard("Unassigned Students", unassignedStudentsCard));
+        panel.add(createCard("Available Capacity", availableCapacityCard));
+        panel.add(createCard("Students Already Placed", assignedStudentsCard));
+        return panel;
     }
 
-    /**
-     * Creates a self-contained panel for a single slider with its label.
-     */
-    private JPanel createWeightSliderPanel(String name) {
-        // This panel holds the label and the slider
-        JPanel panel = new JPanel(new BorderLayout(0, 5));
-        panel.setOpaque(false); // Transparent background
+    private JPanel createCard(String label, JLabel valueLabel) {
+        ModernRoundedPanel card = new ModernRoundedPanel();
+        card.setBackground(AppColors.COLOR_WHITE);
+        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+        JLabel l = new JLabel(label);
+        l.setFont(AppFonts.FONT_MAIN);
+        l.setForeground(AppColors.COLOR_TEXT_LIGHT);
+        card.add(l);
+        card.add(Box.createVerticalStrut(8));
+        card.add(valueLabel);
+        return card;
+    }
 
-        JLabel label = new JLabel(name);
-        label.setFont(AppFonts.FONT_BOLD);
+    private void styleCardLabel(JLabel label) {
+        label.setFont(AppFonts.FONT_HEADER.deriveFont(32f));
         label.setForeground(AppColors.COLOR_TEXT_DARK);
-        panel.add(label, BorderLayout.NORTH); // Label on top
+    }
 
-        JSlider slider = new JSlider(0, 100, 20);
-        slider.setPaintTicks(true);
-        slider.setPaintLabels(true);
-        slider.setMajorTickSpacing(25);
-        slider.setOpaque(false); // Transparent background
-        // No more TitledBorder
-
-        panel.add(slider, BorderLayout.CENTER); // Slider below label
-
+    /**
+     * Creates the panel with the "Start" button and warning.
+     */
+    private JPanel createControlPanel() {
+        JPanel panel = new JPanel(new BorderLayout(20, 0));
+        panel.setOpaque(false);
+        panel.setBorder(new EmptyBorder(10, 5, 10, 5));
+        runAllotmentBtn = new RoundedButton("Start Allotment Process", null, AppColors.COLOR_PRIMARY_ACCENT, AppColors.COLOR_PRIMARY_ACCENT.darker());
+        runAllotmentBtn.setForeground(AppColors.COLOR_WHITE);
+        runAllotmentBtn.setFont(AppFonts.FONT_BOLD.deriveFont(16f));
+        runAllotmentBtn.setPreferredSize(new Dimension(280, 50));
+        JLabel warningLabel = new JLabel("<html><b>Warning:</b> This process can take several minutes and cannot be undone." + "<br>Please ensure all student preferences are up-to-date.</html>");
+        warningLabel.setFont(AppFonts.FONT_MAIN);
+        warningLabel.setForeground(AppColors.COLOR_TEXT_LIGHT);
+        warningLabel.setIcon(UIManager.getIcon("OptionPane.warningIcon"));
+        warningLabel.setIconTextGap(10);
+        panel.add(runAllotmentBtn, BorderLayout.WEST);
+        panel.add(warningLabel, BorderLayout.CENTER);
         return panel;
     }
 
-    private JPanel createTablePanel() {
+    /**
+     * Generic factory method to create either the pending or allotted list panel.
+     */
+    private JPanel createStudentListPanel(String title, boolean isPendingPanel) {
         ModernRoundedPanel panel = new ModernRoundedPanel();
         panel.setBackground(AppColors.COLOR_WHITE);
         panel.setLayout(new BorderLayout(0, 15));
+        JPanel header = new JPanel(new BorderLayout());
+        header.setOpaque(false);
+        header.setBorder(new EmptyBorder(0, 5, 0, 5));
+        JLabel titleLabel = new JLabel(title);
+        titleLabel.setFont(AppFonts.FONT_BOLD.deriveFont(18f));
+        titleLabel.setForeground(AppColors.COLOR_TEXT_DARK);
+        header.add(titleLabel, BorderLayout.WEST);
+        panel.add(header, BorderLayout.NORTH);
 
-        JLabel title = new JLabel("🧩 Allotment Results");
-        title.setFont(AppFonts.FONT_BOLD.deriveFont(18f));
-        title.setForeground(AppColors.COLOR_TEXT_DARK);
+        JPanel cardListContainer = new JPanel();
+        cardListContainer.setLayout(new BoxLayout(cardListContainer, BoxLayout.Y_AXIS));
+        cardListContainer.setBackground(AppColors.COLOR_WHITE);
+        cardListContainer.setBorder(new EmptyBorder(5, 5, 5, 10));
 
-        panel.add(title, BorderLayout.NORTH);
+        if (isPendingPanel) {
+            this.pendingListPanel = cardListContainer;
+        } else {
+            this.allottedListPanel = cardListContainer;
+        }
 
-        String[] cols = {"Room No", "Students", "Compatibility %", "Room Type", "Status", "Action"};
-        tableModel = new DefaultTableModel(new Object[0][0], cols) {
-            @Override
-            public boolean isCellEditable(int row, int col) {
-                return col == 5; // Only the Action column is editable
-            }
-        };
+        JPanel cardWrapper = new JPanel(new BorderLayout());
+        cardWrapper.setOpaque(false);
+        cardWrapper.add(cardListContainer, BorderLayout.NORTH);
 
-        allotmentTable = new JTable(tableModel);
-        allotmentTable.setRowHeight(55); // Give buttons space
-        allotmentTable.setFont(AppFonts.FONT_MAIN);
-        allotmentTable.setShowGrid(false);
-        allotmentTable.setIntercellSpacing(new Dimension(0, 0));
-        allotmentTable.setSelectionBackground(AppColors.COLOR_PRIMARY_ACCENT_LIGHT);
-
-        JTableHeader header = allotmentTable.getTableHeader();
-        header.setFont(AppFonts.FONT_BOLD);
-        header.setBackground(AppColors.COLOR_WHITE);
-        header.setBorder(new MatteBorder(0, 0, 2, 0, AppColors.COLOR_BORDER));
-
-        allotmentTable.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
-        allotmentTable.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox()));
-
-        // Example data
-        tableModel.addRow(new Object[]{"R101", "Athul, Alex", "92%", "2-Sharing", "Confirmed", ""});
-        tableModel.addRow(new Object[]{"R102", "Bony, Navneeth", "88%", "2-Sharing", "Pending", ""});
-
-        JScrollPane scrollPane = new JScrollPane(allotmentTable);
+        JScrollPane scrollPane = new JScrollPane(cardWrapper);
+        scrollPane.getViewport().setBackground(AppColors.COLOR_WHITE);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         panel.add(scrollPane, BorderLayout.CENTER);
 
         return panel;
     }
 
-    // ---------- ACTIONS ----------
-    private void onRunAllotment() {
-        JOptionPane.showMessageDialog(this,
-                "AI Room Allotment process initiated...\n\n" +
-                        "Filters:\nYear: " + yearBox.getSelectedItem() +
-                        "\nRoom Type: " + roomTypeBox.getSelectedItem() +
-                        "\nGender: " + genderBox.getSelectedItem(),
-                "Allotment Running", JOptionPane.INFORMATION_MESSAGE);
-    }
+    /**
+     * Creates a card for a PENDING student.
+     */
+    private JPanel createStudentCard(Student student, Color background, Color border) {
+        JPanel card = new JPanel(new BorderLayout(10, 5));
+        card.setOpaque(true);
+        card.setBackground(background);
+        card.setBorder(new CompoundBorder(new LineBorder(border, 1), new EmptyBorder(10, 15, 10, 15)));
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 110));
 
-    // ---------- Button Renderer & Editor (with GridBagLayout for alignment) ----------
-    private class ButtonRenderer extends JPanel implements TableCellRenderer {
-        final RoundedButton confirmBtn, editBtn, deleteBtn, recalcBtn;
+        // Top: Name and ID
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setOpaque(false);
+        JLabel nameLabel = new JLabel(student.getName());
+        nameLabel.setFont(AppFonts.FONT_BOLD.deriveFont(16f));
+        nameLabel.setForeground(AppColors.COLOR_TEXT_DARK);
+        JLabel idLabel = new JLabel(student.getStudentId().toUpperCase());
+        idLabel.setFont(AppFonts.FONT_MAIN);
+        idLabel.setForeground(AppColors.COLOR_TEXT_LIGHT);
+        topPanel.add(nameLabel, BorderLayout.WEST);
+        topPanel.add(idLabel, BorderLayout.EAST);
 
-        ButtonRenderer() {
-            setOpaque(true);
-            // Use GridBagLayout to center buttons horizontally and vertically
-            setLayout(new GridBagLayout());
+        // Middle: Room Info
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setOpaque(false);
+        JLabel yearLabel = new JLabel("Year: " + student.getAcademicYear() + " | Prefers: " + student.getPreferredRoomType());
+        yearLabel.setFont(AppFonts.FONT_MAIN);
+        yearLabel.setForeground(AppColors.COLOR_TEXT_DARK);
+        centerPanel.add(yearLabel, BorderLayout.WEST);
 
-            confirmBtn = new RoundedButton("✓ Confirm", null, AppColors.COLOR_SUCCESS_LIGHT, AppColors.COLOR_SUCCESS_HOVER);
-            confirmBtn.setForeground(AppColors.COLOR_SUCCESS);
-            editBtn = new RoundedButton("Edit", null, AppColors.COLOR_PRIMARY_ACCENT_LIGHT, AppColors.COLOR_PRIMARY_ACCENT);
-            deleteBtn = new RoundedButton("Delete", null, AppColors.COLOR_DANGER_LIGHT, AppColors.COLOR_DANGER);
-            recalcBtn = new RoundedButton("↻", null, AppColors.COLOR_BACKGROUND, AppColors.COLOR_BORDER);
+        // --- Show Room Number ONLY if allotted ---
+        if (student.getAssignedRoom() != null && !student.getAssignedRoom().isEmpty()) {
+            JLabel roomLabel = new JLabel("Room: " + student.getAssignedRoom());
+            roomLabel.setFont(AppFonts.FONT_BOLD);
+            roomLabel.setForeground(AppColors.COLOR_PRIMARY_ACCENT);
+            centerPanel.add(roomLabel, BorderLayout.EAST);
         }
 
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
-            setBackground(isSelected ? table.getSelectionBackground() : AppColors.COLOR_WHITE);
-            removeAll(); // Clear old components
+        // Bottom: Preferences
+        String veg = student.isVegetarian() ? "Veg" : "Non-Veg";
+        String prefs = "Sleep: " + student.getSleepType() + " | Study: " + student.getStudyPreference() + " | " + veg;
+        JLabel prefsLabel = new JLabel(prefs);
+        prefsLabel.setFont(AppFonts.FONT_MAIN.deriveFont(Font.ITALIC));
+        prefsLabel.setForeground(AppColors.COLOR_TEXT_LIGHT);
 
-            String status = table.getValueAt(row, 4).toString();
+        card.add(topPanel, BorderLayout.NORTH);
+        card.add(centerPanel, BorderLayout.CENTER);
+        card.add(prefsLabel, BorderLayout.SOUTH);
 
-            // Constraints to add padding between buttons
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.insets = new Insets(0, 4, 0, 4); // 4px horizontal padding
+        return card;
+    }
 
-            if ("Confirmed".equals(status)) {
-                add(editBtn, gbc);
-            } else {
-                add(confirmBtn, gbc);
+    // -----------------------------------------------------------------
+    // PUBLIC API (for your Controller/Dashboard to use)
+    // -----------------------------------------------------------------
+
+    public RoundedButton getRefreshButton() { return refreshBtn; }
+    public RoundedButton getClearRoomsButton() { return clearRoomsBtn; }
+    public RoundedButton getRunAllotmentButton() { return runAllotmentBtn; }
+
+    public void setUnassignedStudents(int count) { unassignedStudentsCard.setText(String.valueOf(count)); }
+    public void setAvailableCapacity(int count) { availableCapacityCard.setText(String.valueOf(count)); }
+    public void setAssignedStudents(int count) { assignedStudentsCard.setText(String.valueOf(count)); }
+
+    /**
+     * Populates the PENDING students list with cards.
+     */
+    public void setUnassignedStudentsList(List<Student> students) {
+        populateList(pendingListPanel, students, false);
+    }
+
+    /**
+     * Populates the ALLOTTED students list with cards.
+     */
+    public void setAllottedStudentsList(List<Student> students) {
+        populateList(allottedListPanel, students, true);
+    }
+
+    /**
+     * Helper method to fill a JPanel with student cards.
+     */
+    private void populateList(JPanel listPanel, List<Student> students, boolean isAllotted) {
+        listPanel.removeAll();
+        if (students == null || students.isEmpty()) {
+            String message = isAllotted ? "No students are currently allotted." : "No unassigned students found.";
+            JLabel emptyLabel = new JLabel(message);
+            emptyLabel.setFont(AppFonts.FONT_MAIN);
+            emptyLabel.setForeground(AppColors.COLOR_TEXT_LIGHT);
+            emptyLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            listPanel.add(emptyLabel);
+        } else {
+            Color background = isAllotted ? new Color(230, 245, 230) : AppColors.COLOR_BACKGROUND;
+            Color border = isAllotted ? new Color(34, 197, 94) : AppColors.COLOR_BORDER;
+            for (Student s : students) {
+                listPanel.add(createStudentCard(s, background, border));
+                listPanel.add(Box.createVerticalStrut(10));
             }
-            add(recalcBtn, gbc);
-            add(deleteBtn, gbc);
+        }
+        listPanel.revalidate();
+        listPanel.repaint();
+    }
 
-            return this;
+    public void setUIEnabled(boolean enabled) {
+        runAllotmentBtn.setEnabled(enabled);
+        refreshBtn.setEnabled(enabled);
+        clearRoomsBtn.setEnabled(enabled);
+        if (enabled) {
+            runAllotmentBtn.setText("Start Allotment Process");
+            runAllotmentBtn.setBackground(AppColors.COLOR_PRIMARY_ACCENT);
+        } else {
+            runAllotmentBtn.setText("Running... Please Wait");
+            runAllotmentBtn.setBackground(AppColors.COLOR_TEXT_LIGHT);
         }
     }
 
-    private class ButtonEditor extends DefaultCellEditor {
-        JPanel panel;
-        int row;
-        RoundedButton confirmBtn, recalcBtn, editBtn, deleteBtn;
-        GridBagConstraints gbc; // Reusable constraints
-
-        ButtonEditor(JCheckBox checkBox) {
-            super(checkBox);
-            // Use GridBagLayout to center buttons
-            panel = new JPanel(new GridBagLayout());
-            panel.setOpaque(true);
-
-            // Define constraints once
-            gbc = new GridBagConstraints();
-            gbc.insets = new Insets(0, 4, 0, 4); // 4px horizontal padding
-
-            confirmBtn = new RoundedButton("✓ Confirm", null, AppColors.COLOR_SUCCESS_LIGHT, AppColors.COLOR_SUCCESS_HOVER);
-            confirmBtn.addActionListener(e -> {
-                fireEditingStopped();
-                tableModel.setValueAt("Confirmed", row, 4);
-            });
-
-            recalcBtn = new RoundedButton("↻", null, AppColors.COLOR_BACKGROUND, AppColors.COLOR_BORDER);
-            recalcBtn.addActionListener(e -> {
-                fireEditingStopped();
-                JOptionPane.showMessageDialog(null, "Recalculating for " + tableModel.getValueAt(row, 1));
-            });
-
-            editBtn = new RoundedButton("Edit", null, AppColors.COLOR_PRIMARY_ACCENT_LIGHT, AppColors.COLOR_PRIMARY_ACCENT);
-            deleteBtn = new RoundedButton("Delete", null, AppColors.COLOR_DANGER_LIGHT, AppColors.COLOR_DANGER);
-            deleteBtn.addActionListener(e -> {
-                fireEditingStopped();
-                // Check if the row still exists before removing
-                if(row < tableModel.getRowCount()) {
-                    tableModel.removeRow(row);
-                }
-            });
-        }
-
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int col) {
-            this.row = row;
-            panel.removeAll(); // Clear panel for reuse
-
-            String status = table.getValueAt(row, 4).toString();
-
-            // Add buttons using the defined constraints
-            if ("Confirmed".equals(status)) {
-                panel.add(editBtn, gbc);
-            } else {
-                panel.add(confirmBtn, gbc);
-            }
-            panel.add(recalcBtn, gbc);
-            panel.add(deleteBtn, gbc);
-
-            return panel;
-        }
-    }
-
-    // ModernRoundedPanel remains the same
-    private static class ModernRoundedPanel extends JPanel {
-        private int cornerRadius = 16;
+    private class ModernRoundedPanel extends JPanel {
+        private final int cornerRadius = 16;
         public ModernRoundedPanel() {
+            super();
             setOpaque(false);
-            setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+            setBorder(BorderFactory.createEmptyBorder(20, 25, 20, 25));
         }
         @Override
         protected void paintComponent(Graphics g) {
