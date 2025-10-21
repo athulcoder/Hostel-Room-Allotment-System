@@ -380,6 +380,7 @@ public class LoginScreen extends JPanel {
         if (logoIcon != null) {
             logoLabel.setIcon(logoIcon);
         }
+
         logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         contentPanel.add(logoLabel);
         contentPanel.add(Box.createVerticalStrut(15));

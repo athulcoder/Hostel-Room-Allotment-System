@@ -48,10 +48,4 @@ public class StudentController {
        });
     view.setStudents(students);
    }
-
-
-
-
-
-
 }

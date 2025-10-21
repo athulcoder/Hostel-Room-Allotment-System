@@ -96,7 +96,9 @@ public class DatabaseInitializer {
             stmt.execute(sql);
             System.out.println(" Database initialized and table created for rooms.");
 
-        } catch (SQLException e) {
+
+        }
+        catch (SQLException e) {
             System.err.println("DB Room table Error : " + e.getMessage());
         }
 
@@ -124,6 +126,7 @@ public class DatabaseInitializer {
             }catch (SQLException e) {
                System.out.println("ADMIN TABLE ERROR :"+e);
             }
+
             }
 
 
