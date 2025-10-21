@@ -54,13 +54,13 @@ public class Dashboard extends JPanel {
             new RoomController(roomsView);
         AllotmentPanel allotmentsView = new AllotmentPanel();
             new AllotmentController(allotmentsView);
-//        JPanel settingsView = new SettingsPanel();
+        JPanel settingsView = new SettingsPanel();
 
         contentSwitchPanel.add(dashboardView, "Dashboard");
         contentSwitchPanel.add(studentsView, "Students");
         contentSwitchPanel.add(roomsView, "Rooms");
         contentSwitchPanel.add(allotmentsView, "Allotments");
-//        contentSwitchPanel.add(settingsView, "Settings");
+        contentSwitchPanel.add(settingsView, "Settings");
 
         add(contentSwitchPanel, BorderLayout.CENTER);
 
