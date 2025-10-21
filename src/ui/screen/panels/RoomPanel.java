@@ -242,7 +242,7 @@ public class RoomPanel extends JPanel {
         JPanel legend = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
         legend.setOpaque(false);
         legend.add(createLegendItem(new Color(34, 197, 94), "Available"));
-        legend.add(createLegendItem(new Color(249, 115, 22), "Partially filled"));
+//        legend.add(createLegendItem(new Color(249, 115, 22), "Partially filled"));
         legend.add(createLegendItem(new Color(239, 68, 68), "Full"));
 
         header.add(legend, BorderLayout.EAST);
@@ -393,13 +393,7 @@ public class RoomPanel extends JPanel {
     }
 
 
-    // -----------------------------------------------------------------
-    // INNER CLASS: ModernRoundedPanel (Replaces user's broken one)
-    // -----------------------------------------------------------------
-    /**
-     * A JPanel that paints its background with rounded corners.
-     */
-    private class ModernRoundedPanel extends JPanel {
+    public class ModernRoundedPanel extends JPanel {
         private int cornerRadius = 16;
 
         public ModernRoundedPanel() {

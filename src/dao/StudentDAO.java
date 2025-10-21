@@ -155,6 +155,23 @@ public class StudentDAO {
         return false;
     }
 
+    public boolean clearAllAllotments(String hostelId){
+        String sql = """
+                UPDATE students
+                SET assignedRoom='' WHERE hostelId = ?
+                """;
+
+        try (Connection conn = DatabaseInitializer.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+
+            stmt.setString(1,hostelId);
+            int c=stmt.executeUpdate();
+            return c>0;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public ArrayList<Student> getStudentByName(String name){
         String sql = "SELECT * FROM students WHERE name=?";
         ArrayList<Student> students = new ArrayList<Student>();

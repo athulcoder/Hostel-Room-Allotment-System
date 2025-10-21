@@ -57,9 +57,6 @@ public class StudentFormController {
 
 
 
-
-
-
         if(view.getNameField().getText().isEmpty() || view.getNameField().getText().isEmpty() || view.getStudentIdField().getText().isEmpty() || view.getContactNumberField().getText().isEmpty() || view.getEmailField().getText().isEmpty()||view.getGuardianNameField().getText().isEmpty() ||view.getGuardianPhoneField().getText().isEmpty())
         {
             JOptionPane.showMessageDialog(null,"All fields are required except room number","Warning",JOptionPane.WARNING_MESSAGE);

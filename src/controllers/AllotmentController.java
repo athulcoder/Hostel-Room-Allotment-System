@@ -29,10 +29,7 @@ public class AllotmentController {
         loadAllotmentData();
     }
 
-    /**
-     * THIS IS THE KEY METHOD THAT FETCHES AND DISPLAYS ALL DATA.
-     * It uses a SwingWorker to prevent the UI from freezing.
-     */
+
     private void loadAllotmentData() {
         view.setUIEnabled(false); // Disable buttons while loading
 
@@ -86,9 +83,6 @@ public class AllotmentController {
         worker.execute(); // Start the background task
     }
 
-    /**
-     * Runs the allotment process in a background thread.
-     */
     private void runAllotmentProcess() {
         view.setUIEnabled(false);
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
@@ -123,11 +117,16 @@ public class AllotmentController {
                 JOptionPane.WARNING_MESSAGE);
 
         if (choice == JOptionPane.YES_OPTION) {
-            // You MUST create these methods in your DAOs/Services.
-            // studentDAO.clearAllAllotments(SessionManager.getCurrentAdmin().getHostelId());
-            // roomDAO.resetAllOccupancy(SessionManager.getCurrentAdmin().getHostelId());
 
-            System.out.println("Clearing all allotments... (You need to implement this logic in your DAOs)");
+
+            // You MUST create these methods in your DAOs/Services.
+
+            boolean studentBool = studentDAO.clearAllAllotments(SessionManager.getCurrentAdmin().getHostelId());
+            boolean roomBool =  roomDAO.removeAllOccupies(SessionManager.getCurrentAdmin().getHostelId());
+
+            if(studentBool && roomBool){
+                JOptionPane.showMessageDialog(null,"removed All students from their current Room ");
+            }
 
             // After clearing, refresh the panel
             loadAllotmentData();

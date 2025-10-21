@@ -16,6 +16,9 @@ import java.awt.geom.RoundRectangle2D;
 import java.util.HashMap;
 import java.util.Map;
 
+import static ui.screen.components.AppColors.*;
+import static ui.screen.components.AppFonts.*;
+
 /**
  * A modern, visually appealing dashboard for a campus management system.
  * This class is a JPanel, designed to be placed within a larger frame or CardLayout.
@@ -25,20 +28,6 @@ import java.util.Map;
  */
 public class Dashboard extends JPanel {
 
-    // --- UI Customization (public for access by panel classes) ---
-    public static final Color COLOR_BACKGROUND = new Color(245, 250, 248);
-    public static final Color COLOR_SIDEBAR = new Color(236, 244, 241);
-    public static final Color COLOR_PRIMARY_ACCENT = new Color(13, 156, 116);
-    public static final Color COLOR_PRIMARY_ACCENT_LIGHT = new Color(224, 243, 239);
-    public static final Color COLOR_WHITE = Color.WHITE;
-    public static final Color COLOR_TEXT_DARK = new Color(40, 40, 40);
-    public static final Color COLOR_TEXT_LIGHT = new Color(150, 150, 150);
-    public static final Color COLOR_BORDER = new Color(220, 220, 220);
-
-    public static final Font FONT_MAIN = new Font("Segoe UI", Font.PLAIN, 14);
-    public static final Font FONT_BOLD = new Font("Segoe UI", Font.BOLD, 14);
-    public static final Font FONT_HEADER = new Font("Segoe UI", Font.BOLD, 28);
-    public static final Font FONT_CARD_VALUE = new Font("Segoe UI", Font.BOLD, 36);
 
     private final JPanel contentSwitchPanel;
     private final CardLayout cardLayout;
@@ -65,13 +54,13 @@ public class Dashboard extends JPanel {
             new RoomController(roomsView);
         AllotmentPanel allotmentsView = new AllotmentPanel();
             new AllotmentController(allotmentsView);
-        JPanel settingsView = new SettingsPanel();
+//        JPanel settingsView = new SettingsPanel();
 
         contentSwitchPanel.add(dashboardView, "Dashboard");
         contentSwitchPanel.add(studentsView, "Students");
         contentSwitchPanel.add(roomsView, "Rooms");
         contentSwitchPanel.add(allotmentsView, "Allotments");
-        contentSwitchPanel.add(settingsView, "Settings");
+//        contentSwitchPanel.add(settingsView, "Settings");
 
         add(contentSwitchPanel, BorderLayout.CENTER);
 
@@ -104,7 +93,7 @@ public class Dashboard extends JPanel {
         navTitle.setBorder(BorderFactory.createEmptyBorder(10, 22, 10, 20));
         sidebar.add(navTitle);
 
-        addSidebarButton(sidebar, "Dashboard", IconFactory.createIcon(IconFactory.IconType.DASHBOARD));
+        addSidebarButton(sidebar, "Overview", IconFactory.createIcon(IconFactory.IconType.DASHBOARD));
         addSidebarButton(sidebar, "Students", IconFactory.createIcon(IconFactory.IconType.STUDENTS));
         addSidebarButton(sidebar, "Rooms", IconFactory.createIcon(IconFactory.IconType.ROOMS));
         addSidebarButton(sidebar, "Allotments", IconFactory.createIcon(IconFactory.IconType.ALLOTMENTS));
@@ -150,7 +139,7 @@ public class Dashboard extends JPanel {
     public static class DashboardPanel extends JPanel {
         public DashboardPanel() {
             super(new BorderLayout());
-            setBackground(Dashboard.COLOR_BACKGROUND);
+            setBackground(COLOR_BACKGROUND);
             setBorder(BorderFactory.createEmptyBorder(20, 40, 40, 40));
 
             // Header Section
@@ -162,7 +151,7 @@ public class Dashboard extends JPanel {
 
             // Panel to hold main content, placing cards at the top
             JPanel mainContentArea = new JPanel(new BorderLayout());
-            mainContentArea.setBackground(Dashboard.COLOR_BACKGROUND);
+            mainContentArea.setBackground(COLOR_BACKGROUND);
             mainContentArea.add(cardsPanel, BorderLayout.NORTH);
 
             add(mainContentArea, BorderLayout.CENTER);
@@ -170,60 +159,61 @@ public class Dashboard extends JPanel {
 
         private JPanel createHeader() {
             JPanel header = new JPanel(new BorderLayout());
-            header.setBackground(Dashboard.COLOR_BACKGROUND);
+            header.setBackground(COLOR_BACKGROUND);
             header.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
             JPanel titlePanel = new JPanel();
-            titlePanel.setBackground(Dashboard.COLOR_BACKGROUND);
+            titlePanel.setBackground(COLOR_BACKGROUND);
             titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
 
             JLabel title = new JLabel("Overview");
-            title.setFont(Dashboard.FONT_HEADER);
-            title.setForeground(Dashboard.COLOR_TEXT_DARK);
+            title.setFont(FONT_HEADER);
+            title.setForeground(COLOR_TEXT_DARK);
             titlePanel.add(title);
 
             JLabel subtitle = new JLabel("Quick glance at key campus metrics");
-            subtitle.setFont(Dashboard.FONT_MAIN);
-            subtitle.setForeground(Dashboard.COLOR_TEXT_LIGHT);
+            subtitle.setFont(FONT_MAIN);
+            subtitle.setForeground(COLOR_TEXT_LIGHT);
             titlePanel.add(subtitle);
 
             header.add(titlePanel, BorderLayout.WEST);
 
             JPanel actionsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
-            actionsPanel.setBackground(Dashboard.COLOR_BACKGROUND);
-            actionsPanel.add(createStyledButton("Alerts", IconFactory.createIcon(IconFactory.IconType.ALERTS)));
-            actionsPanel.add(createStyledButton("Admin", IconFactory.createIcon(IconFactory.IconType.ADMIN)));
+            actionsPanel.setBackground(COLOR_BACKGROUND);
+//            actionsPanel.add(createStyledButton("Alerts", IconFactory.createIcon(IconFactory.IconType.ALERTS)));
+//            actionsPanel.add(createStyledButton("Admin", IconFactory.createIcon(IconFactory.IconType.ADMIN)));
             actionsPanel.add(createPrimaryButton("Refresh", IconFactory.createIcon(IconFactory.IconType.REFRESH)));
             header.add(actionsPanel, BorderLayout.EAST);
 
             return header;
         }
 
+
         private JPanel createOverviewCards() {
             // FlowLayout allows cards to wrap on smaller screen sizes, making it responsive
             JPanel cardsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 25, 25));
-            cardsPanel.setBackground(Dashboard.COLOR_BACKGROUND);
+            cardsPanel.setBackground(COLOR_BACKGROUND);
             cardsPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 
-            cardsPanel.add(new StatCard("Total Students", "1,250", IconFactory.createIcon(IconFactory.IconType.STUDENTS)));
-            cardsPanel.add(new StatCard("Total Rooms", "1,000", IconFactory.createIcon(IconFactory.IconType.ROOMS)));
-            cardsPanel.add(new StatCard("Rooms Allotted", "820", IconFactory.createIcon(IconFactory.IconType.ALLOTMENTS)));
-            cardsPanel.add(new StatCard("Available Rooms", "180", IconFactory.createIcon(IconFactory.IconType.ROOMS_AVAILABLE)));
+            cardsPanel.add(new StatCard("Total Students", "8", IconFactory.createIcon(IconFactory.IconType.STUDENTS)));
+            cardsPanel.add(new StatCard("Total Rooms", "5", IconFactory.createIcon(IconFactory.IconType.ROOMS)));
+            cardsPanel.add(new StatCard("Rooms Allotted", "3", IconFactory.createIcon(IconFactory.IconType.ALLOTMENTS)));
+            cardsPanel.add(new StatCard("Available Rooms", "2", IconFactory.createIcon(IconFactory.IconType.ROOMS_AVAILABLE)));
 
             return cardsPanel;
         }
 
         private JButton createStyledButton(String text, Icon icon) {
             Color hoverColor = new Color(205, 235, 228);
-            RoundedButton button = new RoundedButton(text, icon, Dashboard.COLOR_PRIMARY_ACCENT_LIGHT, hoverColor);
-            button.setForeground(Dashboard.COLOR_TEXT_DARK);
+            RoundedButton button = new RoundedButton(text, icon, COLOR_PRIMARY_ACCENT_LIGHT, hoverColor);
+            button.setForeground(COLOR_TEXT_DARK);
             return button;
         }
 
         private JButton createPrimaryButton(String text, Icon icon) {
-            Color hoverColor = Dashboard.COLOR_PRIMARY_ACCENT.brighter();
-            RoundedButton button = new RoundedButton(text, icon, Dashboard.COLOR_PRIMARY_ACCENT, hoverColor);
-            button.setForeground(Dashboard.COLOR_WHITE);
+            Color hoverColor = COLOR_PRIMARY_ACCENT.brighter();
+            RoundedButton button = new RoundedButton(text, icon, COLOR_PRIMARY_ACCENT, hoverColor);
+            button.setForeground(COLOR_WHITE);
             return button;
         }
 
@@ -240,7 +230,7 @@ public class Dashboard extends JPanel {
                 this.currentBgColor = background;
 
                 setIcon(icon);
-                setFont(Dashboard.FONT_BOLD);
+                setFont(FONT_BOLD);
                 setCursor(new Cursor(Cursor.HAND_CURSOR));
                 setContentAreaFilled(false);
                 setFocusPainted(false);
@@ -277,20 +267,20 @@ public class Dashboard extends JPanel {
         private static class StatCard extends JPanel {
             public StatCard(String title, String value, Icon icon) {
                 super(new BorderLayout());
-                setBackground(Dashboard.COLOR_WHITE);
+                setBackground(COLOR_WHITE);
                 setBorder(BorderFactory.createEmptyBorder(20, 25, 20, 25));
                 setPreferredSize(new Dimension(220, 110)); // Set a reasonable size
 
                 JLabel lblTitle = new JLabel(title);
-                lblTitle.setFont(Dashboard.FONT_BOLD);
-                lblTitle.setForeground(Dashboard.COLOR_TEXT_LIGHT);
+                lblTitle.setFont(FONT_BOLD);
+                lblTitle.setForeground(COLOR_TEXT_LIGHT);
 
                 JLabel lblValue = new JLabel(value);
-                lblValue.setFont(Dashboard.FONT_CARD_VALUE);
-                lblValue.setForeground(Dashboard.COLOR_TEXT_DARK);
+                lblValue.setFont(FONT_BOLD);
+                lblValue.setForeground(COLOR_TEXT_DARK);
 
                 JPanel textPanel = new JPanel();
-                textPanel.setBackground(Dashboard.COLOR_WHITE);
+                textPanel.setBackground(COLOR_WHITE);
                 textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
                 textPanel.add(lblTitle);
                 textPanel.add(Box.createVerticalStrut(5));
@@ -308,7 +298,7 @@ public class Dashboard extends JPanel {
                 g2d.fill(new RoundRectangle2D.Float(5, 5, getWidth() - 10, getHeight() - 10, 20, 20));
                 g2d.setColor(getBackground());
                 g2d.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 15, 15));
-                g2d.setColor(Dashboard.COLOR_BORDER);
+                g2d.setColor(COLOR_BORDER);
                 g2d.draw(new RoundRectangle2D.Float(0, 0, getWidth() - 1, getHeight() - 1, 15, 15));
                 g2d.dispose();
             }
@@ -323,10 +313,10 @@ public class Dashboard extends JPanel {
      */
     public static class PlaceholderPanel extends JPanel {
         public PlaceholderPanel(String title) {
-            setBackground(Dashboard.COLOR_BACKGROUND);
+            setBackground(COLOR_BACKGROUND);
             JLabel label = new JLabel(title);
-            label.setFont(Dashboard.FONT_HEADER);
-            label.setForeground(Dashboard.COLOR_TEXT_LIGHT);
+            label.setFont(FONT_HEADER);
+            label.setForeground(COLOR_TEXT_LIGHT);
             add(label);
         }
     }

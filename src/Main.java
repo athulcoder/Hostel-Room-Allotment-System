@@ -13,8 +13,6 @@ public class Main {
 
         new MainUI();
 
-
-
 //        DatabaseInitializer.initializeDatabase();
 //        HostelDAO hostelDAO = new HostelDAO();
 //        Hostel hostel = new Hostel("Adams House","Boys",12,5,540,"H001");

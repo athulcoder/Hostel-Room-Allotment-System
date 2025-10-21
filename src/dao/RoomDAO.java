@@ -95,6 +95,29 @@ public class RoomDAO {
         return false;
     }
 
+    //remove occupy of all rooms
+
+    public boolean removeAllOccupies(String hostelId){
+
+        String sql = """
+                UPDATE rooms SET occupancy = 0 WHERE hostelId =  ?
+                """;
+
+        try(Connection conn = DatabaseInitializer.getConnection(); PreparedStatement statement = conn.prepareStatement(sql);){
+
+            statement.setString(1,hostelId);
+
+            int c = statement.executeUpdate();
+
+            return c>0;
+
+        }catch (SQLException e){
+            System.out.println("ERROR while clearing rooms "+e.getMessage());
+        }
+        return false;
+    }
+
+
     //Delete a room
     public boolean deleteRoom(String roomNumber) {
         String deleteSql = "DELETE FROM rooms WHERE roomNumber = ?";
