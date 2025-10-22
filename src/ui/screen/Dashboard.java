@@ -2,7 +2,9 @@ package ui.screen;
 
 import controllers.AllotmentController;
 import controllers.RoomController;
+import controllers.SettingsController;
 import controllers.StudentController;
+import ui.MainUI;
 import ui.screen.panels.AllotmentPanel;
 import ui.screen.panels.RoomPanel;
 import ui.screen.panels.SettingsPanel;
@@ -27,13 +29,14 @@ import static ui.screen.components.AppFonts.*;
  * @author Gemini
  */
 public class Dashboard extends JPanel {
-
+    private MainUI mainUI;
 
     private final JPanel contentSwitchPanel;
     private final CardLayout cardLayout;
     private final Map<String, SidebarButton> sidebarButtons = new HashMap<>();
 
-    public Dashboard() {
+    public Dashboard(MainUI mainUI) {
+        this.mainUI = mainUI;
         setLayout(new BorderLayout());
         setBackground(COLOR_BACKGROUND);
 
@@ -54,7 +57,8 @@ public class Dashboard extends JPanel {
             new RoomController(roomsView);
         AllotmentPanel allotmentsView = new AllotmentPanel();
             new AllotmentController(allotmentsView);
-        JPanel settingsView = new SettingsPanel();
+        SettingsPanel settingsView = new SettingsPanel();
+            new SettingsController(settingsView, mainUI);
 
         contentSwitchPanel.add(dashboardView, "Dashboard");
         contentSwitchPanel.add(studentsView, "Students");

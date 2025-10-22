@@ -1,42 +1,39 @@
 package ui.screen.panels;
 
+import ui.screen.Dashboard;
 import ui.screen.components.AppColors;
 import ui.screen.components.AppFonts;
 import ui.screen.components.RoundedButton;
 import ui.screen.components.RoundedPanel;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
+import javax.swing.border.*;
 import java.awt.*;
 import java.util.Arrays;
 
 public class SettingsPanel extends JPanel {
 
+
+    private RoundedButton logoutButton;
+
+
     public SettingsPanel() {
         setLayout(new BorderLayout());
         setBackground(AppColors.COLOR_BACKGROUND);
 
-        // --- MAIN CONTENT PANEL ---
         JPanel mainContentPanel = new JPanel();
         mainContentPanel.setLayout(new BoxLayout(mainContentPanel, BoxLayout.Y_AXIS));
         mainContentPanel.setBackground(AppColors.COLOR_BACKGROUND);
         mainContentPanel.setBorder(new EmptyBorder(25, 30, 25, 30));
 
-        // --- HEADER ---
         mainContentPanel.add(createHeader());
         mainContentPanel.add(Box.createVerticalStrut(20));
 
-        // --- PROFILE SECTION ---
         mainContentPanel.add(createProfileSection());
         mainContentPanel.add(Box.createVerticalStrut(30));
 
-        // --- GENERAL SETTINGS SECTION ---
         mainContentPanel.add(createGeneralSettingsSection());
 
-        // --- SCROLL PANE ---
         JScrollPane scrollPane = new JScrollPane(mainContentPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -55,10 +52,11 @@ public class SettingsPanel extends JPanel {
         title.setFont(AppFonts.FONT_HEADER);
         title.setForeground(AppColors.COLOR_TEXT_DARK);
 
-        Insets logoutButtonPadding = new Insets(8, 25, 8, 25);
-        RoundedButton logoutButton = new RoundedButton("Logout", null, AppColors.COLOR_DANGER_LIGHT, AppColors.COLOR_DANGER_HOVER);
+        Insets buttonPadding = new Insets(4, 18, 4, 18);
+       logoutButton = new RoundedButton("Logout", null, AppColors.COLOR_DANGER_LIGHT, AppColors.COLOR_DANGER);
+
         logoutButton.setForeground(AppColors.COLOR_DANGER);
-        logoutButton.setFont(AppFonts.FONT_BOLD);
+        logoutButton.setFont(AppFonts.FONT_HEADER);
 
         headerPanel.add(title, BorderLayout.WEST);
         headerPanel.add(logoutButton, BorderLayout.EAST);
@@ -108,7 +106,8 @@ public class SettingsPanel extends JPanel {
         textField.setFont(AppFonts.FONT_MAIN);
         textField.setEditable(false);
         textField.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
-        textField.setBackground(panel.getBackground());
+        textField.setBackground(AppColors.COLOR_BACKGROUND); // no gray
+        textField.setDisabledTextColor(AppColors.COLOR_TEXT_DARK);
 
         contentPanel.add(label);
         contentPanel.add(hintLabel);
@@ -119,19 +118,22 @@ public class SettingsPanel extends JPanel {
         buttonContainer.setOpaque(false);
         final String EDIT_CARD = "EDIT";
         final String UPDATE_CARD = "UPDATE";
-        final String[] originalValue = new String[1]; // Store original value for cancellation
+        final String[] originalValue = new String[1];
 
-        // --- Use new constructor for custom padding (less height, more width) ---
-        Insets actionButtonPadding = new Insets(4, 18, 4, 18); // Reduced height
-        RoundedButton editButton = new RoundedButton("Edit", null, AppColors.COLOR_SIDEBAR, AppColors.COLOR_BORDER);
+        Insets smallBtnPadding = new Insets(4, 14, 4, 14);
+
+        RoundedButton editButton = new RoundedButton("Edit", null,
+                AppColors.COLOR_SIDEBAR, AppColors.COLOR_BORDER);
         editButton.setForeground(AppColors.COLOR_TEXT_DARK);
         editButton.setFont(AppFonts.FONT_BOLD);
 
-        RoundedButton updateButton = new RoundedButton("Update", null, AppColors.COLOR_PRIMARY_ACCENT, AppColors.COLOR_PRIMARY_ACCENT.darker());
+        RoundedButton updateButton = new RoundedButton("Update", null,
+                AppColors.COLOR_PRIMARY_ACCENT, AppColors.COLOR_PRIMARY_ACCENT.darker());
         updateButton.setForeground(AppColors.COLOR_WHITE);
         updateButton.setFont(AppFonts.FONT_BOLD);
 
-        RoundedButton cancelButton = new RoundedButton("Cancel", null, AppColors.COLOR_SIDEBAR, AppColors.COLOR_BORDER);
+        RoundedButton cancelButton = new RoundedButton("Cancel", null,
+                AppColors.COLOR_SIDEBAR, AppColors.COLOR_BORDER);
         cancelButton.setForeground(AppColors.COLOR_TEXT_DARK);
         cancelButton.setFont(AppFonts.FONT_BOLD);
 
@@ -163,7 +165,7 @@ public class SettingsPanel extends JPanel {
             hintLabel.setVisible(false);
             cardLayout.show(buttonContainer, EDIT_CARD);
             textField.setBorder(nonEditableBorder);
-            textField.setBackground(panel.getBackground());
+            textField.setBackground(AppColors.COLOR_BACKGROUND);
         });
 
         cancelButton.addActionListener(e -> {
@@ -172,7 +174,7 @@ public class SettingsPanel extends JPanel {
             hintLabel.setVisible(false);
             cardLayout.show(buttonContainer, EDIT_CARD);
             textField.setBorder(nonEditableBorder);
-            textField.setBackground(panel.getBackground());
+            textField.setBackground(AppColors.COLOR_BACKGROUND);
         });
 
         panel.add(contentPanel, BorderLayout.CENTER);
@@ -196,8 +198,9 @@ public class SettingsPanel extends JPanel {
         label.setFont(AppFonts.FONT_BOLD);
         label.setForeground(AppColors.COLOR_TEXT_DARK);
 
-        Insets changeButtonPadding = new Insets(6, 22, 6, 22);
-        RoundedButton changeButton = new RoundedButton("Change", null, AppColors.COLOR_PRIMARY_ACCENT_LIGHT, AppColors.COLOR_PRIMARY_ACCENT);
+        Insets btnPadding = new Insets(4, 14, 4, 14);
+        RoundedButton changeButton = new RoundedButton("Change", null,
+                AppColors.COLOR_PRIMARY_ACCENT_LIGHT, AppColors.COLOR_PRIMARY_ACCENT);
         changeButton.setForeground(AppColors.COLOR_PRIMARY_ACCENT);
         changeButton.setFont(AppFonts.FONT_BOLD);
         changeButton.addActionListener(e -> showPasswordChangeDialog());
@@ -208,53 +211,84 @@ public class SettingsPanel extends JPanel {
     }
 
     private void showPasswordChangeDialog() {
-        // (Implementation remains the same)
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.anchor = GridBagConstraints.WEST;
+        JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Change Password", true);
+        dialog.setUndecorated(true);
+        dialog.getRootPane().setBorder(BorderFactory.createLineBorder(AppColors.COLOR_PRIMARY_ACCENT, 2));
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        panel.add(new JLabel("Old Password:"), gbc);
-        gbc.gridy = 1;
-        panel.add(new JLabel("New Password:"), gbc);
-        gbc.gridy = 2;
-        panel.add(new JLabel("Confirm New Password:"), gbc);
+        RoundedPanel container = new RoundedPanel();
+        container.setLayout(new BorderLayout());
+        container.setBackground(AppColors.COLOR_BACKGROUND);
+        container.setBorder(new EmptyBorder(20, 25, 20, 25));
 
-        JPasswordField oldPass = new JPasswordField(15);
-        JPasswordField newPass = new JPasswordField(15);
-        JPasswordField confirmPass = new JPasswordField(15);
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.weightx = 1;
-        panel.add(oldPass, gbc);
-        gbc.gridy = 1;
-        panel.add(newPass, gbc);
-        gbc.gridy = 2;
-        panel.add(confirmPass, gbc);
+        JLabel title = new JLabel("Change Password");
+        title.setFont(AppFonts.FONT_HEADER);
+        title.setForeground(AppColors.COLOR_PRIMARY_ACCENT);
+        title.setBorder(new EmptyBorder(0, 0, 15, 0));
 
-        int result = JOptionPane.showConfirmDialog(this, panel, "Change Password",
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        JPanel form = new JPanel(new GridLayout(3, 2, 10, 10));
+        form.setOpaque(false);
 
-        if (result == JOptionPane.OK_OPTION) {
+        JLabel oldLbl = new JLabel("Old Password:");
+        JLabel newLbl = new JLabel("New Password:");
+        JLabel confirmLbl = new JLabel("Confirm New Password:");
+        for (JLabel lbl : new JLabel[]{oldLbl, newLbl, confirmLbl}) {
+            lbl.setFont(AppFonts.FONT_MAIN);
+            lbl.setForeground(AppColors.COLOR_TEXT_DARK);
+        }
+
+        JPasswordField oldPass = new JPasswordField();
+        JPasswordField newPass = new JPasswordField();
+        JPasswordField confirmPass = new JPasswordField();
+
+        form.add(oldLbl);
+        form.add(oldPass);
+        form.add(newLbl);
+        form.add(newPass);
+        form.add(confirmLbl);
+        form.add(confirmPass);
+
+        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+        buttons.setOpaque(false);
+
+        Insets smallPadding = new Insets(4, 16, 4, 16);
+        RoundedButton cancel = new RoundedButton("Cancel", null, AppColors.COLOR_SIDEBAR, AppColors.COLOR_BORDER);
+        cancel.setForeground(AppColors.COLOR_TEXT_DARK);
+
+        RoundedButton save = new RoundedButton("Save", null, AppColors.COLOR_PRIMARY_ACCENT, AppColors.COLOR_PRIMARY_ACCENT.darker());
+        save.setForeground(AppColors.COLOR_WHITE);
+
+        buttons.add(cancel);
+        buttons.add(save);
+
+        container.add(title, BorderLayout.NORTH);
+        container.add(form, BorderLayout.CENTER);
+        container.add(buttons, BorderLayout.SOUTH);
+
+        dialog.add(container);
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+
+        cancel.addActionListener(e -> dialog.dispose());
+
+        save.addActionListener(e -> {
             char[] newPassword = newPass.getPassword();
             char[] confirmedPassword = confirmPass.getPassword();
 
             if (newPassword.length == 0) {
-                JOptionPane.showMessageDialog(this, "New password cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(dialog, "New password cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
             } else if (!Arrays.equals(newPassword, confirmedPassword)) {
-                JOptionPane.showMessageDialog(this, "The new passwords do not match.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(dialog, "Passwords do not match.", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(this, "Password changed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(dialog, "Password changed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                dialog.dispose();
             }
 
             Arrays.fill(oldPass.getPassword(), '0');
             Arrays.fill(newPass.getPassword(), '0');
             Arrays.fill(confirmPass.getPassword(), '0');
-        }
+        });
+
+        dialog.setVisible(true);
     }
 
     private JPanel createGeneralSettingsSection() {
@@ -328,8 +362,10 @@ public class SettingsPanel extends JPanel {
         notificationPanel.add(Box.createVerticalStrut(5));
         notificationPanel.add(inAppCheck);
         return notificationPanel;
-
     }
 
 
+    public RoundedButton getLogoutButton() {
+        return logoutButton;
+    }
 }

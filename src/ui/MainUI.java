@@ -47,7 +47,7 @@ public class MainUI extends JFrame {
     public void showDashboard(){
 
         if(dashboard==null){
-            dashboard = new Dashboard();
+            dashboard = new Dashboard(this);
 
             mainPanel.add("dashboard",dashboard);
             showScreen("dashboard");
