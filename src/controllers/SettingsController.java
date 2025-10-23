@@ -1,6 +1,7 @@
 package controllers;
 
 import dao.AdminDAO;
+import models.Admin;
 import ui.MainUI;
 import ui.screen.Dashboard;
 import ui.screen.panels.SettingsPanel;
@@ -27,5 +28,11 @@ public class SettingsController {
         mainUI.removeDashboard();
         SessionManager.logout();
 
+    }
+
+
+    public static void updateAdmin(Admin admin){
+
+        adminDAO.
     }
 }

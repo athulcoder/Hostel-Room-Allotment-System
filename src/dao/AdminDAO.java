@@ -102,4 +102,38 @@ public class AdminDAO
             return false;
         }
     }
+
+
+
+    public boolean updateAdmin(Admin admin,String oldUsername){
+
+        String sql = """
+                UPDATE admins SET
+                username =?,
+                name =?,
+                role = ?,
+                phoneNumber =?,
+                WHERE username =?
+                """;
+
+        try(Connection conn = DatabaseInitializer.getConnection(); PreparedStatement statement = conn.prepareStatement(sql)){
+
+            statement.setString(1,admin.getUsername());
+            statement.setString(2,admin.getName());
+            statement.setString(3,admin.getRole());
+            statement.setString(4,admin.getPhoneNumber());
+
+            statement.setString(5,oldUsername);
+
+
+            int c = statement.executeUpdate(sql);
+
+            return c>0;
+        }catch (SQLException e){
+            System.out.println("ERROR while updating Admin");
+        }
+
+
+        return false;
+    }
 }

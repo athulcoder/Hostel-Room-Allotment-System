@@ -1,5 +1,6 @@
 package ui.screen.panels;
 
+import controllers.SettingsController;
 import ui.screen.Dashboard;
 import ui.screen.components.AppColors;
 import ui.screen.components.AppFonts;
@@ -120,7 +121,6 @@ public class SettingsPanel extends JPanel {
         final String UPDATE_CARD = "UPDATE";
         final String[] originalValue = new String[1];
 
-        Insets smallBtnPadding = new Insets(4, 14, 4, 14);
 
         RoundedButton editButton = new RoundedButton("Edit", null,
                 AppColors.COLOR_SIDEBAR, AppColors.COLOR_BORDER);
@@ -161,11 +161,7 @@ public class SettingsPanel extends JPanel {
         });
 
         updateButton.addActionListener(e -> {
-            textField.setEditable(false);
-            hintLabel.setVisible(false);
-            cardLayout.show(buttonContainer, EDIT_CARD);
-            textField.setBorder(nonEditableBorder);
-            textField.setBackground(AppColors.COLOR_BACKGROUND);
+//            SettingsController.updateAdmin();
         });
 
         cancelButton.addActionListener(e -> {
