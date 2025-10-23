@@ -33,6 +33,5 @@ public class SettingsController {
 
     public static void updateAdmin(Admin admin){
 
-        adminDAO.
     }
 }
