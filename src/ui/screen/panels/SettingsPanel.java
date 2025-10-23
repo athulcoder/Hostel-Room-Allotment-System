@@ -53,10 +53,10 @@ public class SettingsPanel extends JPanel {
         title.setForeground(AppColors.COLOR_TEXT_DARK);
 
         Insets buttonPadding = new Insets(4, 18, 4, 18);
-       logoutButton = new RoundedButton("Logout", null, AppColors.COLOR_DANGER_LIGHT, AppColors.COLOR_DANGER);
+       logoutButton = new RoundedButton("Logout", null, AppColors.COLOR_DANGER, AppColors.COLOR_DANGER_HOVER);
 
-        logoutButton.setForeground(AppColors.COLOR_DANGER);
-        logoutButton.setFont(AppFonts.FONT_HEADER);
+        logoutButton.setForeground(AppColors.COLOR_WHITE);
+        logoutButton.setFont(AppFonts.FONT_BOLD);
 
         headerPanel.add(title, BorderLayout.WEST);
         headerPanel.add(logoutButton, BorderLayout.EAST);
