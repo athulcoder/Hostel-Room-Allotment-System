@@ -24,6 +24,7 @@ public class SettingsController {
 
         adminDAO.logout(SessionManager.getCurrentAdmin().getUsername());
         mainUI.showScreen("login-screen");
+        mainUI.removeDashboard();
         SessionManager.logout();
 
     }

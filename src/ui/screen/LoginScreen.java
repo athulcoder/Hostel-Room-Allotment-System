@@ -476,10 +476,17 @@ public class LoginScreen extends JPanel {
         return usernameField.getText();
     }
 
+
     public char[] getPassword() {
         return passwordField.getPassword();
     }
 
+    public void setUsername(String username){
+        usernameField.setText("");
+    }
+    public void setPassword(String password){
+        passwordField.setText("");
+    }
     public void setErrorMessage(String message) {
         messageLabel.setText("<html><center>" + message + "</center></html>"); // Allow multi-line errors
     }

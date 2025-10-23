@@ -44,6 +44,11 @@ public class MainUI extends JFrame {
         cardLayout.show(mainPanel, screenName);
     }
 
+    public void removeDashboard(){
+        mainPanel.remove(dashboard);
+        dashboard =null;
+    }
+
     public void showDashboard(){
 
         if(dashboard==null){

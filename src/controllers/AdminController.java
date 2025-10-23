@@ -31,6 +31,9 @@ public class AdminController {
                 String username = view.getUsername();
                 String password = new String(view.getPassword());
 
+                // resetting the usernameField and passwordField
+                view.setUsername("");
+                view.setPassword("");
                     Admin admin = adminDAO.login(username,password);
 
                     if (admin !=null) {
