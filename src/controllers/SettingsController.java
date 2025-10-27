@@ -10,7 +10,7 @@ import utils.SessionManager;
 public class SettingsController {
     private final MainUI mainUI;
     private SettingsPanel view;
-    private final AdminDAO adminDAO;
+    public final AdminDAO adminDAO;
 
 
     public SettingsController(SettingsPanel view, MainUI mainUI){
@@ -32,6 +32,6 @@ public class SettingsController {
 
 
     public static void updateAdmin(Admin admin){
-
+        String oldAdminUsername = SessionManager.getCurrentAdmin().getUsername();
     }
 }
