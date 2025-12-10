@@ -21,6 +21,8 @@ public class Main {
         Admin a = new Admin("admin234","123456","Jayachandran","Warden","9645372822","H001");
         adminDAO.signup(a);
 
+        //all these are initailasation code for the project db
+
 
     }
 }
